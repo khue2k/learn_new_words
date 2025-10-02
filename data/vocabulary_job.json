@@ -1,0 +1,252 @@
+{
+  "vocabulary": [
+    {
+      "word": "accountant",
+      "type": "noun",
+      "phonetic": "/əˈkaʊn.t̬ənt/",
+      "meaning_vi": "kế toán",
+      "example_en": "She works as an accountant for a large firm.",
+      "example_vi": "Cô ấy làm kế toán cho một công ty lớn."
+    },
+    {
+      "word": "actor",
+      "type": "noun",
+      "phonetic": "/ˈæk.tɚ/",
+      "meaning_vi": "diễn viên",
+      "example_en": "He is a famous actor in Hollywood movies.",
+      "example_vi": "Anh ấy là một diễn viên nổi tiếng trong các bộ phim Hollywood."
+    },
+    {
+      "word": "actress",
+      "type": "noun",
+      "phonetic": "/ˈæk.trəs/",
+      "meaning_vi": "diễn viên",
+      "example_en": "The actress won an award for her performance.",
+      "example_vi": "Nữ diễn viên đã giành được giải thưởng cho vai diễn của mình."
+    },
+    {
+      "word": "artist",
+      "type": "noun",
+      "phonetic": "/ˈɑːr.t̬ɪst/",
+      "meaning_vi": "nghệ sỹ",
+      "example_en": "The artist displayed her paintings at the gallery.",
+      "example_vi": "Nghệ sĩ đã trưng bày các bức tranh của mình tại phòng triển lãm."
+    },
+    {
+      "word": "astronaut",
+      "type": "noun",
+      "phonetic": "/ˈæs.trə.nɑːt/",
+      "meaning_vi": "phi hành gia",
+      "example_en": "The astronaut traveled to the moon.",
+      "example_vi": "Phi hành gia đã du hành đến mặt trăng."
+    },
+    {
+      "word": "baker",
+      "type": "noun",
+      "phonetic": "/ˈbeɪ.kɚ/",
+      "meaning_vi": "thợ nướng bánh",
+      "example_en": "The baker makes fresh bread every morning.",
+      "example_vi": "Thợ nướng bánh làm bánh mì tươi mỗi sáng."
+    },
+    {
+      "word": "butcher",
+      "type": "noun",
+      "phonetic": "/ˈbʊtʃ.ɚ/",
+      "meaning_vi": "người mổ thịt",
+      "example_en": "The butcher sells high-quality meat at the market.",
+      "example_vi": "Người mổ thịt bán thịt chất lượng cao ở chợ."
+    },
+    {
+      "word": "cashier",
+      "type": "noun",
+      "phonetic": "/kæʃˈɪr/",
+      "meaning_vi": "nhân viên thu ngân",
+      "example_en": "The cashier scanned all the items quickly.",
+      "example_vi": "Nhân viên thu ngân quét tất cả các mặt hàng một cách nhanh chóng."
+    },
+    {
+      "word": "chef",
+      "type": "noun",
+      "phonetic": "/ʃef/",
+      "meaning_vi": "đầu bếp",
+      "example_en": "The chef prepared a delicious three-course meal.",
+      "example_vi": "Đầu bếp đã chuẩn bị một bữa ăn ba món ngon tuyệt."
+    },
+    {
+      "word": "comedian",
+      "type": "noun",
+      "phonetic": "/kəˈmiː.di.ən/",
+      "meaning_vi": "diễn viên hài",
+      "example_en": "The comedian made everyone laugh at the show.",
+      "example_vi": "Diễn viên hài khiến mọi người cười nghiêng ngả trong buổi biểu diễn."
+    },
+    {
+      "word": "delivery man",
+      "type": "noun",
+      "phonetic": "/dɪˈlɪv.ɚ.i.mæn/",
+      "meaning_vi": "nhân viên giao hàng",
+      "example_en": "The delivery man brought the package to my door.",
+      "example_vi": "Nhân viên giao hàng đã mang gói hàng đến tận cửa nhà tôi."
+    },
+    {
+      "word": "doctor",
+      "type": "noun",
+      "phonetic": "/ˈdoktə/",
+      "meaning_vi": "bác sĩ",
+      "example_en": "The doctor examined the patient carefully.",
+      "example_vi": "Bác sĩ đã khám bệnh nhân một cách cẩn thận."
+    },
+    {
+      "word": "entrepreneur",
+      "type": "noun",
+      "phonetic": "/ˌɑːn.trə.prəˈnɝː/",
+      "meaning_vi": "nhà kinh doanh",
+      "example_en": "She is a successful entrepreneur who started her own company.",
+      "example_vi": "Cô ấy là một nhà kinh doanh thành công, người đã tự mở công ty."
+    },
+    {
+      "word": "engineer",
+      "type": "noun",
+      "phonetic": "/ˌen.dʒɪˈnɪər/",
+      "meaning_vi": "kỹ sư",
+      "example_en": "The engineer designed a new bridge for the city.",
+      "example_vi": "Kỹ sư đã thiết kế một cây cầu mới cho thành phố."
+    },
+    {
+      "word": "factory worker",
+      "type": "noun",
+      "phonetic": "/ˈfæk.tɚ.i ˈwɝː.kɚ/",
+      "meaning_vi": "công nhân nhà máy",
+      "example_en": "Factory workers operate heavy machinery daily.",
+      "example_vi": "Công nhân nhà máy vận hành máy móc nặng hàng ngày."
+    },
+    {
+      "word": "office worker",
+      "type": "noun",
+      "phonetic": "/ˈɑː.fɪs ˈwɝː.kɚ/",
+      "meaning_vi": "nhân viên văn phòng",
+      "example_en": "The office worker manages emails and meetings all day.",
+      "example_vi": "Nhân viên văn phòng quản lý email và các cuộc họp cả ngày."
+    },
+    {
+      "word": "florist",
+      "type": "noun",
+      "phonetic": "/ˈflɔːr.ɪst/",
+      "meaning_vi": "người bán hoa",
+      "example_en": "The florist arranged a beautiful bouquet for the wedding.",
+      "example_vi": "Người bán hoa đã sắp xếp một bó hoa đẹp cho đám cưới."
+    },
+    {
+      "word": "hairdresser",
+      "type": "noun",
+      "phonetic": "/ˈherˌdres.ɚ/",
+      "meaning_vi": "thợ cắt tóc",
+      "example_en": "The hairdresser gave her a stylish haircut.",
+      "example_vi": "Thợ cắt tóc đã tạo cho cô ấy một kiểu tóc thời trang."
+    },
+    {
+      "word": "lawyer",
+      "type": "noun",
+      "phonetic": "/ˈlɑː.jɚ/",
+      "meaning_vi": "luật sư",
+      "example_en": "The lawyer defended her client in court.",
+      "example_vi": "Luật sư đã bào chữa cho thân chủ của mình tại tòa."
+    },
+    {
+      "word": "musician",
+      "type": "noun",
+      "phonetic": "/mjuːˈzɪʃ.ən/",
+      "meaning_vi": "nhạc sĩ, nhạc công",
+      "example_en": "The musician played a beautiful melody on the piano.",
+      "example_vi": "Nhạc sĩ đã chơi một giai điệu tuyệt vời trên đàn piano."
+    },
+    {
+      "word": "pharmacist",
+      "type": "noun",
+      "phonetic": "/ˈfɑːr.mə.sɪst/",
+      "meaning_vi": "dược sĩ",
+      "example_en": "The pharmacist dispensed the prescribed medication.",
+      "example_vi": "Dược sĩ đã cấp phát thuốc theo toa."
+    },
+    {
+      "word": "plumber",
+      "type": "noun",
+      "phonetic": "/ˈplʌm.ɚ/",
+      "meaning_vi": "thợ ống nước",
+      "example_en": "The plumber fixed the leaky pipe in the kitchen.",
+      "example_vi": "Thợ ống nước đã sửa ống nước bị rò rỉ trong bếp."
+    },
+    {
+      "word": "politician",
+      "type": "noun",
+      "phonetic": "/ˌpɑː.ləˈtɪʃ.ən/",
+      "meaning_vi": "chính trị gia",
+      "example_en": "The politician gave a speech about economic reforms.",
+      "example_vi": "Chính trị gia đã có bài phát biểu về cải cách kinh tế."
+    },
+    {
+      "word": "programmer",
+      "type": "noun",
+      "phonetic": "/ˈproʊ.ɡræm.ɚ/",
+      "meaning_vi": "lập trình viên",
+      "example_en": "The programmer wrote code for a new app.",
+      "example_vi": "Lập trình viên đã viết mã cho một ứng dụng mới."
+    },
+    {
+      "word": "real estate agent",
+      "type": "noun",
+      "phonetic": "/ˈriː.əl ɪ.steɪt ˌeɪ.dʒənt/",
+      "meaning_vi": "người môi giới bất động sản",
+      "example_en": "The real estate agent helped us find a new home.",
+      "example_vi": "Người môi giới bất động sản đã giúp chúng tôi tìm một ngôi nhà mới."
+    },
+    {
+      "word": "tailor",
+      "type": "noun",
+      "phonetic": "/ˈteɪ.lɚ/",
+      "meaning_vi": "thợ may",
+      "example_en": "The tailor made a custom suit for the groom.",
+      "example_vi": "Thợ may đã may một bộ vest theo yêu cầu cho chú rể."
+    },
+    {
+      "word": "taxi driver",
+      "type": "noun",
+      "phonetic": "/ˈtæk.si ˌdraɪ.vɚ/",
+      "meaning_vi": "tài xế xe taxi",
+      "example_en": "The taxi driver took us to the airport on time.",
+      "example_vi": "Tài xế xe taxi đã đưa chúng tôi đến sân bay đúng giờ."
+    },
+    {
+      "word": "teacher",
+      "type": "noun",
+      "phonetic": "/ˈtiː.tʃɚ/",
+      "meaning_vi": "giáo viên",
+      "example_en": "The teacher explained the lesson clearly.",
+      "example_vi": "Giáo viên đã giải thích bài học một cách rõ ràng."
+    },
+    {
+      "word": "receptionist",
+      "type": "noun",
+      "phonetic": "/rɪˈsep.ʃən.ɪst/",
+      "meaning_vi": "nhân viên lễ tân, tiếp tân",
+      "example_en": "The receptionist greeted us warmly at the hotel.",
+      "example_vi": "Nhân viên lễ tân đã chào đón chúng tôi nồng nhiệt tại khách sạn."
+    },
+    {
+      "word": "singer",
+      "type": "noun",
+      "phonetic": "/ˈsɪŋ.ɚ/",
+      "meaning_vi": "ca sĩ",
+      "example_en": "The singer performed a hit song at the concert.",
+      "example_vi": "Ca sĩ đã biểu diễn một bài hát nổi tiếng tại buổi hòa nhạc."
+    },
+    {
+      "word": "firefighter",
+      "type": "noun",
+      "phonetic": "/ˈfaɪərfaɪtər/",
+      "meaning_vi": "lính cứu hỏa",
+      "example_en": "The firefighter rescued a child from the burning building.",
+      "example_vi": "Lính cứu hỏa đã cứu một đứa trẻ khỏi tòa nhà đang cháy."
+    }
+  ]
+}

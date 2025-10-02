@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học Từ Vựng | Flashcards</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .flashcard {
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+        .flashcard.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .flashcard-face {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .flashcard-back {
+            transform: rotateY(180deg);
+        }
+        .speaker-btn {
+            transition: background-color 0.2s;
+        }
+        .speaker-btn:hover {
+            background-color: #e2e8f0;
+        }
+        .nav-btn.active {
+            background-color: #4f46e5;
+            color: white;
+        }
+        /* Hide the default file input */
+        #json-file-input {
+            display: none;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-800">
+
+    <div id="app" class="container mx-auto p-4 md:p-8 max-w-5xl">
+        <!-- Header -->
+        <header class="text-center mb-8">
+            <h1 id="topic-title" class="text-3xl md:text-4xl font-bold text-slate-900">Học Từ Vựng Theo Chủ Đề</h1>
+            <p id="topic-subtitle" class="text-slate-600 mt-2">Tải lên tệp JSON của bạn để bắt đầu.</p>
+        </header>
+        
+        <!-- File Uploader -->
+        <div id="upload-section" class="text-center">
+            <label for="json-file-input" class="cursor-pointer inline-block bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 transition-colors">
+                Chọn tệp JSON
+            </label>
+            <input type="file" id="json-file-input" accept=".json">
+            <p id="error-message" class="text-red-500 mt-4"></p>
+        </div>
+
+        <!-- Main Content (hidden by default) -->
+        <div id="main-content" class="hidden">
+            <!-- Navigation -->
+            <div class="flex justify-center mb-8 bg-slate-200 rounded-lg p-1 max-w-xs mx-auto">
+                <button id="btn-list-view" class="nav-btn w-1/2 py-2 px-4 rounded-md font-semibold text-slate-700 transition-colors active">Danh sách</button>
+                <button id="btn-flashcard-view" class="nav-btn w-1/2 py-2 px-4 rounded-md font-semibold text-slate-700 transition-colors">Flashcard</button>
+            </div>
+
+            <!-- Vocabulary List View -->
+            <main id="list-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Vocabulary items will be inserted here by JavaScript -->
+            </main>
+
+            <!-- Flashcard View -->
+            <section id="flashcard-view" class="hidden">
+                <div id="flashcard-container" class="mb-6">
+                    <!-- Flashcard will be inserted here -->
+                </div>
+                <div id="flashcard-controls" class="flex items-center justify-center gap-4 flex-wrap">
+                    <button id="btn-prev" class="px-5 py-2.5 bg-white rounded-lg font-semibold shadow-md hover:bg-slate-100 transition-colors">Trước</button>
+                    <button id="btn-random" class="px-5 py-2.5 bg-white rounded-lg font-semibold shadow-md hover:bg-slate-100 transition-colors">Ngẫu nhiên</button>
+                    <button id="btn-next" class="px-5 py-2.5 bg-white rounded-lg font-semibold shadow-md hover:bg-slate-100 transition-colors">Tiếp theo</button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let vocabulary = [];
+            let currentFlashcardIndex = 0;
+
+            // DOM Elements
+            const uploadSection = document.getElementById('upload-section');
+            const mainContent = document.getElementById('main-content');
+            const jsonFileInput = document.getElementById('json-file-input');
+            const errorMessage = document.getElementById('error-message');
+            
+            const topicTitle = document.getElementById('topic-title');
+            const topicSubtitle = document.getElementById('topic-subtitle');
+
+            const listView = document.getElementById('list-view');
+            const flashcardView = document.getElementById('flashcard-view');
+            const flashcardContainer = document.getElementById('flashcard-container');
+            
+            const btnListView = document.getElementById('btn-list-view');
+            const btnFlashcardView = document.getElementById('btn-flashcard-view');
+            const btnPrev = document.getElementById('btn-prev');
+            const btnNext = document.getElementById('btn-next');
+            const btnRandom = document.getElementById('btn-random');
+
+            // --- Core Functions ---
+
+            function speak(text) {
+                if ('speechSynthesis' in window) {
+                    window.speechSynthesis.cancel();
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.9;
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    alert('Trình duyệt của bạn không hỗ trợ phát âm.');
+                }
+            }
+
+            function renderListView() {
+                listView.innerHTML = '';
+                vocabulary.forEach(item => {
+                    const card = `
+                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
+                            <div class="flex justify-between items-center mb-2">
+                                <h3 class="text-xl font-bold text-indigo-600">${item.word}</h3>
+                                <button class="speaker-btn p-2 rounded-full" data-word="${item.word}" title="Nghe phát âm">
+                                    <svg xmlns="http://www.w.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                </button>
+                            </div>
+                            <p class="text-slate-500 mb-4">${item.phonetic} <span class="italic text-slate-400 ml-2">(${item.type})</span></p>
+                            <p class="text-lg font-semibold text-slate-800 mb-4">${item.meaning_vi}</p>
+                            <div class="text-sm text-slate-600 space-y-2">
+                                <p><strong class="font-medium">EN:</strong> ${item.example_en}</p>
+                                <p><strong class="font-medium">VI:</strong> ${item.example_vi}</p>
+                            </div>
+                        </div>`;
+                    listView.innerHTML += card;
+                });
+            }
+            
+            function renderFlashcard(index) {
+                if (index < 0 || index >= vocabulary.length) return;
+                const item = vocabulary[index];
+                flashcardContainer.innerHTML = `
+                    <div class="flashcard-wrapper" style="perspective: 1000px;">
+                        <div class="flashcard relative w-full h-80 md:h-96">
+                            <div class="flashcard-face absolute w-full h-full flex flex-col items-center justify-center bg-white rounded-xl shadow-lg border border-slate-200 p-6 text-center">
+                                <h2 class="text-4xl md:text-5xl font-bold text-indigo-600">${item.word}</h2>
+                                <p class="text-slate-500 mt-2 text-lg">${item.phonetic}</p>
+                                <button class="speaker-btn absolute top-4 right-4 p-2 rounded-full" data-word="${item.word}" title="Nghe phát âm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                </button>
+                                <p class="absolute bottom-6 text-slate-400">Nhấn để xem nghĩa</p>
+                            </div>
+                            <div class="flashcard-face flashcard-back absolute w-full h-full flex flex-col justify-center bg-indigo-600 text-white rounded-xl shadow-lg p-6 text-center">
+                                <h3 class="text-3xl md:text-4xl font-bold mb-4">${item.meaning_vi}</h3>
+                                <div class="text-indigo-100 space-y-2">
+                                    <p><strong class="font-medium">EN:</strong> ${item.example_en}</p>
+                                    <p><strong class="font-medium">VI:</strong> ${item.example_vi}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                const flashcard = flashcardContainer.querySelector('.flashcard');
+                flashcard.addEventListener('click', () => flashcard.classList.toggle('is-flipped'));
+            }
+
+            function loadVocabulary(data) {
+                if (!data.vocabulary || !Array.isArray(data.vocabulary)) {
+                    errorMessage.textContent = 'Lỗi: Tệp JSON không có cấu trúc hợp lệ.';
+                    return;
+                }
+                
+                vocabulary = data.vocabulary;
+                currentFlashcardIndex = 0;
+
+                topicTitle.textContent = `Bộ từ vựng: ${data.topic || 'Chủ đề tùy chỉnh'}`;
+                topicSubtitle.textContent = 'Sử dụng danh sách hoặc flashcards để học hiệu quả hơn.';
+                errorMessage.textContent = '';
+                
+                uploadSection.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+
+                // Reset view to list
+                flashcardView.classList.add('hidden');
+                listView.classList.remove('hidden');
+                btnListView.classList.add('active');
+                btnFlashcardView.classList.remove('active');
+
+                renderListView();
+            }
+
+            // --- Event Listeners ---
+            jsonFileInput.addEventListener('change', (event) => {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const data = JSON.parse(e.target.result);
+                        loadVocabulary(data);
+                    } catch (error) {
+                        errorMessage.textContent = 'Không thể đọc tệp. Vui lòng kiểm tra lại định dạng JSON.';
+                        mainContent.classList.add('hidden');
+                        uploadSection.classList.remove('hidden');
+                    }
+                };
+                reader.readAsText(file);
+            });
+            
+            btnListView.addEventListener('click', () => {
+                flashcardView.classList.add('hidden');
+                listView.classList.remove('hidden', 'grid');
+                listView.classList.add('grid');
+                btnListView.classList.add('active');
+                btnFlashcardView.classList.remove('active');
+            });
+
+            btnFlashcardView.addEventListener('click', () => {
+                listView.classList.add('hidden');
+                listView.classList.remove('grid');
+                flashcardView.classList.remove('hidden');
+                btnFlashcardView.classList.add('active');
+                btnListView.classList.remove('active');
+                renderFlashcard(currentFlashcardIndex);
+            });
+            
+            document.body.addEventListener('click', (e) => {
+                const speakerButton = e.target.closest('.speaker-btn');
+                if (speakerButton) {
+                    const wordToSpeak = speakerButton.dataset.word;
+                    speak(wordToSpeak);
+                }
+            });
+
+            btnNext.addEventListener('click', () => {
+                currentFlashcardIndex = (currentFlashcardIndex + 1) % vocabulary.length;
+                renderFlashcard(currentFlashcardIndex);
+            });
+
+            btnPrev.addEventListener('click', () => {
+                currentFlashcardIndex = (currentFlashcardIndex - 1 + vocabulary.length) % vocabulary.length;
+                renderFlashcard(currentFlashcardIndex);
+            });
+
+            btnRandom.addEventListener('click', () => {
+                let randomIndex;
+                do {
+                    randomIndex = Math.floor(Math.random() * vocabulary.length);
+                } while (randomIndex === currentFlashcardIndex && vocabulary.length > 1);
+                currentFlashcardIndex = randomIndex;
+                renderFlashcard(currentFlashcardIndex);
+            });
+        });
+    </script>
+</body>
+</html>
+
