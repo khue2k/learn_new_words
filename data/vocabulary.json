@@ -1,0 +1,1804 @@
+{
+  "topics": [
+    {
+      "name": "Nghề nghiệp",
+      "words": [
+        {
+          "word": "accountant",
+          "pos": "n",
+          "phonetic": "/əˈkaʊn.t̬ənt/",
+          "meaning": "kế toán",
+          "example_en": "The accountant audited the company's financial records.",
+          "example_vi": "Kế toán kiểm toán hồ sơ tài chính của công ty."
+        },
+        {
+          "word": "actor/actress",
+          "pos": "n",
+          "phonetic": "/ˈæk.tɚ/ /ˈæk.trəs/",
+          "meaning": "diễn viên",
+          "example_en": "The actor performed in a Broadway show.",
+          "example_vi": "Diễn viên biểu diễn trong một vở kịch Broadway."
+        },
+        {
+          "word": "artist",
+          "pos": "n",
+          "phonetic": "/ˈɑːr.t̬ɪst/",
+          "meaning": "nghệ sỹ",
+          "example_en": "The artist created a stunning sculpture.",
+          "example_vi": "Nghệ sĩ tạo ra một tác phẩm điêu khắc tuyệt đẹp."
+        },
+        {
+          "word": "astronaut",
+          "pos": "n",
+          "phonetic": "/ˈæs.trə.nɑːt/",
+          "meaning": "phi hành gia",
+          "example_en": "The astronaut conducted experiments in space.",
+          "example_vi": "Phi hành gia thực hiện các thí nghiệm trong không gian."
+        },
+        {
+          "word": "baker",
+          "pos": "n",
+          "phonetic": "/ˈbeɪ.kɚ/",
+          "meaning": "thợ nướng bánh",
+          "example_en": "The baker kneaded the dough for fresh loaves.",
+          "example_vi": "Thợ nướng bánh nhào bột cho những ổ bánh mì tươi."
+        },
+        {
+          "word": "butcher",
+          "pos": "n",
+          "phonetic": "/ˈbʊtʃ.ɚ/",
+          "meaning": "người mổ thịt",
+          "example_en": "The butcher prepared cuts of beef for sale.",
+          "example_vi": "Người mổ thịt chuẩn bị các miếng thịt bò để bán."
+        },
+        {
+          "word": "cashier",
+          "pos": "n",
+          "phonetic": "/kæʃˈɪr/",
+          "meaning": "nhân viên thu ngân",
+          "example_en": "The cashier processed the customer's payment.",
+          "example_vi": "Nhân viên thu ngân xử lý thanh toán của khách hàng."
+        },
+        {
+          "word": "chef",
+          "pos": "n",
+          "phonetic": "/ʃef/",
+          "meaning": "đầu bếp",
+          "example_en": "The chef seasoned the dish perfectly.",
+          "example_vi": "Đầu bếp nêm nếm món ăn một cách hoàn hảo."
+        },
+        {
+          "word": "comedian",
+          "pos": "n",
+          "phonetic": "/kəˈmiː.di.ən/",
+          "meaning": "diễn viên hài",
+          "example_en": "The comedian told jokes that made the audience laugh.",
+          "example_vi": "Diễn viên hài kể chuyện cười khiến khán giả cười ngặt nghẽo."
+        },
+        {
+          "word": "delivery man",
+          "pos": "n",
+          "phonetic": "/dɪˈlɪv.ɚ.i.mæn/",
+          "meaning": "nhân viên giao hàng",
+          "example_en": "The delivery man arrived with the online order.",
+          "example_vi": "Nhân viên giao hàng đến với đơn hàng trực tuyến."
+        },
+        {
+          "word": "doctor",
+          "pos": "n",
+          "phonetic": "/ˈdoktə/",
+          "meaning": "bác sĩ",
+          "example_en": "The doctor prescribed medication for the illness.",
+          "example_vi": "Bác sĩ kê đơn thuốc cho bệnh."
+        },
+        {
+          "word": "entrepreneur",
+          "pos": "n",
+          "phonetic": "/ˌɑːn.trə.prəˈnɝː/",
+          "meaning": "nhà kinh doanh",
+          "example_en": "The entrepreneur launched a successful startup.",
+          "example_vi": "Nhà kinh doanh khởi chạy một startup thành công."
+        },
+        {
+          "word": "engineer",
+          "pos": "n",
+          "phonetic": "/ˌen.dʒɪˈnɪər/",
+          "meaning": "kỹ sư",
+          "example_en": "The engineer designed the new software system.",
+          "example_vi": "Kỹ sư thiết kế hệ thống phần mềm mới."
+        },
+        {
+          "word": "factory worker",
+          "pos": "n",
+          "phonetic": "/ˈfæk.tɚ.i ˈwɝː.kɚ/",
+          "meaning": "công nhân nhà máy",
+          "example_en": "The factory worker assembled parts on the line.",
+          "example_vi": "Công nhân nhà máy lắp ráp các bộ phận trên dây chuyền."
+        },
+        {
+          "word": "office worker",
+          "pos": "n",
+          "phonetic": "/ˈɑː.fɪs ˈwɝː.kɚ/",
+          "meaning": "nhân viên văn phòng",
+          "example_en": "The office worker attended several meetings.",
+          "example_vi": "Nhân viên văn phòng tham gia nhiều cuộc họp."
+        },
+        {
+          "word": "florist",
+          "pos": "n",
+          "phonetic": "/ˈflɔːr.ɪst/",
+          "meaning": "người bán hoa",
+          "example_en": "The florist created floral arrangements for events.",
+          "example_vi": "Người bán hoa tạo sắp xếp hoa cho các sự kiện."
+        },
+        {
+          "word": "hairdresser",
+          "pos": "n",
+          "phonetic": "/ˈherˌdres.ɚ/",
+          "meaning": "thợ cắt tóc",
+          "example_en": "The hairdresser styled the client's hair.",
+          "example_vi": "Thợ cắt tóc tạo kiểu tóc cho khách hàng."
+        },
+        {
+          "word": "lawyer",
+          "pos": "n",
+          "phonetic": "/ˈlɑː.jɚ/",
+          "meaning": "luật sư",
+          "example_en": "The lawyer argued the case in court.",
+          "example_vi": "Luật sư tranh luận vụ án tại tòa."
+        },
+        {
+          "word": "musician",
+          "pos": "n",
+          "phonetic": "/mjuːˈzɪʃ.ən/",
+          "meaning": "nhạc sĩ, nhạc công",
+          "example_en": "The musician composed a new song.",
+          "example_vi": "Nhạc sĩ sáng tác một bài hát mới."
+        },
+        {
+          "word": "pharmacist",
+          "pos": "n",
+          "phonetic": "/ˈfɑːr.mə.sɪst/",
+          "meaning": "dược sĩ",
+          "example_en": "The pharmacist advised on medication usage.",
+          "example_vi": "Dược sĩ tư vấn về cách sử dụng thuốc."
+        },
+        {
+          "word": "plumber",
+          "pos": "n",
+          "phonetic": "/ˈplʌm.ɚ/",
+          "meaning": "thợ ống nước",
+          "example_en": "The plumber repaired the clogged drain.",
+          "example_vi": "Thợ ống nước sửa chữa ống thoát nước bị tắc."
+        },
+        {
+          "word": "politician",
+          "pos": "n",
+          "phonetic": "/ˌpɑː.ləˈtɪʃ.ən/",
+          "meaning": "chính trị gia",
+          "example_en": "The politician campaigned for election.",
+          "example_vi": "Chính trị gia vận động tranh cử."
+        },
+        {
+          "word": "programmer",
+          "pos": "n",
+          "phonetic": "/ˈproʊ.ɡræm.ɚ/",
+          "meaning": "lập trình viên",
+          "example_en": "The programmer debugged the software.",
+          "example_vi": "Lập trình viên sửa lỗi phần mềm."
+        },
+        {
+          "word": "real estate agent",
+          "pos": "n",
+          "phonetic": "/ˈriː.əl ɪ.steɪt ˌeɪ.dʒənt/",
+          "meaning": "người môi giới bất động sản",
+          "example_en": "The real estate agent showed the house to buyers.",
+          "example_vi": "Người môi giới bất động sản cho xem nhà với người mua."
+        },
+        {
+          "word": "tailor",
+          "pos": "n",
+          "phonetic": "/ˈteɪ.lɚ/",
+          "meaning": "thợ may",
+          "example_en": "The tailor altered the dress to fit.",
+          "example_vi": "Thợ may chỉnh sửa váy để vừa vặn."
+        },
+        {
+          "word": "taxi driver",
+          "pos": "n",
+          "phonetic": "/ˈtæk.si ˌdraɪ.vɚ/",
+          "meaning": "tài xế xe taxi",
+          "example_en": "The taxi driver navigated through traffic.",
+          "example_vi": "Tài xế xe taxi lái xe qua giao thông."
+        },
+        {
+          "word": "teacher",
+          "pos": "n",
+          "phonetic": "/ˈtiː.tʃɚ/",
+          "meaning": "giáo viên",
+          "example_en": "The teacher taught the class math.",
+          "example_vi": "Giáo viên dạy lớp toán."
+        },
+        {
+          "word": "receptionist",
+          "pos": "n",
+          "phonetic": "/rɪˈsep.ʃən.ɪst/",
+          "meaning": "nhân viên lễ tân, tiếp tân",
+          "example_en": "The receptionist answered the phone calls.",
+          "example_vi": "Nhân viên lễ tân trả lời cuộc gọi điện thoại."
+        },
+        {
+          "word": "singer",
+          "pos": "n",
+          "phonetic": "/ˈsɪŋ.ɚ/",
+          "meaning": "ca sĩ",
+          "example_en": "The singer recorded a new album.",
+          "example_vi": "Ca sĩ thu âm một album mới."
+        },
+        {
+          "word": "firefighter",
+          "pos": "n",
+          "phonetic": "/ˈfaɪərfaɪtər/",
+          "meaning": "lính cứu hỏa",
+          "example_en": "The firefighter extinguished the fire.",
+          "example_vi": "Lính cứu hỏa dập tắt đám cháy."
+        }
+      ]
+    },
+    {
+      "name": "Trái cây",
+      "words": [
+        {
+          "word": "apple",
+          "pos": "n",
+          "phonetic": "/ˈæp.əl/",
+          "meaning": "quả táo",
+          "example_en": "An apple a day keeps the doctor away.",
+          "example_vi": "Một quả táo mỗi ngày giữ bác sĩ xa."
+        },
+        {
+          "word": "banana",
+          "pos": "n",
+          "phonetic": "/bəˈnæn.ə/",
+          "meaning": "quả chuối",
+          "example_en": "Bananas are rich in potassium.",
+          "example_vi": "Chuối giàu kali."
+        },
+        {
+          "word": "pear",
+          "pos": "n",
+          "phonetic": "/per/",
+          "meaning": "quả lê",
+          "example_en": "The pear was juicy and sweet.",
+          "example_vi": "Quả lê mọng nước và ngọt."
+        },
+        {
+          "word": "grape",
+          "pos": "n",
+          "phonetic": "/ɡreɪp/",
+          "meaning": "quả nho",
+          "example_en": "Grapes can be made into wine.",
+          "example_vi": "Nho có thể làm thành rượu vang."
+        },
+        {
+          "word": "peach",
+          "pos": "n",
+          "phonetic": "/piːtʃ/",
+          "meaning": "quả đào",
+          "example_en": "Peaches are fuzzy on the outside.",
+          "example_vi": "Đào có lông tơ bên ngoài."
+        },
+        {
+          "word": "orange",
+          "pos": "n",
+          "phonetic": "/ˈɔːr.ɪndʒ/",
+          "meaning": "quả cam",
+          "example_en": "Oranges are high in vitamin C.",
+          "example_vi": "Cam giàu vitamin C."
+        },
+        {
+          "word": "mango",
+          "pos": "n",
+          "phonetic": "/ˈmæŋ.ɡoʊ/",
+          "meaning": "quả xoài",
+          "example_en": "Mangos are tropical fruits.",
+          "example_vi": "Xoài là trái cây nhiệt đới."
+        },
+        {
+          "word": "coconut",
+          "pos": "n",
+          "phonetic": "/ˈkoʊ.kə.nʌt/",
+          "meaning": "quả dừa",
+          "example_en": "Coconuts provide water and meat.",
+          "example_vi": "Dừa cung cấp nước và cùi."
+        },
+        {
+          "word": "pineapple",
+          "pos": "n",
+          "phonetic": "/ˈpaɪnæpl/",
+          "meaning": "quả dứa",
+          "example_en": "Pineapples grow on plants, not trees.",
+          "example_vi": "Dứa mọc trên cây, không phải cây."
+        },
+        {
+          "word": "watermelon",
+          "pos": "n",
+          "phonetic": "/ˈwɑː.t̬ɚˌmel.ən/",
+          "meaning": "dưa hấu",
+          "example_en": "Watermelons are refreshing in summer.",
+          "example_vi": "Dưa hấu tươi mát trong mùa hè."
+        },
+        {
+          "word": "durian",
+          "pos": "n",
+          "phonetic": "/ˈduːriən/",
+          "meaning": "sầu riêng",
+          "example_en": "Durian is known as the king of fruits.",
+          "example_vi": "Sầu riêng được biết đến là vua của các loại trái cây."
+        },
+        {
+          "word": "lychee",
+          "pos": "n",
+          "phonetic": "/ˈlaitʃiː, ˈliː-/",
+          "meaning": "quả vải",
+          "example_en": "Lychees have a sweet white flesh.",
+          "example_vi": "Vải có cùi trắng ngọt."
+        },
+        {
+          "word": "guava",
+          "pos": "n",
+          "phonetic": "/ˈɡwaːvə/",
+          "meaning": "quả ổi",
+          "example_en": "Guavas are rich in vitamins.",
+          "example_vi": "Ổi giàu vitamin."
+        },
+        {
+          "word": "starfruit",
+          "pos": "n",
+          "phonetic": "/ˈstɑːr.fruːt/",
+          "meaning": "quả khế",
+          "example_en": "Starfruit has a star-shaped cross-section.",
+          "example_vi": "Khế có mặt cắt hình sao."
+        },
+        {
+          "word": "apricot",
+          "pos": "n",
+          "phonetic": "/ˈeɪ.prɪ.kɑːt/",
+          "meaning": "quả mơ",
+          "example_en": "Apricots are small and orange.",
+          "example_vi": "Mơ nhỏ và màu cam."
+        },
+        {
+          "word": "jackfruit",
+          "pos": "n",
+          "phonetic": "/ˈdʒæk.fruːt/",
+          "meaning": "quả mít",
+          "example_en": "Jackfruit is the largest tree fruit.",
+          "example_vi": "Mít là trái cây lớn nhất trên cây."
+        },
+        {
+          "word": "avocado",
+          "pos": "n",
+          "phonetic": "/ˌɑː.vəˈkɑː.doʊ/",
+          "meaning": "quả bơ",
+          "example_en": "Avocados are used in guacamole.",
+          "example_vi": "Bơ được dùng trong sốt guacamole."
+        },
+        {
+          "word": "papaya",
+          "pos": "n",
+          "phonetic": "/pəˈpaɪ.ə/",
+          "meaning": "quả đu đủ",
+          "example_en": "Papayas aid in digestion.",
+          "example_vi": "Đu đủ giúp tiêu hóa."
+        },
+        {
+          "word": "plum",
+          "pos": "n",
+          "phonetic": "/plʌm/",
+          "meaning": "quả mận",
+          "example_en": "Plums can be purple or red.",
+          "example_vi": "Mận có thể màu tím hoặc đỏ."
+        },
+        {
+          "word": "lemon",
+          "pos": "n",
+          "phonetic": "/ˈlem.ən/",
+          "meaning": "chanh vàng",
+          "example_en": "Lemons are sour and yellow.",
+          "example_vi": "Chanh vàng chua và màu vàng."
+        },
+        {
+          "word": "kiwi",
+          "pos": "n",
+          "phonetic": "/ˈkiː.wiː/",
+          "meaning": "quả kiwi (dương đào)",
+          "example_en": "Kiwi has green flesh and black seeds.",
+          "example_vi": "Kiwi có cùi xanh và hạt đen."
+        },
+        {
+          "word": "raspberry",
+          "pos": "n",
+          "phonetic": "/ˈræz.ber.i/",
+          "meaning": "quả mâm xôi",
+          "example_en": "Raspberries are red and sweet.",
+          "example_vi": "Mâm xôi đỏ và ngọt."
+        },
+        {
+          "word": "blueberry",
+          "pos": "n",
+          "phonetic": "/ˈbluːˌbər.i/ /ˈbluːˌber.i/",
+          "meaning": "quả việt quất",
+          "example_en": "Blueberries are antioxidant-rich.",
+          "example_vi": "Việt quất giàu chất chống oxy hóa."
+        }
+      ]
+    },
+    {
+      "name": "Gia đình",
+      "words": [
+        {
+          "word": "family",
+          "pos": "n",
+          "phonetic": "/ˈfæm.əl.i/",
+          "meaning": "gia đình",
+          "example_en": "Family gatherings are important during holidays.",
+          "example_vi": "Tụ họp gia đình quan trọng trong các ngày lễ."
+        },
+        {
+          "word": "mother",
+          "pos": "n",
+          "phonetic": "/ˈmaðə/",
+          "meaning": "mẹ",
+          "example_en": "My mother cooks delicious meals.",
+          "example_vi": "Mẹ tôi nấu những bữa ăn ngon."
+        },
+        {
+          "word": "father",
+          "pos": "n",
+          "phonetic": "/ˈfɑː.ðɚ/",
+          "meaning": "bố, cha",
+          "example_en": "My father teaches me how to ride a bike.",
+          "example_vi": "Bố tôi dạy tôi cách đạp xe."
+        },
+        {
+          "word": "parent",
+          "pos": "n",
+          "phonetic": "/ˈpeərənt/",
+          "meaning": "bố hoặc mẹ (parents: bố mẹ, phụ huynh)",
+          "example_en": "Parents support their children's education.",
+          "example_vi": "Phụ huynh hỗ trợ giáo dục con cái."
+        },
+        {
+          "word": "daughter",
+          "pos": "n",
+          "phonetic": "/ˈdɑː.t̬ɚ/",
+          "meaning": "con gái",
+          "example_en": "Their daughter is studying abroad.",
+          "example_vi": "Con gái họ đang học ở nước ngoài."
+        },
+        {
+          "word": "son",
+          "pos": "n",
+          "phonetic": "/san/",
+          "meaning": "con trai",
+          "example_en": "The son helps with household chores.",
+          "example_vi": "Con trai giúp việc nhà."
+        },
+        {
+          "word": "sibling",
+          "pos": "n",
+          "phonetic": "/ˈsibliŋ/",
+          "meaning": "anh chị em ruột",
+          "example_en": "Siblings often share rooms in childhood.",
+          "example_vi": "Anh chị em thường chia sẻ phòng thời thơ ấu."
+        },
+        {
+          "word": "sister",
+          "pos": "n",
+          "phonetic": "/ˈsistə/",
+          "meaning": "chị, em gái",
+          "example_en": "My sister and I go shopping together.",
+          "example_vi": "Chị em tôi đi mua sắm cùng nhau."
+        },
+        {
+          "word": "brother",
+          "pos": "n",
+          "phonetic": "/ˈbrʌð.ɚ/",
+          "meaning": "anh, em trai",
+          "example_en": "My brother plays soccer every weekend.",
+          "example_vi": "Anh trai tôi chơi bóng đá mỗi cuối tuần."
+        },
+        {
+          "word": "grandmother",
+          "pos": "n",
+          "phonetic": "/ˈɡræn.mʌð.ɚ/",
+          "meaning": "bà nội (ngoại)",
+          "example_en": "Grandmother tells stories from her youth.",
+          "example_vi": "Bà kể chuyện từ thời trẻ."
+        },
+        {
+          "word": "grandfather",
+          "pos": "n",
+          "phonetic": "/ˈɡræn.fɑː.ðɚ/",
+          "meaning": "ông nội (ngoại)",
+          "example_en": "Grandfather enjoys gardening.",
+          "example_vi": "Ông thích làm vườn."
+        },
+        {
+          "word": "grandparent",
+          "pos": "n",
+          "phonetic": "/ˈɡræn.per.ənt/",
+          "meaning": "ông hoặc bà (grandparents: ông bà)",
+          "example_en": "Grandparents spoil their grandchildren.",
+          "example_vi": "Ông bà nuông chiều cháu."
+        },
+        {
+          "word": "relative",
+          "pos": "n",
+          "phonetic": "/ˈrelətiv/",
+          "meaning": "họ hàng",
+          "example_en": "Relatives gather for family reunions.",
+          "example_vi": "Họ hàng tụ họp cho cuộc họp mặt gia đình."
+        },
+        {
+          "word": "aunt",
+          "pos": "n",
+          "phonetic": "/ænt/",
+          "meaning": "cô, dì",
+          "example_en": "My aunt bakes cookies for us.",
+          "example_vi": "Cô tôi nướng bánh quy cho chúng tôi."
+        },
+        {
+          "word": "uncle",
+          "pos": "n",
+          "phonetic": "/ˈaŋkl/",
+          "meaning": "chú, bác, cậu, dượng",
+          "example_en": "Uncle takes us fishing.",
+          "example_vi": "Chú đưa chúng tôi đi câu cá."
+        },
+        {
+          "word": "cousin",
+          "pos": "n",
+          "phonetic": "/ˈkʌz.ən/",
+          "meaning": "anh em họ",
+          "example_en": "My cousin and I are the same age.",
+          "example_vi": "Anh em họ của tôi bằng tuổi tôi."
+        },
+        {
+          "word": "nephew",
+          "pos": "n",
+          "phonetic": "/ˈnefjuː/",
+          "meaning": "cháu trai (con của anh chị em)",
+          "example_en": "My nephew loves playing games.",
+          "example_vi": "Cháu trai tôi thích chơi trò chơi."
+        },
+        {
+          "word": "niece",
+          "pos": "n",
+          "phonetic": "/niːs/",
+          "meaning": "cháu gái (con của anh chị em)",
+          "example_en": "My niece draws beautiful pictures.",
+          "example_vi": "Cháu gái tôi vẽ tranh đẹp."
+        },
+        {
+          "word": "wife",
+          "pos": "n",
+          "phonetic": "/waif/",
+          "meaning": "vợ",
+          "example_en": "His wife is a doctor.",
+          "example_vi": "Vợ anh ấy là bác sĩ."
+        },
+        {
+          "word": "husband",
+          "pos": "n",
+          "phonetic": "/ˈhʌz.bənd/",
+          "meaning": "chồng",
+          "example_en": "Her husband cooks dinner.",
+          "example_vi": "Chồng cô ấy nấu bữa tối."
+        }
+      ]
+    },
+    {
+      "name": "Động vật",
+      "words": [
+        {
+          "word": "mouse",
+          "pos": "n",
+          "phonetic": "/maʊs/",
+          "meaning": "con chuột",
+          "example_en": "The mouse scurried across the floor.",
+          "example_vi": "Con chuột chạy qua sàn nhà."
+        },
+        {
+          "word": "cat",
+          "pos": "n",
+          "phonetic": "/kæt/",
+          "meaning": "con mèo",
+          "example_en": "The cat chased the mouse.",
+          "example_vi": "Con mèo đuổi con chuột."
+        },
+        {
+          "word": "dog",
+          "pos": "n",
+          "phonetic": "/dɑːɡ/",
+          "meaning": "con chó",
+          "example_en": "The dog wagged its tail.",
+          "example_vi": "Con chó vẫy đuôi."
+        },
+        {
+          "word": "kitten",
+          "pos": "n",
+          "phonetic": "/ˈkɪt̬.ən/",
+          "meaning": "mèo con",
+          "example_en": "The kitten played with a ball.",
+          "example_vi": "Mèo con chơi với quả bóng."
+        },
+        {
+          "word": "puppy",
+          "pos": "n",
+          "phonetic": "/ˈpʌp.i/",
+          "meaning": "chó con",
+          "example_en": "The puppy chewed on a toy.",
+          "example_vi": "Chó con nhai đồ chơi."
+        },
+        {
+          "word": "pig",
+          "pos": "n",
+          "phonetic": "/pɪɡ/",
+          "meaning": "con lợn, heo",
+          "example_en": "The pig rolled in the mud.",
+          "example_vi": "Con lợn lăn trong bùn."
+        },
+        {
+          "word": "chicken",
+          "pos": "n",
+          "phonetic": "/ˈtʃɪk.ɪn/",
+          "meaning": "con gà",
+          "example_en": "The chicken clucked in the yard.",
+          "example_vi": "Con gà cục tác trong sân."
+        },
+        {
+          "word": "duck",
+          "pos": "n",
+          "phonetic": "/dʌk/",
+          "meaning": "con vịt",
+          "example_en": "The duck quacked by the pond.",
+          "example_vi": "Con vịt kêu quạc bên ao."
+        },
+        {
+          "word": "goose",
+          "pos": "n",
+          "phonetic": "/ɡuːs/",
+          "meaning": "con ngỗng",
+          "example_en": "The goose honked loudly.",
+          "example_vi": "Con ngỗng kêu to."
+        },
+        {
+          "word": "turkey",
+          "pos": "n",
+          "phonetic": "/ˈtɝː.ki/",
+          "meaning": "con gà tây",
+          "example_en": "The turkey strutted around.",
+          "example_vi": "Con gà tây diễu quanh."
+        },
+        {
+          "word": "stork",
+          "pos": "n",
+          "phonetic": "/stɔːrk/",
+          "meaning": "con cò",
+          "example_en": "The stork stood in the water.",
+          "example_vi": "Con cò đứng trong nước."
+        },
+        {
+          "word": "swan",
+          "pos": "n",
+          "phonetic": "/swɑːn/",
+          "meaning": "thiên nga",
+          "example_en": "The swan glided on the lake.",
+          "example_vi": "Thiên nga lướt trên hồ."
+        },
+        {
+          "word": "rabbit",
+          "pos": "n",
+          "phonetic": "/ˈræb.ɪt/",
+          "meaning": "con thỏ",
+          "example_en": "The rabbit hopped away.",
+          "example_vi": "Con thỏ nhảy đi."
+        },
+        {
+          "word": "cow",
+          "pos": "n",
+          "phonetic": "/kaʊ/",
+          "meaning": "con bò",
+          "example_en": "The cow mooed in the field.",
+          "example_vi": "Con bò rống trong đồng."
+        },
+        {
+          "word": "buffalo",
+          "pos": "n",
+          "phonetic": "/ˈbʌfələʊ/",
+          "meaning": "con trâu",
+          "example_en": "The buffalo grazed on grass.",
+          "example_vi": "Con trâu gặm cỏ."
+        },
+        {
+          "word": "horse",
+          "pos": "n",
+          "phonetic": "/hɔːrs/",
+          "meaning": "con ngựa",
+          "example_en": "The horse galloped fast.",
+          "example_vi": "Con ngựa phi nước đại."
+        },
+        {
+          "word": "goat",
+          "pos": "n",
+          "phonetic": "/ɡoʊt/",
+          "meaning": "con dê",
+          "example_en": "The goat ate leaves.",
+          "example_vi": "Con dê ăn lá."
+        },
+        {
+          "word": "sheep",
+          "pos": "n",
+          "phonetic": "/ʃiːp/",
+          "meaning": "con cừu",
+          "example_en": "The sheep bleated softly.",
+          "example_vi": "Con cừu be be khẽ."
+        },
+        {
+          "word": "fish",
+          "pos": "n",
+          "phonetic": "/fɪʃ/",
+          "meaning": "con cá",
+          "example_en": "The fish swam in the tank.",
+          "example_vi": "Con cá bơi trong bể."
+        },
+        {
+          "word": "goldfish",
+          "pos": "n",
+          "phonetic": "/ˈɡoʊld.fɪʃ/",
+          "meaning": "cá vàng",
+          "example_en": "The goldfish is orange.",
+          "example_vi": "Cá vàng màu cam."
+        },
+        {
+          "word": "crab",
+          "pos": "n",
+          "phonetic": "/kræb/",
+          "meaning": "con cua",
+          "example_en": "The crab walked sideways.",
+          "example_vi": "Con cua đi ngang."
+        },
+        {
+          "word": "shrimp",
+          "pos": "n",
+          "phonetic": "/ʃrɪmp/",
+          "meaning": "con tôm",
+          "example_en": "The shrimp was fried.",
+          "example_vi": "Con tôm được chiên."
+        },
+        {
+          "word": "squid",
+          "pos": "n",
+          "phonetic": "/skwɪd/",
+          "meaning": "con mực",
+          "example_en": "The squid squirted ink.",
+          "example_vi": "Con mực phun mực."
+        },
+        {
+          "word": "octopus",
+          "pos": "n",
+          "phonetic": "/ˈɑːktəpʊs/",
+          "meaning": "con bạch tuộc",
+          "example_en": "The octopus has eight arms.",
+          "example_vi": "Con bạch tuộc có tám tay."
+        },
+        {
+          "word": "shark",
+          "pos": "n",
+          "phonetic": "/ʃɑːrk/",
+          "meaning": "cá mập",
+          "example_en": "The shark swam in the ocean.",
+          "example_vi": "Cá mập bơi trong đại dương."
+        },
+        {
+          "word": "dolphin",
+          "pos": "n",
+          "phonetic": "/ˈdɑːlfɪn/",
+          "meaning": "cá heo",
+          "example_en": "The dolphin jumped high.",
+          "example_vi": "Cá heo nhảy cao."
+        },
+        {
+          "word": "turtle",
+          "pos": "n",
+          "phonetic": "/ˈtɝː.t̬əl/",
+          "meaning": "con rùa",
+          "example_en": "The turtle moved slowly.",
+          "example_vi": "Con rùa di chuyển chậm."
+        },
+        {
+          "word": "monkey",
+          "pos": "n",
+          "phonetic": "/ˈmʌŋ.ki/",
+          "meaning": "con khỉ",
+          "example_en": "The monkey swung from trees.",
+          "example_vi": "Con khỉ đu từ cây."
+        },
+        {
+          "word": "tiger",
+          "pos": "n",
+          "phonetic": "/ˈtaɪɡər/",
+          "meaning": "con hổ",
+          "example_en": "The tiger roared loudly.",
+          "example_vi": "Con hổ gầm to."
+        },
+        {
+          "word": "lion",
+          "pos": "n",
+          "phonetic": "/ˈlaɪ.ən/",
+          "meaning": "con sư tử",
+          "example_en": "The lion is the king of the jungle.",
+          "example_vi": "Con sư tử là vua của rừng."
+        },
+        {
+          "word": "leopard",
+          "pos": "n",
+          "phonetic": "/ˈlep.ɚd/",
+          "meaning": "con báo",
+          "example_en": "The leopard has spots.",
+          "example_vi": "Con báo có đốm."
+        },
+        {
+          "word": "elephant",
+          "pos": "n",
+          "phonetic": "/ˈel.ə.fənt/",
+          "meaning": "con voi",
+          "example_en": "The elephant has a trunk.",
+          "example_vi": "Con voi có vòi."
+        },
+        {
+          "word": "giraffe",
+          "pos": "n",
+          "phonetic": "/dʒɪˈræf/",
+          "meaning": "hươu cao cổ",
+          "example_en": "The giraffe has a long neck.",
+          "example_vi": "Hươu cao cổ có cổ dài."
+        },
+        {
+          "word": "deer",
+          "pos": "n",
+          "phonetic": "/dɪr/",
+          "meaning": "con hươu, nai",
+          "example_en": "The deer ran through the forest.",
+          "example_vi": "Con hươu chạy qua rừng."
+        },
+        {
+          "word": "hippo",
+          "pos": "n",
+          "phonetic": "/ˈhɪpəʊ/",
+          "meaning": "con hà mã",
+          "example_en": "The hippo swam in the river.",
+          "example_vi": "Con hà mã bơi trong sông."
+        },
+        {
+          "word": "rhino",
+          "pos": "n",
+          "phonetic": "/ˈraɪnəʊ/",
+          "meaning": "con tê giác",
+          "example_en": "The rhino has a horn.",
+          "example_vi": "Con tê giác có sừng."
+        },
+        {
+          "word": "hedgehog",
+          "pos": "n",
+          "phonetic": "/ˈhedʒ.hɑːɡ/",
+          "meaning": "con nhím",
+          "example_en": "The hedgehog curled up.",
+          "example_vi": "Con nhím cuộn tròn."
+        },
+        {
+          "word": "squirrel",
+          "pos": "n",
+          "phonetic": "/ˈskwɝː.əl/",
+          "meaning": "con sóc",
+          "example_en": "The squirrel collected nuts.",
+          "example_vi": "Con sóc thu thập hạt."
+        },
+        {
+          "word": "otter",
+          "pos": "n",
+          "phonetic": "/ˈɑː.t̬ɚ/",
+          "meaning": "rái cá",
+          "example_en": "The otter played in the water.",
+          "example_vi": "Rái cá chơi trong nước."
+        },
+        {
+          "word": "kangaroo",
+          "pos": "n",
+          "phonetic": "/ˌkæŋ.ɡəˈruː/",
+          "meaning": "chuột túi",
+          "example_en": "The kangaroo hopped across the plain.",
+          "example_vi": "Chuột túi nhảy qua đồng bằng."
+        },
+        {
+          "word": "hamster",
+          "pos": "n",
+          "phonetic": "/ˈhæm.stɚ/",
+          "meaning": "chuột đồng",
+          "example_en": "The hamster ran on the wheel.",
+          "example_vi": "Chuột đồng chạy trên bánh xe."
+        },
+        {
+          "word": "fox",
+          "pos": "n",
+          "phonetic": "/fɑːks/",
+          "meaning": "con cáo",
+          "example_en": "The fox is cunning.",
+          "example_vi": "Con cáo xảo quyệt."
+        },
+        {
+          "word": "wolf",
+          "pos": "n",
+          "phonetic": "/wʊlf/",
+          "meaning": "con sói",
+          "example_en": "The wolf howled at the moon.",
+          "example_vi": "Con sói hú vào mặt trăng."
+        },
+        {
+          "word": "bear",
+          "pos": "n",
+          "phonetic": "/ber/",
+          "meaning": "con gấu",
+          "example_en": "The bear fished in the river.",
+          "example_vi": "Con gấu bắt cá trong sông."
+        },
+        {
+          "word": "panda",
+          "pos": "n",
+          "phonetic": "/ˈpæn.də/",
+          "meaning": "con gấu trúc",
+          "example_en": "The panda ate bamboo.",
+          "example_vi": "Con gấu trúc ăn tre."
+        },
+        {
+          "word": "ostrich",
+          "pos": "n",
+          "phonetic": "/ˈɑː.strɪtʃ/",
+          "meaning": "đà điểu",
+          "example_en": "The ostrich ran fast.",
+          "example_vi": "Đà điểu chạy nhanh."
+        },
+        {
+          "word": "bee",
+          "pos": "n",
+          "phonetic": "/biː/",
+          "meaning": "ong",
+          "example_en": "The bee pollinated the flower.",
+          "example_vi": "Con ong thụ phấn hoa."
+        },
+        {
+          "word": "butterfly",
+          "pos": "n",
+          "phonetic": "/ˈbʌtərflaɪ/",
+          "meaning": "bướm",
+          "example_en": "The butterfly fluttered its wings.",
+          "example_vi": "Con bướm vỗ cánh."
+        },
+        {
+          "word": "worm",
+          "pos": "n",
+          "phonetic": "/wɜːrm/",
+          "meaning": "con sâu",
+          "example_en": "The worm crawled on the ground.",
+          "example_vi": "Con sâu bò trên mặt đất."
+        },
+        {
+          "word": "earthworm",
+          "pos": "n",
+          "phonetic": "/ˈɜːrθwɜːrm/",
+          "meaning": "con giun",
+          "example_en": "The earthworm aerated the soil.",
+          "example_vi": "Con giun làm thoáng đất."
+        },
+        {
+          "word": "eagle",
+          "pos": "n",
+          "phonetic": "/ˈiː.ɡəl/",
+          "meaning": "đại bàng",
+          "example_en": "The eagle soared in the sky.",
+          "example_vi": "Đại bàng bay vút trên trời."
+        },
+        {
+          "word": "owl",
+          "pos": "n",
+          "phonetic": "/aʊl/",
+          "meaning": "con cú",
+          "example_en": "The owl hooted at night.",
+          "example_vi": "Con cú kêu ban đêm."
+        },
+        {
+          "word": "parrot",
+          "pos": "n",
+          "phonetic": "/ˈper.ət/",
+          "meaning": "con vẹt",
+          "example_en": "The parrot mimicked speech.",
+          "example_vi": "Con vẹt bắt chước lời nói."
+        },
+        {
+          "word": "peacock",
+          "pos": "n",
+          "phonetic": "/ˈpiː.kɑːk/",
+          "meaning": "con công",
+          "example_en": "The peacock displayed its feathers.",
+          "example_vi": "Con công xòe lông."
+        },
+        {
+          "word": "dove",
+          "pos": "n",
+          "phonetic": "/dʌv/",
+          "meaning": "chim bồ câu",
+          "example_en": "The dove symbolizes peace.",
+          "example_vi": "Chim bồ câu tượng trưng cho hòa bình."
+        },
+        {
+          "word": "flamingo",
+          "pos": "n",
+          "phonetic": "/fləˈmɪŋ.ɡoʊ/",
+          "meaning": "chim hồng hạc",
+          "example_en": "The flamingo stood on one leg.",
+          "example_vi": "Chim hồng hạc đứng một chân."
+        },
+        {
+          "word": "crow",
+          "pos": "n",
+          "phonetic": "/kroʊ/",
+          "meaning": "con quạ",
+          "example_en": "The crow cawed from the tree.",
+          "example_vi": "Con quạ kêu từ cây."
+        },
+        {
+          "word": "hawk",
+          "pos": "n",
+          "phonetic": "/hɑːk/",
+          "meaning": "chim diều hâu",
+          "example_en": "The hawk hunted for prey.",
+          "example_vi": "Chim diều hâu săn mồi."
+        },
+        {
+          "word": "penguin",
+          "pos": "n",
+          "phonetic": "/ˈpeŋ.ɡwɪn/",
+          "meaning": "chim cánh cụt",
+          "example_en": "The penguin waddled on ice.",
+          "example_vi": "Chim cánh cụt đi lạch bạch trên băng."
+        },
+        {
+          "word": "sparrow",
+          "pos": "n",
+          "phonetic": "/ˈsper.oʊ/",
+          "meaning": "chim sẻ",
+          "example_en": "The sparrow chirped in the morning.",
+          "example_vi": "Chim sẻ hót vào buổi sáng."
+        },
+        {
+          "word": "swallow",
+          "pos": "n",
+          "phonetic": "/ˈswɑː.loʊ/",
+          "meaning": "chim nhạn, én",
+          "example_en": "The swallow built a nest.",
+          "example_vi": "Chim nhạn xây tổ."
+        }
+      ]
+    },
+    {
+      "name": "Màu sắc",
+      "words": [
+        {
+          "word": "white",
+          "pos": "n, adj",
+          "phonetic": "/waɪt/",
+          "meaning": "màu trắng",
+          "example_en": "The snow is white.",
+          "example_vi": "Tuyết màu trắng."
+        },
+        {
+          "word": "black",
+          "pos": "n, adj",
+          "phonetic": "/blæk/",
+          "meaning": "màu đen",
+          "example_en": "The night sky is black.",
+          "example_vi": "Bầu trời đêm màu đen."
+        },
+        {
+          "word": "red",
+          "pos": "n, adj",
+          "phonetic": "/red/",
+          "meaning": "màu đỏ",
+          "example_en": "The rose is red.",
+          "example_vi": "Hoa hồng màu đỏ."
+        },
+        {
+          "word": "orange",
+          "pos": "n, adj",
+          "phonetic": "/ˈɔːr.ɪndʒ/",
+          "meaning": "màu cam",
+          "example_en": "The carrot is orange.",
+          "example_vi": "Cà rốt màu cam."
+        },
+        {
+          "word": "yellow",
+          "pos": "n, adj",
+          "phonetic": "/ˈjel.oʊ/",
+          "meaning": "màu vàng",
+          "example_en": "The sun is yellow.",
+          "example_vi": "Mặt trời màu vàng."
+        },
+        {
+          "word": "green",
+          "pos": "n, adj",
+          "phonetic": "/ɡriːn/",
+          "meaning": "xanh lá cây",
+          "example_en": "The grass is green.",
+          "example_vi": "Cỏ màu xanh lá cây."
+        },
+        {
+          "word": "blue",
+          "pos": "n, adj",
+          "phonetic": "/bluː/",
+          "meaning": "màu xanh lam, xanh nước biển",
+          "example_en": "The sky is blue.",
+          "example_vi": "Bầu trời màu xanh lam."
+        },
+        {
+          "word": "violet",
+          "pos": "n, adj",
+          "phonetic": "/ˈvaiəlit/",
+          "meaning": "màu tím",
+          "example_en": "The flower is violet.",
+          "example_vi": "Hoa màu tím."
+        },
+        {
+          "word": "purple",
+          "pos": "n, adj",
+          "phonetic": "/ˈpɝː.pəl/",
+          "meaning": "màu tía",
+          "example_en": "The grape is purple.",
+          "example_vi": "Nho màu tía."
+        },
+        {
+          "word": "beige",
+          "pos": "n, adj",
+          "phonetic": "/beɪʒ/",
+          "meaning": "màu be",
+          "example_en": "The wall is beige.",
+          "example_vi": "Tường màu be."
+        },
+        {
+          "word": "pink",
+          "pos": "n, adj",
+          "phonetic": "/piŋk/",
+          "meaning": "màu hồng",
+          "example_en": "The dress is pink.",
+          "example_vi": "Váy màu hồng."
+        },
+        {
+          "word": "gray",
+          "pos": "n, adj",
+          "phonetic": "/ɡreɪ/",
+          "meaning": "màu xám",
+          "example_en": "The cloud is gray.",
+          "example_vi": "Mây màu xám."
+        },
+        {
+          "word": "brown",
+          "pos": "n, adj",
+          "phonetic": "/braʊn/",
+          "meaning": "màu nâu",
+          "example_en": "The soil is brown.",
+          "example_vi": "Đất màu nâu."
+        },
+        {
+          "word": "silver",
+          "pos": "n, adj",
+          "phonetic": "/ˈsɪl.vɚ/",
+          "meaning": "màu bạc",
+          "example_en": "The coin is silver.",
+          "example_vi": "Đồng xu màu bạc."
+        },
+        {
+          "word": "indigo",
+          "pos": "n, adj",
+          "phonetic": "/ˈɪn.dɪ.ɡoʊ/",
+          "meaning": "màu chàm",
+          "example_en": "The dye is indigo.",
+          "example_vi": "Thuốc nhuộm màu chàm."
+        },
+        {
+          "word": "navy (blue)",
+          "pos": "n, adj",
+          "phonetic": "/ˈneɪ·vi (ˈblu)/",
+          "meaning": "màu xanh tím than",
+          "example_en": "The uniform is navy blue.",
+          "example_vi": "Đồng phục màu xanh tím than."
+        },
+        {
+          "word": "ivory",
+          "pos": "n, adj",
+          "phonetic": "/ˈaɪ.vɚ.i/",
+          "meaning": "màu trắng ngà",
+          "example_en": "The piano keys are ivory.",
+          "example_vi": "Phím piano màu trắng ngà."
+        },
+        {
+          "word": "coral",
+          "pos": "n, adj",
+          "phonetic": "/ˈkɔːr.əl/",
+          "meaning": "màu hồng san hô",
+          "example_en": "The lipstick is coral.",
+          "example_vi": "Son môi màu hồng san hô."
+        },
+        {
+          "word": "teal",
+          "pos": "n, adj",
+          "phonetic": "/tiːl/",
+          "meaning": "màu xanh mòng két (xanh lam pha xanh lục đậm)",
+          "example_en": "The dress is teal.",
+          "example_vi": "Váy màu xanh mòng két."
+        },
+        {
+          "word": "blond",
+          "pos": "n, adj",
+          "phonetic": "/blɑnd/",
+          "meaning": "vàng hoe",
+          "example_en": "Her hair is blond.",
+          "example_vi": "Tóc cô ấy màu vàng hoe."
+        }
+      ]
+    },
+    {
+      "name": "Bộ phận Cơ thể",
+      "words": [
+        {
+          "word": "head",
+          "pos": "n",
+          "phonetic": "/hed/",
+          "meaning": "đầu",
+          "example_en": "He hit his head on the door.",
+          "example_vi": "Anh ấy đập đầu vào cửa."
+        },
+        {
+          "word": "hair",
+          "pos": "n",
+          "phonetic": "/her/",
+          "meaning": "tóc",
+          "example_en": "She has long hair.",
+          "example_vi": "Cô ấy có tóc dài."
+        },
+        {
+          "word": "face",
+          "pos": "n",
+          "phonetic": "/feɪs/",
+          "meaning": "gương mặt",
+          "example_en": "Wash your face every morning.",
+          "example_vi": "Rửa mặt mỗi sáng."
+        },
+        {
+          "word": "forehead",
+          "pos": "n",
+          "phonetic": "/ˈfɑː.rɪd/",
+          "meaning": "trán",
+          "example_en": "He has a high forehead.",
+          "example_vi": "Anh ấy có trán cao."
+        },
+        {
+          "word": "eyebrow",
+          "pos": "n",
+          "phonetic": "/ˈaɪ.braʊ/",
+          "meaning": "lông mày",
+          "example_en": "She raised her eyebrow.",
+          "example_vi": "Cô ấy nhướn mày."
+        },
+        {
+          "word": "eye",
+          "pos": "n",
+          "phonetic": "/aɪ/",
+          "meaning": "mắt",
+          "example_en": "His eyes are blue.",
+          "example_vi": "Mắt anh ấy màu xanh."
+        },
+        {
+          "word": "eyelash",
+          "pos": "n",
+          "phonetic": "/ˈaɪ.læʃ/",
+          "meaning": "lông mi",
+          "example_en": "She has long eyelashes.",
+          "example_vi": "Cô ấy có lông mi dài."
+        },
+        {
+          "word": "nose",
+          "pos": "n",
+          "phonetic": "/nəʊz/",
+          "meaning": "mũi",
+          "example_en": "He has a big nose.",
+          "example_vi": "Anh ấy có mũi to."
+        },
+        {
+          "word": "ear",
+          "pos": "n",
+          "phonetic": "/ɪr/",
+          "meaning": "tai",
+          "example_en": "She pierced her ears.",
+          "example_vi": "Cô ấy xỏ tai."
+        },
+        {
+          "word": "cheek",
+          "pos": "n",
+          "phonetic": "/tʃiːk/",
+          "meaning": "má",
+          "example_en": "Her cheeks are rosy.",
+          "example_vi": "Má cô ấy hồng hào."
+        },
+        {
+          "word": "beard",
+          "pos": "n",
+          "phonetic": "/bɪrd/",
+          "meaning": "râu",
+          "example_en": "He grew a beard.",
+          "example_vi": "Anh ấy để râu."
+        },
+        {
+          "word": "mouth",
+          "pos": "n",
+          "phonetic": "/maʊθ/",
+          "meaning": "miệng",
+          "example_en": "Open your mouth.",
+          "example_vi": "Mở miệng ra."
+        },
+        {
+          "word": "lip",
+          "pos": "n",
+          "phonetic": "/lɪp/",
+          "meaning": "môi",
+          "example_en": "Her lips are red.",
+          "example_vi": "Môi cô ấy đỏ."
+        },
+        {
+          "word": "tooth (teeth)",
+          "pos": "n",
+          "phonetic": "/tuːθ/ /tiːθ/",
+          "meaning": "răng",
+          "example_en": "Brush your teeth.",
+          "example_vi": "Đánh răng."
+        },
+        {
+          "word": "gum",
+          "pos": "n",
+          "phonetic": "/ɡʌm/",
+          "meaning": "nướu, lợi",
+          "example_en": "His gums are healthy.",
+          "example_vi": "Nướu anh ấy khỏe mạnh."
+        },
+        {
+          "word": "jaw",
+          "pos": "n",
+          "phonetic": "/dʒɑː/",
+          "meaning": "hàm, quai hàm",
+          "example_en": "He clenched his jaw.",
+          "example_vi": "Anh ấy siết hàm."
+        },
+        {
+          "word": "chin",
+          "pos": "n",
+          "phonetic": "/tʃɪn/",
+          "meaning": "cằm",
+          "example_en": "He has a double chin.",
+          "example_vi": "Anh ấy có cằm đôi."
+        },
+        {
+          "word": "neck",
+          "pos": "n",
+          "phonetic": "/nek/",
+          "meaning": "cổ",
+          "example_en": "She wore a necklace.",
+          "example_vi": "Cô ấy đeo vòng cổ."
+        },
+        {
+          "word": "chest",
+          "pos": "n",
+          "phonetic": "/tʃest/",
+          "meaning": "ngực (chung)",
+          "example_en": "He has a broad chest.",
+          "example_vi": "Anh ấy có ngực rộng."
+        },
+        {
+          "word": "back",
+          "pos": "n",
+          "phonetic": "/bæk/",
+          "meaning": "lưng",
+          "example_en": "My back hurts.",
+          "example_vi": "Lưng tôi đau."
+        },
+        {
+          "word": "belly",
+          "pos": "n",
+          "phonetic": "/ˈbeli/",
+          "meaning": "bụng",
+          "example_en": "Rub your belly.",
+          "example_vi": "Xoa bụng."
+        },
+        {
+          "word": "hip",
+          "pos": "n",
+          "phonetic": "/hɪp/",
+          "meaning": "hông",
+          "example_en": "She put hands on hips.",
+          "example_vi": "Cô ấy chống tay vào hông."
+        },
+        {
+          "word": "arm",
+          "pos": "n",
+          "phonetic": "/ɑːrm/",
+          "meaning": "cánh tay",
+          "example_en": "Lift your arm.",
+          "example_vi": "Nâng tay lên."
+        },
+        {
+          "word": "armpit",
+          "pos": "n",
+          "phonetic": "/ˈɑːrm.pɪt/",
+          "meaning": "nách",
+          "example_en": "Sweat under armpit.",
+          "example_vi": "Mồ hôi dưới nách."
+        },
+        {
+          "word": "forearm",
+          "pos": "n",
+          "phonetic": "/ˈfɔːr.ɑːrm/",
+          "meaning": "cẳng tay",
+          "example_en": "Tattoo on forearm.",
+          "example_vi": "Hình xăm trên cẳng tay."
+        },
+        {
+          "word": "elbow",
+          "pos": "n",
+          "phonetic": "/ˈel.boʊ/",
+          "meaning": "khuỷu tay",
+          "example_en": "Bend your elbow.",
+          "example_vi": "Gập khuỷu tay."
+        },
+        {
+          "word": "finger",
+          "pos": "n",
+          "phonetic": "/ˈfɪŋ.ɡɚ/",
+          "meaning": "ngón tay",
+          "example_en": "Point with finger.",
+          "example_vi": "Chỉ bằng ngón tay."
+        },
+        {
+          "word": "knuckle",
+          "pos": "n",
+          "phonetic": "/ˈnʌk.əl/",
+          "meaning": "khớp đốt ngón tay (đặc biệt là đoạn nối giữa ngón tay và bàn tay)",
+          "example_en": "Crack your knuckles.",
+          "example_vi": "Rắc khớp ngón tay."
+        },
+        {
+          "word": "leg",
+          "pos": "n",
+          "phonetic": "/leɡ/",
+          "meaning": "chân",
+          "example_en": "Cross your legs.",
+          "example_vi": "Bắt chéo chân."
+        },
+        {
+          "word": "knee",
+          "pos": "n",
+          "phonetic": "/niː/",
+          "meaning": "đầu gối",
+          "example_en": "Bend your knee.",
+          "example_vi": "Gập đầu gối."
+        },
+        {
+          "word": "ankle",
+          "pos": "n",
+          "phonetic": "/ˈæŋ.kəl/",
+          "meaning": "mắt cá chân",
+          "example_en": "Twist your ankle.",
+          "example_vi": "Trẹo mắt cá chân."
+        },
+        {
+          "word": "heel",
+          "pos": "n",
+          "phonetic": "/hiːl/",
+          "meaning": "gót chân",
+          "example_en": "Stand on heels.",
+          "example_vi": "Đứng trên gót chân."
+        }
+      ]
+    },
+    {
+      "name": "Trường học",
+      "words": [
+        {
+          "word": "school",
+          "pos": "n",
+          "phonetic": "/sku:l/",
+          "meaning": "trường học",
+          "example_en": "Children go to school.",
+          "example_vi": "Trẻ em đi học."
+        },
+        {
+          "word": "class",
+          "pos": "n",
+          "phonetic": "/klɑ:s/",
+          "meaning": "lớp học",
+          "example_en": "The class starts at 8.",
+          "example_vi": "Lớp bắt đầu lúc 8 giờ."
+        },
+        {
+          "word": "student",
+          "pos": "n",
+          "phonetic": "/ˈstju:dnt/",
+          "meaning": "học sinh, sinh viên",
+          "example_en": "The student studied hard.",
+          "example_vi": "Học sinh học chăm chỉ."
+        },
+        {
+          "word": "pupil",
+          "pos": "n",
+          "phonetic": "/ˈpju:pl/",
+          "meaning": "học sinh",
+          "example_en": "The pupil answered the question.",
+          "example_vi": "Học sinh trả lời câu hỏi."
+        },
+        {
+          "word": "teacher",
+          "pos": "n",
+          "phonetic": "/ˈtiː.tʃɚ/",
+          "meaning": "giáo viên",
+          "example_en": "The teacher teaches math.",
+          "example_vi": "Giáo viên dạy toán."
+        },
+        {
+          "word": "principal",
+          "pos": "n",
+          "phonetic": "/ˈprɪntsɪpəl/",
+          "meaning": "hiệu trưởng",
+          "example_en": "The principal leads the school.",
+          "example_vi": "Hiệu trưởng lãnh đạo trường."
+        },
+        {
+          "word": "course",
+          "pos": "n",
+          "phonetic": "/kɔːrs/",
+          "meaning": "khóa học",
+          "example_en": "Enroll in the course.",
+          "example_vi": "Đăng ký khóa học."
+        },
+        {
+          "word": "semester",
+          "pos": "n",
+          "phonetic": "/sɪˈmestər/",
+          "meaning": "học kì",
+          "example_en": "The semester ends soon.",
+          "example_vi": "Học kì kết thúc sớm."
+        },
+        {
+          "word": "exercise",
+          "pos": "n",
+          "phonetic": "/ˈeksərsaɪz/",
+          "meaning": "bài tập",
+          "example_en": "Do the exercise.",
+          "example_vi": "Làm bài tập."
+        },
+        {
+          "word": "homework",
+          "pos": "n",
+          "phonetic": "/ˈhəʊmwɜːrk/",
+          "meaning": "bài tập về nhà",
+          "example_en": "Finish your homework.",
+          "example_vi": "Hoàn thành bài tập về nhà."
+        },
+        {
+          "word": "examination exam",
+          "pos": "n",
+          "phonetic": "/ɪɡˌzæmɪˈneɪʃn/ /ɪɡˈzæm/",
+          "meaning": "bài kiểm tra",
+          "example_en": "Prepare for the exam.",
+          "example_vi": "Chuẩn bị cho kỳ thi."
+        },
+        {
+          "word": "grade",
+          "pos": "n",
+          "phonetic": "/ɡreɪd/",
+          "meaning": "điểm số",
+          "example_en": "Get good grades.",
+          "example_vi": "Đạt điểm tốt."
+        },
+        {
+          "word": "certificate",
+          "pos": "n",
+          "phonetic": "/sərˈtɪfɪkət/",
+          "meaning": "bằng cấp, giấy khen",
+          "example_en": "Receive a certificate.",
+          "example_vi": "Nhận bằng cấp."
+        },
+        {
+          "word": "kindergarten",
+          "pos": "n",
+          "phonetic": "/ˈkɪn.dɚˌɡɑːr.tən/",
+          "meaning": "lớp mẫu giáo, nhà trẻ",
+          "example_en": "Attend kindergarten.",
+          "example_vi": "Đi mẫu giáo."
+        },
+        {
+          "word": "primary school",
+          "pos": "n",
+          "phonetic": "/ˈpraɪ.mɚ.i ˌskuːl/",
+          "meaning": "trường tiểu học, trường cấp 1",
+          "example_en": "Go to primary school.",
+          "example_vi": "Đi trường tiểu học."
+        },
+        {
+          "word": "secondary school",
+          "pos": "n",
+          "phonetic": "/ˈsek.ən.der.i ˌskuːl/",
+          "meaning": "trường trung học, trường cấp 2",
+          "example_en": "Attend secondary school.",
+          "example_vi": "Đi trường trung học."
+        },
+        {
+          "word": "high school",
+          "pos": "n",
+          "phonetic": "/ˈhaɪ skuːl/",
+          "meaning": "trường cấp 3",
+          "example_en": "Graduate from high school.",
+          "example_vi": "Tốt nghiệp cấp 3."
+        },
+        {
+          "word": "university",
+          "pos": "n",
+          "phonetic": "/ˌjuːnɪˈvɜːrsəti/",
+          "meaning": "trường đại học",
+          "example_en": "Study at university.",
+          "example_vi": "Học đại học."
+        },
+        {
+          "word": "college",
+          "pos": "n",
+          "phonetic": "/ˈkɑːlɪdʒ/",
+          "meaning": "trường đại học, cao đẳng",
+          "example_en": "Go to college.",
+          "example_vi": "Đi cao đẳng."
+        },
+        {
+          "word": "private school",
+          "pos": "n",
+          "phonetic": "/ˌpraɪ.vət ˈskuːl/",
+          "meaning": "trường tư",
+          "example_en": "Attend private school.",
+          "example_vi": "Đi trường tư."
+        },
+        {
+          "word": "public school",
+          "pos": "n",
+          "phonetic": "/ˌpʌblɪk ˈskuːl/",
+          "meaning": "trường công",
+          "example_en": "Go to public school.",
+          "example_vi": "Đi trường công."
+        }
+      ]
+    },
+    {
+      "name": "Tính cách",
+      "words": [
+        {
+          "word": "active",
+          "pos": "adj",
+          "phonetic": "/ˈæk.tɪv/",
+          "meaning": "năng nổ, lanh lợi",
+          "example_en": "She is very active in sports.",
+          "example_vi": "Cô ấy rất năng nổ trong thể thao."
+        },
+        {
+          "word": "alert",
+          "pos": "adj",
+          "phonetic": "/əˈlɝːt/",
+          "meaning": "tỉnh táo, cảnh giác",
+          "example_en": "Stay alert while driving.",
+          "example_vi": "Giữ tỉnh táo khi lái xe."
+        },
+        {
+          "word": "ambitious",
+          "pos": "adj",
+          "phonetic": "/æmˈbɪʃ.əs/",
+          "meaning": "tham vọng",
+          "example_en": "He is ambitious and hardworking.",
+          "example_vi": "Anh ấy tham vọng và chăm chỉ."
+        },
+        {
+          "word": "attentive",
+          "pos": "adj",
+          "phonetic": "/əˈten.t̬ɪv/",
+          "meaning": "chăm chú, chú tâm",
+          "example_en": "The student is attentive in class.",
+          "example_vi": "Học sinh chăm chú trong lớp."
+        },
+        {
+          "word": "bold",
+          "pos": "adj",
+          "phonetic": "/boʊld/",
+          "meaning": "táo bạo, mạo hiểm",
+          "example_en": "She made a bold decision.",
+          "example_vi": "Cô ấy đưa ra quyết định táo bạo."
+        },
+        {
+          "word": "brave",
+          "pos": "adj",
+          "phonetic": "/breɪv/",
+          "meaning": "dũng cảm, gan dạ",
+          "example_en": "The brave soldier fought.",
+          "example_vi": "Chiến binh dũng cảm chiến đấu."
+        },
+        {
+          "word": "careful",
+          "pos": "adj",
+          "phonetic": "/ˈker.fəl/",
+          "meaning": "cẩn thận, thận trọng",
+          "example_en": "Be careful crossing the street.",
+          "example_vi": "Cẩn thận khi qua đường."
+        },
+        {
+          "word": "careless",
+          "pos": "adj",
+          "phonetic": "/ˈker.ləs/",
+          "meaning": "bất cẩn, cẩu thả",
+          "example_en": "He is careless with money.",
+          "example_vi": "Anh ấy bất cẩn với tiền bạc."
+        },
+        {
+          "word": "cautious",
+          "pos": "adj",
+          "phonetic": "/ˈkɑː.ʃəs/",
+          "meaning": "thận trọng, cẩn thận",
+          "example_en": "She is cautious when investing.",
+          "example_vi": "Cô ấy thận trọng khi đầu tư."
+        },
+        {
+          "word": "conscientious",
+          "pos": "adj",
+          "phonetic": "/ˌkɑːn.ʃiˈen.ʃəs/",
+          "meaning": "chu đáo, tỉ mỉ",
+          "example_en": "He is conscientious in his duties.",
+          "example_vi": "Anh ấy chu đáo trong nhiệm vụ."
+        },
+        {
+          "word": "courageous",
+          "pos": "adj",
+          "phonetic": "/kəˈreɪ.dʒəs/",
+          "meaning": "can đảm",
+          "example_en": "The courageous act saved lives.",
+          "example_vi": "Hành động can đảm cứu mạng sống."
+        },
+        {
+          "word": "crafty",
+          "pos": "adj",
+          "phonetic": "/ˈkræf.ti/",
+          "meaning": "làu cá, xảo quyệt",
+          "example_en": "The crafty plan worked.",
+          "example_vi": "Kế hoạch xảo quyệt thành công."
+        },
+        {
+          "word": "cunning",
+          "pos": "adj",
+          "phonetic": "/ˈkʌnɪŋ/",
+          "meaning": "xảo quyệt",
+          "example_en": "The cunning fox escaped.",
+          "example_vi": "Con cáo xảo quyệt thoát khỏi."
+        }
+      ]
+    }
+  ]
+}

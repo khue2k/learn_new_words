@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Học Từ Vựng | Flashcards</title>
+    <title>Học Từ Vựng | Flashcards & Câu Hỏi</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -42,6 +42,36 @@
         #json-file-input {
             display: none;
         }
+        .pagination-btn.active {
+            background-color: #4f46e5;
+            color: white;
+        }
+        .quiz-option {
+            transition: all 0.2s;
+        }
+        .quiz-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .quiz-option.correct {
+            background-color: #10b981;
+            color: white;
+        }
+        .quiz-option.incorrect {
+            background-color: #ef4444;
+            color: white;
+        }
+        .progress-bar {
+            height: 6px;
+            background-color: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #4f46e5;
+            transition: width 0.3s ease;
+        }
     </style>
 </head>
 <body class="antialiased text-slate-800">
@@ -65,14 +95,22 @@
         <!-- Main Content (hidden by default) -->
         <div id="main-content" class="hidden">
             <!-- Navigation -->
-            <div class="flex justify-center mb-8 bg-slate-200 rounded-lg p-1 max-w-xs mx-auto">
-                <button id="btn-list-view" class="nav-btn w-1/2 py-2 px-4 rounded-md font-semibold text-slate-700 transition-colors active">Danh sách</button>
-                <button id="btn-flashcard-view" class="nav-btn w-1/2 py-2 px-4 rounded-md font-semibold text-slate-700 transition-colors">Flashcard</button>
+            <div class="flex justify-center mb-8 bg-slate-200 rounded-lg p-1 max-w-md mx-auto">
+                <button id="btn-list-view" class="nav-btn w-1/3 py-2 px-4 rounded-md font-semibold text-slate-700 transition-colors active">Danh sách</button>
+                <button id="btn-flashcard-view" class="nav-btn w-1/3 py-2 px-4 rounded-md font-semibold text-slate-700 transition-colors">Flashcard</button>
+                <button id="btn-quiz-view" class="nav-btn w-1/3 py-2 px-4 rounded-md font-semibold text-slate-700 transition-colors">Câu hỏi</button>
             </div>
 
             <!-- Vocabulary List View -->
-            <main id="list-view" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Vocabulary items will be inserted here by JavaScript -->
+            <main id="list-view" class="mb-8">
+                <div id="list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Vocabulary items will be inserted here by JavaScript -->
+                </div>
+                
+                <!-- Pagination for List View -->
+                <div id="list-pagination" class="mt-8 flex justify-center items-center space-x-2">
+                    <!-- Pagination buttons will be inserted here by JavaScript -->
+                </div>
             </main>
 
             <!-- Flashcard View -->
@@ -80,10 +118,49 @@
                 <div id="flashcard-container" class="mb-6">
                     <!-- Flashcard will be inserted here -->
                 </div>
+                
+                <!-- Pagination for Flashcard View -->
+                <div id="flashcard-pagination" class="mb-6 flex justify-center items-center space-x-2">
+                    <!-- Pagination buttons will be inserted here by JavaScript -->
+                </div>
+                
                 <div id="flashcard-controls" class="flex items-center justify-center gap-4 flex-wrap">
                     <button id="btn-prev" class="px-5 py-2.5 bg-white rounded-lg font-semibold shadow-md hover:bg-slate-100 transition-colors">Trước</button>
                     <button id="btn-random" class="px-5 py-2.5 bg-white rounded-lg font-semibold shadow-md hover:bg-slate-100 transition-colors">Ngẫu nhiên</button>
                     <button id="btn-next" class="px-5 py-2.5 bg-white rounded-lg font-semibold shadow-md hover:bg-slate-100 transition-colors">Tiếp theo</button>
+                </div>
+            </section>
+
+            <!-- Quiz View -->
+            <section id="quiz-view" class="hidden">
+                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold text-slate-800">Kiểm tra từ vựng</h2>
+                        <div class="text-sm font-medium text-slate-600">
+                            <span id="quiz-progress-text">0/0</span>
+                        </div>
+                    </div>
+                    <div class="progress-bar mb-4">
+                        <div id="quiz-progress-bar" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    
+                    <div id="quiz-container">
+                        <!-- Quiz content will be inserted here by JavaScript -->
+                    </div>
+                    
+                    <div id="quiz-result" class="hidden mt-6 p-4 bg-slate-100 rounded-lg text-center">
+                        <h3 class="text-xl font-bold mb-2" id="quiz-result-title">Kết quả</h3>
+                        <p class="text-lg mb-4" id="quiz-result-text">Bạn đã trả lời đúng <span id="quiz-correct-count">0</span>/<span id="quiz-total-count">0</span> câu hỏi</p>
+                        <button id="quiz-restart-btn" class="bg-indigo-600 text-white font-medium py-2 px-6 rounded-lg hover:bg-indigo-700 transition-colors">
+                            Làm lại
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="text-center">
+                    <button id="quiz-start-btn" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 transition-colors">
+                        Bắt đầu kiểm tra
+                    </button>
                 </div>
             </section>
         </div>
@@ -93,6 +170,18 @@
         document.addEventListener('DOMContentLoaded', () => {
             let vocabulary = [];
             let currentFlashcardIndex = 0;
+            
+            // Quiz variables
+            let quizQuestions = [];
+            let currentQuizIndex = 0;
+            let quizScore = 0;
+            let quizInProgress = false;
+            
+            // Pagination settings
+            let currentListPage = 1;
+            let itemsPerPage = 6; // Number of items per page in list view
+            let currentFlashcardPage = 1;
+            let flashcardsPerPage = 10; // Number of flashcards per page
 
             // DOM Elements
             const uploadSection = document.getElementById('upload-section');
@@ -104,11 +193,28 @@
             const topicSubtitle = document.getElementById('topic-subtitle');
 
             const listView = document.getElementById('list-view');
+            const listContainer = document.getElementById('list-container');
+            const listPagination = document.getElementById('list-pagination');
+            
             const flashcardView = document.getElementById('flashcard-view');
             const flashcardContainer = document.getElementById('flashcard-container');
+            const flashcardPagination = document.getElementById('flashcard-pagination');
+            
+            const quizView = document.getElementById('quiz-view');
+            const quizContainer = document.getElementById('quiz-container');
+            const quizProgressText = document.getElementById('quiz-progress-text');
+            const quizProgressBar = document.getElementById('quiz-progress-bar');
+            const quizResult = document.getElementById('quiz-result');
+            const quizResultTitle = document.getElementById('quiz-result-title');
+            const quizResultText = document.getElementById('quiz-result-text');
+            const quizCorrectCount = document.getElementById('quiz-correct-count');
+            const quizTotalCount = document.getElementById('quiz-total-count');
+            const quizStartBtn = document.getElementById('quiz-start-btn');
+            const quizRestartBtn = document.getElementById('quiz-restart-btn');
             
             const btnListView = document.getElementById('btn-list-view');
             const btnFlashcardView = document.getElementById('btn-flashcard-view');
+            const btnQuizView = document.getElementById('btn-quiz-view');
             const btnPrev = document.getElementById('btn-prev');
             const btnNext = document.getElementById('btn-next');
             const btnRandom = document.getElementById('btn-random');
@@ -127,15 +233,23 @@
                 }
             }
 
-            function renderListView() {
-                listView.innerHTML = '';
-                vocabulary.forEach(item => {
+            function renderListView(page = 1) {
+                currentListPage = page;
+                listContainer.innerHTML = '';
+                
+                // Calculate items to show
+                const startIndex = (page - 1) * itemsPerPage;
+                const endIndex = Math.min(startIndex + itemsPerPage, vocabulary.length);
+                
+                // Render items for current page
+                for (let i = startIndex; i < endIndex; i++) {
+                    const item = vocabulary[i];
                     const card = `
                         <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
                             <div class="flex justify-between items-center mb-2">
                                 <h3 class="text-xl font-bold text-indigo-600">${item.word}</h3>
                                 <button class="speaker-btn p-2 rounded-full" data-word="${item.word}" title="Nghe phát âm">
-                                    <svg xmlns="http://www.w.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
                                 </button>
                             </div>
                             <p class="text-slate-500 mb-4">${item.phonetic} <span class="italic text-slate-400 ml-2">(${item.type})</span></p>
@@ -145,8 +259,43 @@
                                 <p><strong class="font-medium">VI:</strong> ${item.example_vi}</p>
                             </div>
                         </div>`;
-                    listView.innerHTML += card;
-                });
+                    listContainer.innerHTML += card;
+                }
+                
+                // Render pagination
+                renderListPagination();
+            }
+            
+            function renderListPagination() {
+                const totalPages = Math.ceil(vocabulary.length / itemsPerPage);
+                
+                if (totalPages <= 1) {
+                    listPagination.innerHTML = '';
+                    return;
+                }
+                
+                let paginationHTML = '';
+                
+                // Previous button
+                if (currentListPage > 1) {
+                    paginationHTML += `<button class="pagination-btn px-3 py-2 bg-white rounded-md font-medium shadow-sm hover:bg-slate-100 transition-colors" data-page="${currentListPage - 1}">Trước</button>`;
+                }
+                
+                // Page numbers
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === currentListPage) {
+                        paginationHTML += `<button class="pagination-btn active px-3 py-2 bg-indigo-600 text-white rounded-md font-medium shadow-sm">${i}</button>`;
+                    } else {
+                        paginationHTML += `<button class="pagination-btn px-3 py-2 bg-white rounded-md font-medium shadow-sm hover:bg-slate-100 transition-colors" data-page="${i}">${i}</button>`;
+                    }
+                }
+                
+                // Next button
+                if (currentListPage < totalPages) {
+                    paginationHTML += `<button class="pagination-btn px-3 py-2 bg-white rounded-md font-medium shadow-sm hover:bg-slate-100 transition-colors" data-page="${currentListPage + 1}">Tiếp</button>`;
+                }
+                
+                listPagination.innerHTML = paginationHTML;
             }
             
             function renderFlashcard(index) {
@@ -174,6 +323,265 @@
                     </div>`;
                 const flashcard = flashcardContainer.querySelector('.flashcard');
                 flashcard.addEventListener('click', () => flashcard.classList.toggle('is-flipped'));
+                
+                // Update flashcard pagination
+                renderFlashcardPagination();
+            }
+            
+            function renderFlashcardPagination() {
+                const totalPages = Math.ceil(vocabulary.length / flashcardsPerPage);
+                
+                if (totalPages <= 1) {
+                    flashcardPagination.innerHTML = '';
+                    return;
+                }
+                
+                // Calculate current page based on current flashcard index
+                currentFlashcardPage = Math.floor(currentFlashcardIndex / flashcardsPerPage) + 1;
+                
+                let paginationHTML = '';
+                
+                // Previous button
+                if (currentFlashcardPage > 1) {
+                    paginationHTML += `<button class="pagination-btn px-3 py-2 bg-white rounded-md font-medium shadow-sm hover:bg-slate-100 transition-colors" data-page="${currentFlashcardPage - 1}">Trước</button>`;
+                }
+                
+                // Page numbers
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === currentFlashcardPage) {
+                        paginationHTML += `<button class="pagination-btn active px-3 py-2 bg-indigo-600 text-white rounded-md font-medium shadow-sm">${i}</button>`;
+                    } else {
+                        paginationHTML += `<button class="pagination-btn px-3 py-2 bg-white rounded-md font-medium shadow-sm hover:bg-slate-100 transition-colors" data-page="${i}">${i}</button>`;
+                    }
+                }
+                
+                // Next button
+                if (currentFlashcardPage < totalPages) {
+                    paginationHTML += `<button class="pagination-btn px-3 py-2 bg-white rounded-md font-medium shadow-sm hover:bg-slate-100 transition-colors" data-page="${currentFlashcardPage + 1}">Tiếp</button>`;
+                }
+                
+                flashcardPagination.innerHTML = paginationHTML;
+            }
+            
+            function goToFlashcardPage(page) {
+                currentFlashcardPage = page;
+                currentFlashcardIndex = (page - 1) * flashcardsPerPage;
+                renderFlashcard(currentFlashcardIndex);
+            }
+
+            // --- Quiz Functions ---
+            
+            function generateQuizQuestions() {
+                quizQuestions = [];
+                
+                // Create different types of questions
+                vocabulary.forEach((item, index) => {
+                    // Question type 1: Word to meaning
+                    quizQuestions.push({
+                        type: 'word_to_meaning',
+                        question: `"${item.word}" có nghĩa là gì?`,
+                        options: generateOptionsForMeaning(item.meaning_vi, index),
+                        correctAnswer: item.meaning_vi,
+                        word: item.word
+                    });
+                    
+                    // Question type 2: Meaning to word
+                    quizQuestions.push({
+                        type: 'meaning_to_word',
+                        question: `Từ nào có nghĩa là "${item.meaning_vi}"?`,
+                        options: generateOptionsForWord(item.word, index),
+                        correctAnswer: item.word,
+                        meaning: item.meaning_vi
+                    });
+                    
+                    // Question type 3: Example completion
+                    if (item.example_en) {
+                        const incompleteExample = item.example_en.replace(item.word, '______');
+                        quizQuestions.push({
+                            type: 'example_completion',
+                            question: `Hoàn thành câu: ${incompleteExample}`,
+                            options: generateOptionsForWord(item.word, index),
+                            correctAnswer: item.word,
+                            example: item.example_en
+                        });
+                    }
+                });
+                
+                // Shuffle questions
+                shuffleArray(quizQuestions);
+                // Limit to 15 questions max for better user experience
+                if (quizQuestions.length > 15) {
+                    quizQuestions = quizQuestions.slice(0, 15);
+                }
+            }
+            
+            function generateOptionsForMeaning(correctMeaning, correctIndex) {
+                const options = [correctMeaning];
+                
+                // Get 3 random wrong meanings
+                while (options.length < 4) {
+                    const randomIndex = Math.floor(Math.random() * vocabulary.length);
+                    if (randomIndex !== correctIndex && !options.includes(vocabulary[randomIndex].meaning_vi)) {
+                        options.push(vocabulary[randomIndex].meaning_vi);
+                    }
+                }
+                
+                shuffleArray(options);
+                return options;
+            }
+            
+            function generateOptionsForWord(correctWord, correctIndex) {
+                const options = [correctWord];
+                
+                // Get 3 random wrong words
+                while (options.length < 4) {
+                    const randomIndex = Math.floor(Math.random() * vocabulary.length);
+                    if (randomIndex !== correctIndex && !options.includes(vocabulary[randomIndex].word)) {
+                        options.push(vocabulary[randomIndex].word);
+                    }
+                }
+                
+                shuffleArray(options);
+                return options;
+            }
+            
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+            
+            function startQuiz() {
+                quizInProgress = true;
+                currentQuizIndex = 0;
+                quizScore = 0;
+                
+                generateQuizQuestions();
+                
+                quizStartBtn.classList.add('hidden');
+                quizResult.classList.add('hidden');
+                renderQuizQuestion();
+            }
+            
+            function renderQuizQuestion() {
+                if (currentQuizIndex >= quizQuestions.length) {
+                    endQuiz();
+                    return;
+                }
+                
+                const question = quizQuestions[currentQuizIndex];
+                let questionHTML = '';
+                
+                questionHTML += `<div class="mb-6">
+                    <h3 class="text-xl font-semibold text-slate-800 mb-4">${question.question}</h3>
+                    <div class="space-y-3">`;
+                
+                question.options.forEach((option, index) => {
+                    questionHTML += `
+                        <button class="quiz-option w-full text-left p-4 bg-white rounded-lg border border-slate-200 font-medium text-slate-700" data-option="${option}">
+                            ${String.fromCharCode(65 + index)}. ${option}
+                        </button>`;
+                });
+                
+                questionHTML += `</div></div>`;
+                
+                quizContainer.innerHTML = questionHTML;
+                
+                // Update progress
+                quizProgressText.textContent = `${currentQuizIndex + 1}/${quizQuestions.length}`;
+                quizProgressBar.style.width = `${((currentQuizIndex) / quizQuestions.length) * 100}%`;
+                
+                // Add event listeners to options
+                document.querySelectorAll('.quiz-option').forEach(option => {
+                    option.addEventListener('click', handleAnswerSelection);
+                });
+            }
+            
+            function handleAnswerSelection(e) {
+                if (!quizInProgress) return;
+                
+                const selectedOption = e.currentTarget;
+                const selectedAnswer = selectedOption.dataset.option;
+                const correctAnswer = quizQuestions[currentQuizIndex].correctAnswer;
+                
+                // Disable all options
+                document.querySelectorAll('.quiz-option').forEach(option => {
+                    option.removeEventListener('click', handleAnswerSelection);
+                    option.style.pointerEvents = 'none';
+                });
+                
+                // Mark correct and incorrect answers
+                document.querySelectorAll('.quiz-option').forEach(option => {
+                    if (option.dataset.option === correctAnswer) {
+                        option.classList.add('correct');
+                    } else if (option === selectedOption && selectedAnswer !== correctAnswer) {
+                        option.classList.add('incorrect');
+                    }
+                });
+                
+                // Update score
+                if (selectedAnswer === correctAnswer) {
+                    quizScore++;
+                }
+                
+                // Move to next question after a delay
+                setTimeout(() => {
+                    currentQuizIndex++;
+                    renderQuizQuestion();
+                }, 1500);
+            }
+            
+            function endQuiz() {
+                quizInProgress = false;
+                
+                // Calculate percentage
+                const percentage = Math.round((quizScore / quizQuestions.length) * 100);
+                
+                // Set result message based on performance
+                let resultTitle = '';
+                let resultMessage = '';
+                
+                if (percentage >= 90) {
+                    resultTitle = 'Xuất sắc!';
+                    resultMessage = 'Bạn thực sự nắm vững từ vựng này!';
+                } else if (percentage >= 70) {
+                    resultTitle = 'Tốt lắm!';
+                    resultMessage = 'Bạn có vốn từ vựng khá tốt!';
+                } else if (percentage >= 50) {
+                    resultTitle = 'Khá tốt!';
+                    resultMessage = 'Bạn đã nắm được khá nhiều từ vựng!';
+                } else {
+                    resultTitle = 'Cần luyện tập thêm';
+                    resultMessage = 'Hãy tiếp tục ôn tập để cải thiện!';
+                }
+                
+                // Update result display
+                quizResultTitle.textContent = resultTitle;
+                quizResultText.innerHTML = `${resultMessage}<br>Bạn đã trả lời đúng <span class="font-bold">${quizScore}</span> trong tổng số <span class="font-bold">${quizQuestions.length}</span> câu hỏi.`;
+                quizCorrectCount.textContent = quizScore;
+                quizTotalCount.textContent = quizQuestions.length;
+                
+                // Show result
+                quizResult.classList.remove('hidden');
+                quizContainer.innerHTML = '';
+                
+                // Update progress bar to full
+                quizProgressBar.style.width = '100%';
+            }
+            
+            function resetQuiz() {
+                quizInProgress = false;
+                currentQuizIndex = 0;
+                quizScore = 0;
+                
+                quizStartBtn.classList.remove('hidden');
+                quizResult.classList.add('hidden');
+                quizContainer.innerHTML = '';
+                
+                quizProgressText.textContent = '0/0';
+                quizProgressBar.style.width = '0%';
             }
 
             function loadVocabulary(data) {
@@ -184,9 +592,11 @@
                 
                 vocabulary = data.vocabulary;
                 currentFlashcardIndex = 0;
+                currentListPage = 1;
+                currentFlashcardPage = 1;
 
                 topicTitle.textContent = `Bộ từ vựng: ${data.topic || 'Chủ đề tùy chỉnh'}`;
-                topicSubtitle.textContent = 'Sử dụng danh sách hoặc flashcards để học hiệu quả hơn.';
+                topicSubtitle.textContent = 'Sử dụng danh sách, flashcards hoặc câu hỏi để học hiệu quả hơn.';
                 errorMessage.textContent = '';
                 
                 uploadSection.classList.add('hidden');
@@ -194,11 +604,16 @@
 
                 // Reset view to list
                 flashcardView.classList.add('hidden');
+                quizView.classList.add('hidden');
                 listView.classList.remove('hidden');
                 btnListView.classList.add('active');
                 btnFlashcardView.classList.remove('active');
+                btnQuizView.classList.remove('active');
 
                 renderListView();
+                
+                // Reset quiz
+                resetQuiz();
             }
 
             // --- Event Listeners ---
@@ -222,19 +637,30 @@
             
             btnListView.addEventListener('click', () => {
                 flashcardView.classList.add('hidden');
-                listView.classList.remove('hidden', 'grid');
-                listView.classList.add('grid');
+                quizView.classList.add('hidden');
+                listView.classList.remove('hidden');
                 btnListView.classList.add('active');
                 btnFlashcardView.classList.remove('active');
+                btnQuizView.classList.remove('active');
             });
 
             btnFlashcardView.addEventListener('click', () => {
                 listView.classList.add('hidden');
-                listView.classList.remove('grid');
+                quizView.classList.add('hidden');
                 flashcardView.classList.remove('hidden');
                 btnFlashcardView.classList.add('active');
                 btnListView.classList.remove('active');
+                btnQuizView.classList.remove('active');
                 renderFlashcard(currentFlashcardIndex);
+            });
+            
+            btnQuizView.addEventListener('click', () => {
+                listView.classList.add('hidden');
+                flashcardView.classList.add('hidden');
+                quizView.classList.remove('hidden');
+                btnQuizView.classList.add('active');
+                btnListView.classList.remove('active');
+                btnFlashcardView.classList.remove('active');
             });
             
             document.body.addEventListener('click', (e) => {
@@ -242,6 +668,20 @@
                 if (speakerButton) {
                     const wordToSpeak = speakerButton.dataset.word;
                     speak(wordToSpeak);
+                }
+                
+                // Handle list pagination clicks
+                const listPaginationBtn = e.target.closest('#list-pagination .pagination-btn');
+                if (listPaginationBtn && listPaginationBtn.dataset.page) {
+                    const page = parseInt(listPaginationBtn.dataset.page);
+                    renderListView(page);
+                }
+                
+                // Handle flashcard pagination clicks
+                const flashcardPaginationBtn = e.target.closest('#flashcard-pagination .pagination-btn');
+                if (flashcardPaginationBtn && flashcardPaginationBtn.dataset.page) {
+                    const page = parseInt(flashcardPaginationBtn.dataset.page);
+                    goToFlashcardPage(page);
                 }
             });
 
@@ -263,8 +703,10 @@
                 currentFlashcardIndex = randomIndex;
                 renderFlashcard(currentFlashcardIndex);
             });
+            
+            quizStartBtn.addEventListener('click', startQuiz);
+            quizRestartBtn.addEventListener('click', resetQuiz);
         });
     </script>
 </body>
 </html>
-
