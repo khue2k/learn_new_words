@@ -1,554 +1,768 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Học 1000 Từ Vựng Tiếng Anh Thông Dụng</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-        }
-        .flip-card-inner {
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        .flip-card.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-        .flip-card-front, .flip-card-back {
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-        }
-        .flip-card-back {
-            transform: rotateY(180deg);
-        }
-    </style>
+  <meta charset="utf-8" />
+  <title>Vocabulary Master — Full Features</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .card { perspective:1000px; width:320px; height:220px; margin:auto; cursor:pointer }
+    .card-inner { width:100%; height:100%; transition: transform .6s; transform-style: preserve-3d; position:relative }
+    .card.flipped .card-inner { transform: rotateY(180deg); }
+    .card-face { position:absolute; width:100%; height:100%; backface-visibility:hidden; border-radius:1rem; box-shadow:0 6px 12px rgba(0,0,0,0.15); display:flex; align-items:center; justify-content:center; padding:1rem }
+    .card-front { background:white }
+    .card-back { background:#fef3c7; transform: rotateY(180deg) }
+    .draggable { user-select:none }
+    .drop-target { min-height:48px; border: 2px dashed #e5e7eb; border-radius:8px; padding:8px }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="min-h-screen bg-gradient-to-r from-slate-100 to-indigo-50 font-sans">
 
-    <!-- Header -->
-    <header class="bg-gray-800 text-white py-6 shadow-lg">
-        <div class="container mx-auto px-4 text-center">
-            <h1 class="text-3xl font-bold">1000 Từ Vựng Tiếng Anh Thông Dụng</h1>
-            <p class="mt-2 text-lg">Nắm vững nền tảng từ vựng để giao tiếp hiệu quả.</p>
-        </div>
+  <div class="max-w-6xl mx-auto p-6">
+    <header class="mb-6">
+      <h1 class="text-4xl font-extrabold text-indigo-700">Vocabulary Master — Tất cả chức năng</h1>
+      <p class="text-slate-600 mt-1">Upload JSON → học bằng các chế độ: List, Flashcards, Quiz, Spelling, Listening, Matching, SRS, Daily 10, Dashboard...</p>
     </header>
 
-    <main class="container mx-auto px-4 py-8">
-        
-        <!-- Search and Controls -->
-        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-            <input type="text" id="searchInput" placeholder="Tìm kiếm từ vựng..." class="w-full md:flex-1 p-3 rounded-lg border-2 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300">
-            <button id="startFlashcardButton" class="bg-purple-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-purple-600 transition-colors duration-300">
-                Bắt đầu học Flashcard
-            </button>
+    <!-- Top controls -->
+    <section class="flex flex-wrap gap-3 items-center mb-4">
+      <input id="fileInput" type="file" accept=".json" class="p-2 border rounded bg-white shadow" />
+      <button id="btnList" class="px-4 py-2 bg-indigo-600 text-white rounded shadow">List</button>
+      <button id="btnFlash" class="px-4 py-2 bg-green-600 text-white rounded shadow">Flashcards</button>
+      <button id="btnQuiz" class="px-4 py-2 bg-purple-600 text-white rounded shadow">Quiz</button>
+      <button id="btnSpelling" class="px-4 py-2 bg-orange-500 text-white rounded shadow">Spelling</button>
+      <button id="btnListen" class="px-4 py-2 bg-cyan-600 text-white rounded shadow">Listening</button>
+      <button id="btnMatch" class="px-4 py-2 bg-fuchsia-600 text-white rounded shadow">Matching</button>
+      <button id="btnDaily" class="px-4 py-2 bg-yellow-600 text-white rounded shadow">Daily 10</button>
+      <button id="btnSRS" class="px-4 py-2 bg-emerald-600 text-white rounded shadow">Ôn hôm nay (SRS)</button>
+      <button id="btnDash" class="px-4 py-2 bg-slate-700 text-white rounded shadow">Dashboard</button>
+
+      <div class="ml-auto flex items-center gap-3">
+        <div class="text-sm text-slate-600">XP: <span id="xpCount">0</span></div>
+        <div id="badges" class="flex gap-2"></div>
+      </div>
+    </section>
+
+    <!-- Main content area -->
+    <main id="main" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- left: sidebar / info -->
+      <aside class="col-span-1 space-y-4">
+        <div class="bg-white p-4 rounded shadow">
+          <h3 class="font-semibold text-indigo-600">Tải tệp JSON</h3>
+          <p class="text-sm text-slate-600 mt-2">Định dạng mẫu:</p>
+          <pre class="text-xs bg-slate-50 p-2 rounded text-slate-700 overflow-x-auto">{
+ "topic": "Family",
+ "vocabulary": [
+   {"word":"father","phonetic":"/ˈfɑːðər/","type":"noun","meaning_vi":"cha, bố","example_en":"My father is a teacher.","example_vi":"Cha tôi là giáo viên.","lang":"en-US"}
+ ]
+}</pre>
         </div>
 
-        <!-- Flashcard View (initially hidden) -->
-        <div id="flashcardView" class="hidden flex flex-col items-center">
-            <div id="flashcardContainer" class="flip-card w-full max-w-lg h-96 bg-transparent cursor-pointer rounded-xl mb-6" onclick="flipCard()">
-                <div class="flip-card-inner relative w-full h-full text-center">
-                    <!-- Flashcard Front -->
-                    <div id="cardFront" class="flip-card-front absolute w-full h-full bg-white rounded-xl shadow-md p-6 flex flex-col items-center justify-center border-l-4 border-blue-500">
-                        <h3 class="text-5xl font-bold text-gray-900 mb-4" id="flashcardWord"></h3>
-                        <p class="text-2xl italic text-gray-600 mb-4" id="flashcardIPA"></p>
-                    </div>
-                    <!-- Flashcard Back -->
-                    <div id="cardBack" class="flip-card-back absolute w-full h-full bg-white rounded-xl shadow-md p-6 flex flex-col items-center justify-center border-l-4 border-green-500">
-                        <p class="text-3xl font-bold text-gray-900 mb-2" id="flashcardVN"></p>
-                        <p class="text-xl text-gray-700 mb-4 text-center" id="flashcardExample"></p>
-                        <p class="text-lg text-gray-500 text-center" id="flashcardExampleVN"></p>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Flashcard Controls -->
-            <div class="flex items-center space-x-4">
-                <button id="prevButton" class="bg-gray-400 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-500 transition-colors duration-300">
-                    Trước
-                </button>
-                <div class="text-xl font-semibold text-gray-700" id="cardCounter">1 / 30</div>
-                <button id="nextButton" class="bg-gray-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-600 transition-colors duration-300">
-                    Sau
-                </button>
-            </div>
-            <button id="shuffleButton" class="bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-600 transition-colors duration-300 mt-4">
-                Ngẫu nhiên
-            </button>
-            <button id="backToListButton" class="bg-gray-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors duration-300 mt-4">
-                Quay lại danh sách
-            </button>
+        <div class="bg-white p-4 rounded shadow">
+          <h3 class="font-semibold text-indigo-600">Thống kê nhanh</h3>
+          <p class="text-sm mt-2">Tổng từ: <span id="totalWords">0</span></p>
+          <p class="text-sm">Đã bookmark: <span id="totalBookmarks">0</span></p>
+          <p class="text-sm">SRS đến hạn: <span id="dueCount">0</span></p>
         </div>
 
-        <!-- Word List (initially shown) -->
-        <div id="wordListView">
-            <div id="wordList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Words will be dynamically inserted here -->
-            </div>
+        <div class="bg-white p-4 rounded shadow">
+          <h3 class="font-semibold text-indigo-600">Công cụ nhanh</h3>
+          <div class="flex flex-col gap-2 mt-2">
+            <button id="btnQuickReview" class="px-3 py-2 bg-indigo-500 text-white rounded">Quick Review (5)</button>
+            <button id="btnClearProgress" class="px-3 py-2 bg-red-500 text-white rounded">Xóa progress (localStorage)</button>
+          </div>
         </div>
+      </aside>
+
+      <!-- center: main view -->
+      <section id="center" class="col-span-2 space-y-6">
+        <!-- dynamic content inserted here -->
+        <div id="viewArea"></div>
+      </section>
     </main>
+  </div>
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white text-center py-4 mt-8 rounded-t-xl">
-        <p>&copy; 2024 Lộ Trình Học Tiếng Anh. Mọi quyền được bảo lưu.</p>
-    </footer>
+<script>
+/* ==========================
+   App state & storage
+   ========================== */
+let app = {
+  data: null,
+  topic: '',
+  vocab: [],
+  bookmarks: JSON.parse(localStorage.getItem('vocab_bookmarks')||'[]'),
+  srs: JSON.parse(localStorage.getItem('vocab_srs')||'{}'), // word -> {level, nextReview (iso)}
+  daily: JSON.parse(localStorage.getItem('vocab_daily')||'{}'), // date -> [words]
+  xp: parseInt(localStorage.getItem('vocab_xp')||'0',10) || 0,
+  badges: JSON.parse(localStorage.getItem('vocab_badges')||'[]'),
+  quizHistory: JSON.parse(localStorage.getItem('vocab_quiz_history')||'[]') // records
+};
 
-    <script>
-        // Data from the provided PDF, including example sentences
-        const words = [
-            { word: "abandon", ipa: "/ə'bændən/", vn: "từ bỏ; bỏ rơi, ruồng bỏ", example: "He had to abandon his car on the side of the road.", example_vn: "Anh ấy phải bỏ lại chiếc xe của mình bên vệ đường." },
-            { word: "abode", ipa: "/ə'bǝud/", vn: "nơi ở, sự lưu trú", example: "The family's temporary abode was a small cottage.", example_vn: "Nơi ở tạm thời của gia đình là một ngôi nhà nhỏ." },
-            { word: "abort", ipa: "/ə'bo:t/", vn: "sẩy thai, làm sẩy thai, phá thai bỏ dở", example: "The mission had to be aborted due to bad weather.", example_vn: "Nhiệm vụ phải bị hủy bỏ do thời tiết xấu." },
-            { word: "abortion", ipa: "/ə'bo:n/", vn: "sự sẩy thai, sự phá thai; sự nạo thai", example: "The topic of abortion is very controversial.", example_vn: "Chủ đề về phá thai rất gây tranh cãi." },
-            { word: "abroad", ipa: "/ə'bro:d/", vn: "ở nước ngoài, ra nước ngoài", example: "He works abroad for a technology company.", example_vn: "Anh ấy làm việc ở nước ngoài cho một công ty công nghệ." },
-            { word: "absent", ipa: "/'æbsənt/", vn: "vắng mặt, đi nghỉ", example: "He was absent from class today.", example_vn: "Anh ấy vắng mặt trong lớp học hôm nay." },
-            { word: "abstraction", ipa: "/æb'strækfn/", vn: "sự trừu tượng, cái nhìn trừu tượng", example: "The artist's work is a pure abstraction.", example_vn: "Tác phẩm của nghệ sĩ là một sự trừu tượng thuần túy." },
-            { word: "absurd", ipa: "/ǝb'sə:d/", vn: "vô lý, ngu xuẩn, ngớ ngẩn", example: "The idea of flying cars once seemed absurd.", example_vn: "Ý tưởng về ô tô bay từng có vẻ vô lý." },
-            { word: "abuse", ipa: "/ə'bju:z/", vn: "sự lạm dụng", example: "He was fired for abuse of power.", example_vn: "Anh ấy đã bị sa thải vì lạm dụng quyền lực." },
-            { word: "academic", ipa: "/ækə'dɛmık/", vn: "(thuộc) học viện; (thuộc) trường đại học", example: "He has a strong academic background.", example_vn: "Anh ấy có nền tảng học vấn vững chắc." },
-            { word: "academy", ipa: "/ə'kædəmi/", vn: "học viện", example: "She is a student at the Royal Academy of Music.", example_vn: "Cô ấy là sinh viên tại Học viện Âm nhạc Hoàng gia." },
-            { word: "access", ipa: "/'ækses/", vn: "lối vào, cửa vào, đường vào", example: "We were given access to the restricted area.", example_vn: "Chúng tôi được cấp quyền vào khu vực bị hạn chế." },
-            { word: "accomplish", ipa: "/ə'ka:mplıf/", vn: "hoàn thành, làm xong, đạt được (mục tiêu...)", example: "You can accomplish anything you set your mind to.", example_vn: "Bạn có thể hoàn thành bất cứ điều gì bạn đặt tâm trí vào." },
-            { word: "accord", ipa: "/ə'kɔ:rd/", vn: "phù hợp, hòa hợp", example: "The final decision was in accord with the group's wishes.", example_vn: "Quyết định cuối cùng phù hợp với mong muốn của nhóm." },
-            { word: "account", ipa: "/ə'kaunt/", vn: "sự tính toán, tính toán", example: "Please give me an account of what happened.", example_vn: "Làm ơn hãy cho tôi một bản tường thuật về những gì đã xảy ra." },
-            { word: "accountant", ipa: "/ə'kauntənt/", vn: "nhân viên kế toán, người giữ sổ sách kế toán", example: "My accountant handles all my tax forms.", example_vn: "Kế toán của tôi xử lý tất cả các biểu mẫu thuế của tôi." },
-            { word: "accurate", ipa: "/'ækjərət/", vn: "đúng đắn, chính xác, xác đáng", example: "The report was very accurate.", example_vn: "Báo cáo rất chính xác." },
-            { word: "accuse", ipa: "/əkju:z/", vn: "buộc tội, kết tội, tố cáo", example: "They accused him of cheating on the exam.", example_vn: "Họ buộc tội anh ấy gian lận trong kỳ thi." },
-            { word: "accused", ipa: "/ə'kju:zt/", vn: "bị cáo", example: "The accused was found not guilty.", example_vn: "Bị cáo được tuyên bố vô tội." },
-            { word: "achieve", ipa: "/ǝ'tfi:v/", vn: "đạt được, giành được", example: "She worked hard to achieve her goals.", example_vn: "Cô ấy đã làm việc chăm chỉ để đạt được mục tiêu của mình." },
-            { word: "acid", ipa: "/'æsid/", vn: "(hoá học) axit, chua", example: "Lemons have a very acidic taste.", example_vn: "Chanh có vị rất chua." },
-            { word: "acknowledge", ipa: "/ək'nəliddz/", vn: "nhận, thừa nhận, công nhận", example: "He acknowledged his mistake.", example_vn: "Anh ấy đã thừa nhận sai lầm của mình." },
-            { word: "acquit", ipa: "/ə'kwit/", vn: "tha tội, tuyên bố trắng án", example: "The jury decided to acquit the defendant.", example_vn: "Bồi thẩm đoàn đã quyết định tha bổng cho bị cáo." },
-            { word: "active", ipa: "/'æktiv/", vn: "tích cực, nhanh nhẹn, lanh lợi", example: "She is a very active member of the community.", example_vn: "Cô ấy là một thành viên rất tích cực của cộng đồng." },
-            { word: "activity", ipa: "/æk'tıvǝti/", vn: "sự tích cực, hoạt động", example: "Reading is a great leisure activity.", example_vn: "Đọc sách là một hoạt động giải trí tuyệt vời." },
-            { word: "adamant", ipa: "/'ædəmənt/", vn: "kỷ cương; cứng rắn", example: "She was adamant that she would not change her mind.", example_vn: "Cô ấy kiên quyết rằng sẽ không thay đổi ý kiến của mình." },
-            { word: "add", ipa: "/æd/", vn: "thêm vào, làm tăng thêm", example: "Please add some sugar to my tea.", example_vn: "Vui lòng thêm một chút đường vào trà của tôi." },
-            { word: "address", ipa: "/'ædres/", vn: "địa chỉ", example: "What is your home address?", example_vn: "Địa chỉ nhà của bạn là gì?" },
-            { word: "adequate", ipa: "/'ædıkwǝt/", vn: "đủ, đầy đủ, tương xứng, xứng đáng", example: "The food was adequate for everyone.", example_vn: "Thức ăn đã đủ cho mọi người." },
-            { word: "adjust", ipa: "/ǝdzAst/", vn: "sửa lại cho đúng, điều chỉnh", example: "I need to adjust the settings on my phone.", example_vn: "Tôi cần điều chỉnh các cài đặt trên điện thoại của mình." },
-            { word: "administration", ipa: "/ǝdmini'streifn/", vn: "sự trông nom, sự quản lý; sự cai quản, sự cai trị", example: "The hospital's administration is very efficient.", example_vn: "Ban quản lý bệnh viện rất hiệu quả." },
-            { word: "admit", ipa: "/ǝd'mit/", vn: "nhận vào thừa nhận, thú nhận", example: "I have to admit that I was wrong.", example_vn: "Tôi phải thừa nhận rằng tôi đã sai." },
-            { word: "adopt", ipa: "/ə'dopt/", vn: "nhận làm con nuôi", example: "They decided to adopt a child.", example_vn: "Họ quyết định nhận một đứa trẻ làm con nuôi." },
-            { word: "adore", ipa: "/ə'dɔr, ə'doʊr/", vn: "ngưỡng vọng, kính yêu", example: "She adores her grandmother.", example_vn: "Cô ấy rất kính yêu bà của mình." },
-            { word: "adroit", ipa: "/ə'droit/", vn: "khéo léo, khéo tay", example: "He is adroit at handling difficult situations.", example_vn: "Anh ấy khéo léo trong việc xử lý các tình huống khó khăn." },
-            { word: "adult", ipa: "/'ædalt /ǝ'dalt/", vn: "người lớn, trưởng thành", example: "Children must be accompanied by an adult.", example_vn: "Trẻ em phải có người lớn đi kèm." },
-            { word: "adversity", ipa: "/ǝd'v3:rsəti/", vn: "sự bất hạnh, nghịch cảnh", example: "She has overcome great adversity in her life.", example_vn: "Cô ấy đã vượt qua nghịch cảnh lớn trong cuộc đời." },
-            { word: "affect", ipa: "/ǝ'fekt/", vn: "làm ảnh hưởng đến, làm tác động đến; chạm đến", example: "The weather will affect our travel plans.", example_vn: "Thời tiết sẽ ảnh hưởng đến kế hoạch du lịch của chúng tôi." },
-            { word: "affection", ipa: "/n.fɛk.fən/", vn: "sự làm ảnh hưởng đến, sự làm tác động đến", example: "She showed great affection for her pets.", example_vn: "Cô ấy thể hiện tình cảm lớn đối với thú cưng của mình." },
-            { word: "affectionate", ipa: "/ə'feksənət/", vn: "thương yêu, trìu mến kính yêu, kính mến", example: "He is a very affectionate child.", example_vn: "Anh ấy là một đứa trẻ rất trìu mến." },
-            { word: "afford", ipa: "/ə'fɔrd/", vn: "có đủ khả năng", example: "I can't afford a new car right now.", example_vn: "Tôi không đủ khả năng mua một chiếc xe hơi mới vào lúc này." },
-            { word: "agency", ipa: "/'eidzənsi/", vn: "tác dụng, lực", example: "He found a job through a recruitment agency.", example_vn: "Anh ấy tìm được việc làm thông qua một công ty tuyển dụng." },
-            { word: "agenda", ipa: "/ə'dzendə/", vn: "những việc phải làm", example: "The main item on the agenda is the new budget.", example_vn: "Mục chính trong chương trình nghị sự là ngân sách mới." },
-            { word: "aggressive", ipa: "/ǝ'gresiv/", vn: "hay gây hấn, hung hãn, hung hăng", example: "The company is taking an aggressive approach to marketing.", example_vn: "Công ty đang áp dụng một cách tiếp cận marketing mạnh mẽ." },
-            { word: "agility", ipa: "/ə'dzıləti/", vn: "sự nhanh nhẹn, lanh lợi", example: "The athlete's agility was impressive.", example_vn: "Sự nhanh nhẹn của vận động viên thật ấn tượng." },
-            { word: "agitate", ipa: "/'ædzıteıt/", vn: "khích động, làm xúc động", example: "He tried to agitate the crowd with his speech.", example_vn: "Anh ấy cố gắng khích động đám đông bằng bài phát biểu của mình." },
-            { word: "agree", ipa: "/ǝ'gri:/", vn: "đồng ý, chấp thuận", example: "I agree with your point of view.", example_vn: "Tôi đồng ý với quan điểm của bạn." },
-            { word: "agreement", ipa: "/ə'gri:mənt/", vn: "hiệp định, hiệp nghị", example: "We reached a mutual agreement.", example_vn: "Chúng tôi đã đạt được một thỏa thuận chung." },
-            { word: "aid", ipa: "/eid/", vn: "sự giúp đỡ, sự viện trợ; cứu trợ", example: "The first-aid kit is in the car.", example_vn: "Bộ sơ cứu ở trong xe hơi." },
-            { word: "air", ipa: "/er/", vn: "bầu không khí, không khí", example: "The air in the mountains is very fresh.", example_vn: "Không khí ở vùng núi rất trong lành." },
-            { word: "aisle", ipa: "/ail/", vn: "cánh, gian bên trong", example: "We walked down the wedding aisle.", example_vn: "Chúng tôi đi xuống lối đi trong đám cưới." },
-            { word: "alarm", ipa: "/ə'la:m/", vn: "sự báo động, sự báo nguy", example: "The fire alarm went off.", example_vn: "Chuông báo cháy đã reo lên." },
-            { word: "album", ipa: "/'ælbəm/", vn: "tập ảnh, quyển album", example: "She showed me her photo album.", example_vn: "Cô ấy cho tôi xem album ảnh của mình." },
-            { word: "alien", ipa: "/'eiliǝn/", vn: "xa lạ", example: "The movie is about an alien invasion.", example_vn: "Bộ phim nói về một cuộc xâm lược của người ngoài hành tinh." },
-            { word: "alike", ipa: "/ə'laık/", vn: "tương tự, giống nhau, như nhau", example: "The twin sisters look very much alike.", example_vn: "Hai chị em sinh đôi trông rất giống nhau." },
-            { word: "allrounder", ipa: "/ǝ:1 'raondǝr/", vn: "người toàn diện, toàn năng", example: "He is a good allrounder in sports.", example_vn: "Anh ấy là một người toàn năng trong thể thao." },
-            { word: "alliance", ipa: "/ə'laiǝns/", vn: "sự liên minh, khối liên minh", example: "The two countries formed a military alliance.", example_vn: "Hai quốc gia đã thành lập một liên minh quân sự." },
-            { word: "allow", ipa: "/ə'lao/", vn: "cho phép, để cho", example: "My parents don't allow me to stay out late.", example_vn: "Bố mẹ tôi không cho phép tôi ra ngoài về muộn." },
-            { word: "allure", ipa: "/ə'lor/", vn: "sức quyến rũ; cám dỗ", example: "The city has a certain allure for young artists.", example_vn: "Thành phố có một sức quyến rũ nhất định đối với các nghệ sĩ trẻ." },
-            { word: "ally", ipa: "/ə'lai/", vn: "nước đồng minh, liên kết, liên minh", example: "They are a key ally in the fight against terrorism.", example_vn: "Họ là một đồng minh chủ chốt trong cuộc chiến chống khủng bố." },
-            { word: "alone", ipa: "/ə'loun/", vn: "một mình, trơ trọi, cô đơn, đơn độc", example: "She prefers to be alone when she's reading.", example_vn: "Cô ấy thích ở một mình khi đọc sách." },
-            { word: "alteration", ipa: "/o:ltə'reıfn/", vn: "sự thay đổi, điều chỉnh", example: "The dress needs a small alteration.", example_vn: "Cái váy cần một chút chỉnh sửa." },
-            { word: "alternative", ipa: "/əl'tərnətıv, æl'tərnətıv/", vn: "xen nhau; thay đổi nhau, thay phiên nhau", example: "We have an alternative plan if this one fails.", example_vn: "Chúng tôi có một kế hoạch thay thế nếu cái này thất bại." },
-            { word: "always", ipa: "/o:lweiz/", vn: "luôn luôn, mọi lúc", example: "He is always on time for his appointments.", example_vn: "Anh ấy luôn luôn đúng giờ cho các cuộc hẹn của mình." },
-            { word: "amateur", ipa: "/'æmətsər/", vn: "người nghiệp dư; có tính chất nghiệp dư", example: "He's an amateur photographer, but his photos are amazing.", example_vn: "Anh ấy là một nhiếp ảnh gia nghiệp dư, nhưng những bức ảnh của anh ấy thật tuyệt vời." },
-            { word: "amaze", ipa: "/ə'meiz/", vn: "làm kinh ngạc, làm sửng sốt", example: "The magic trick amazed the audience.", example_vn: "Tiết mục ảo thuật đã làm khán giả kinh ngạc." },
-            { word: "ambassador", ipa: "/æm'bæsədə/", vn: "đại sứ", example: "She was appointed as the new ambassador to France.", example_vn: "Cô ấy được bổ nhiệm làm đại sứ mới tại Pháp." },
-            { word: "ambience", ipa: "/'æmbiǝns/", vn: "môi trường, không khí ở một địa điểm", example: "The restaurant has a great ambience.", example_vn: "Nhà hàng có một không khí tuyệt vời." },
-            { word: "ambition", ipa: "/æm'bin/", vn: "đam mê, khát vọng, tham vọng", example: "Her ambition is to become a successful writer.", example_vn: "Tham vọng của cô ấy là trở thành một nhà văn thành công." },
-            { word: "ambitious", ipa: "/æm'bıfəs/", vn: "có nhiều khát vọng, tham vọng", example: "He is very ambitious and works hard to achieve his goals.", example_vn: "Anh ấy rất tham vọng và làm việc chăm chỉ để đạt được mục tiêu của mình." },
-            { word: "ambulance", ipa: "/'æmbjuləns/", vn: "xe cứu thương, xe cấp cứu", example: "An ambulance arrived at the scene of the accident.", example_vn: "Một chiếc xe cứu thương đã đến hiện trường vụ tai nạn." },
-            { word: "amiable", ipa: "/'eimiǝbl/", vn: "đáng mến, dễ thương", example: "She has a very amiable personality.", example_vn: "Cô ấy có một tính cách rất đáng mến." },
-            { word: "amicable", ipa: "/'æmıkəbl/", vn: "thân ái, thân mật, thân tình", example: "They ended their relationship on amicable terms.", example_vn: "Họ kết thúc mối quan hệ một cách thân mật." },
-            { word: "amount", ipa: "/ə'maunt/", vn: "số lượng, lượng; cộng dồn lên đến", example: "The amount of money she earns is impressive.", example_vn: "Số tiền cô ấy kiếm được rất ấn tượng." },
-            { word: "ample", ipa: "/'æmpl/", vn: "phong phú, nhiều", example: "There is ample space for everyone in the room.", example_vn: "Có đủ không gian cho mọi người trong phòng." },
-            { word: "amusing", ipa: "/ə'mju:zın/", vn: "có tính giải trí, buồn cười", example: "The story was very amusing.", example_vn: "Câu chuyện rất buồn cười." },
-            { word: "angelic", ipa: "/æn'dzelık/", vn: "tốt bụng, thánh thiện như thiên thần", example: "She has an angelic face and a kind heart.", example_vn: "Cô ấy có một khuôn mặt thiên thần và một trái tim nhân hậu." },
-            { word: "angry", ipa: "/'ængri/", vn: "cáu giận, tức giận", example: "He was angry about the delay.", example_vn: "Anh ấy tức giận về sự chậm trễ." },
-            { word: "anguish", ipa: "/'ængwis/", vn: "nỗi đau đớn, khổ não", example: "He was in a state of anguish after the accident.", example_vn: "Anh ấy trong tình trạng đau khổ sau vụ tai nạn." },
-            { word: "anniversary", ipa: "/,æni'və:səri/", vn: "ngày kỷ niệm; lễ kỷ niệm", example: "We are celebrating our 10th wedding anniversary.", example_vn: "Chúng tôi đang kỷ niệm 10 năm ngày cưới của mình." },
-            { word: "annoy", ipa: "/ə'nɔɪ/", vn: "quấy rầy, làm phiền", example: "Please don't annoy me when I'm studying.", example_vn: "Làm ơn đừng làm phiền tôi khi tôi đang học." },
-            { word: "annual", ipa: "/'ænjuəl/", vn: "hàng năm, từng năm", example: "The company holds an annual meeting in December.", example_vn: "Công ty tổ chức một cuộc họp hàng năm vào tháng 12." },
-            { word: "anonymous", ipa: "/ə'nɑnɪməs/", vn: "giấu tên, ẩn danh, nặc danh", example: "An anonymous donor gave a large sum of money to the charity.", example_vn: "Một nhà tài trợ ẩn danh đã quyên góp một khoản tiền lớn cho tổ chức từ thiện." },
-            { word: "answer", ipa: "/'ænsər/", vn: "câu trả lời; hồi đáp, trả lời", example: "Please answer the question.", example_vn: "Vui lòng trả lời câu hỏi." },
-            { word: "antiquated", ipa: "/'æntɪkweɪtɪd/", vn: "cổ xưa, cũ kỹ, không hợp thời", example: "The factory uses antiquated machinery.", example_vn: "Nhà máy sử dụng máy móc cổ lỗ sĩ." },
-            { word: "antique", ipa: "/æn'tik/", vn: "cổ, cổ xưa, theo lối cổ", example: "She collects antique furniture.", example_vn: "Cô ấy sưu tập đồ nội thất cổ." },
-            { word: "anxiety", ipa: "/æn'zaɪəti/", vn: "mối lo, mối lo âu, mối băn khoăn; sự lo lắng", example: "Test anxiety is a common problem for students.", example_vn: "Sự lo lắng khi làm bài thi là một vấn đề phổ biến đối với học sinh." },
-            { word: "anxious", ipa: "/'æŋkʃəs/", vn: "lo âu, băn khoăn", example: "He was anxious about the job interview.", example_vn: "Anh ấy lo lắng về cuộc phỏng vấn xin việc." },
-            { word: "anyhow", ipa: "/'ɛnihaʊ/", vn: "thế nào cũng được, cách nào cũng được", example: "It was a difficult situation, but we got through it anyhow.", example_vn: "Đó là một tình huống khó khăn, nhưng chúng tôi đã vượt qua bằng mọi cách." },
-            { word: "apart", ipa: "/ǝ'pa:t/", vn: "về một bên, qua một bên, riêng ra, xa ra", example: "The two houses are miles apart.", example_vn: "Hai ngôi nhà cách nhau hàng dặm." },
-            { word: "appeal", ipa: "/ə'pi:l/", vn: "sự kêu gọi; lời kêu gọi", example: "The charity made an appeal for donations.", example_vn: "Tổ chức từ thiện đã kêu gọi quyên góp." },
-            { word: "appetite", ipa: "/'æpɪtʌɪt/", vn: "sự ngon miệng, sự thèm ăn", example: "The long walk gave me a big appetite.", example_vn: "Đi bộ đường dài làm tôi thèm ăn." },
-            { word: "apply", ipa: "/ə'plaɪ/", vn: "gắn vào, áp vào, ghép vào, đính vào", example: "You should apply sunscreen before you go out.", example_vn: "Bạn nên thoa kem chống nắng trước khi ra ngoài." },
-            { word: "appointment", ipa: "/ə'pɔɪntmənt/", vn: "sự bổ nhiệm, chức vụ được bổ nhiệm", example: "I have a dentist appointment at 3 pm.", example_vn: "Tôi có một cuộc hẹn với nha sĩ lúc 3 giờ chiều." },
-            { word: "appreciate", ipa: "/ə'pri:ʃieɪt/", vn: "đánh giá, cảm kích", example: "I really appreciate your help.", example_vn: "Tôi thực sự cảm kích sự giúp đỡ của bạn." },
-            { word: "appreciation", ipa: "/ǝ,pri:ʃi'eɪʃn/", vn: "sự đánh giá cao, sự cảm kích", example: "He showed his appreciation with a small gift.", example_vn: "Anh ấy thể hiện sự cảm kích của mình bằng một món quà nhỏ." },
-            { word: "approach", ipa: "/ə'prəʊtʃ/", vn: "sự đến gần, sự lại gần", example: "The car's approach was slow and quiet.", example_vn: "Chiếc xe đến gần một cách chậm rãi và yên tĩnh." },
-            { word: "appropriate", ipa: "/ə'prəʊpriət/", vn: "thích hợp, thích đáng", example: "Wear appropriate clothing for the interview.", example_vn: "Mặc trang phục phù hợp cho buổi phỏng vấn." },
-            { word: "approval", ipa: "/ə'pru:vl/", vn: "sự tán thành, sự đồng ý, sự chấp thuận", example: "The project received the committee's approval.", example_vn: "Dự án đã nhận được sự chấp thuận của ủy ban." },
-            { word: "approve", ipa: "/ə'pru:v/", vn: "tán thành, chấp thuận, bằng lòng", example: "My parents approve of my career choice.", example_vn: "Bố mẹ tôi tán thành lựa chọn nghề nghiệp của tôi." },
-            { word: "area", ipa: "/'eriə/", vn: "diện tích, khu vực, lĩnh vực", example: "This is a quiet residential area.", example_vn: "Đây là một khu dân cư yên tĩnh." },
-            { word: "argue", ipa: "/'ɑrɡju:/", vn: "chứng tỏ, chỉ rõ", example: "They started to argue about politics.", example_vn: "Họ bắt đầu tranh cãi về chính trị." },
-            { word: "arrive", ipa: "/ə'raɪv/", vn: "đến nơi, đạt tới", example: "What time did you arrive at the airport?", example_vn: "Bạn đã đến sân bay lúc mấy giờ?" },
-            { word: "arrogant", ipa: "/'ærəɡənt/", vn: "kiêu ngạo, kiêu căng, ngạo mạn", example: "His arrogant attitude made him unpopular.", example_vn: "Thái độ kiêu ngạo của anh ấy khiến anh ấy không được lòng." },
-            { word: "article", ipa: "/'ɑrtɪkl/", vn: "bài báo", example: "I read an interesting article about climate change.", example_vn: "Tôi đã đọc một bài báo thú vị về biến đổi khí hậu." },
-            { word: "ashamed", ipa: "/ǝ'ʃeɪmd/", vn: "xấu hổ, ngượng ngùng", example: "He was ashamed of his behavior.", example_vn: "Anh ấy xấu hổ về hành vi của mình." },
-            { word: "aside", ipa: "/ǝ'saɪd/", vn: "về một bên, sang một bên", example: "He stepped aside to let her pass.", example_vn: "Anh ấy bước sang một bên để cô ấy đi qua." },
-            { word: "ask", ipa: "/æsk/", vn: "hỏi, yêu cầu", example: "I need to ask you a question.", example_vn: "Tôi cần hỏi bạn một câu hỏi." },
-            { word: "aspirin", ipa: "/'æspɪrɪn/", vn: "(dược học) atpirin", example: "I took an aspirin for my headache.", example_vn: "Tôi đã uống một viên aspirin để trị đau đầu." },
-            { word: "aspiring", ipa: "/ǝ'spaɪrɪŋ/", vn: "thiết tha, mong mỏi, khao khát", example: "He is an aspiring musician.", example_vn: "Anh ấy là một nhạc sĩ đầy khát vọng." },
-            { word: "assault", ipa: "/ǝ'sɔlt/", vn: "cuộc tấn công, đột kích; tấn công, công kích", example: "He was charged with assault.", example_vn: "Anh ấy bị buộc tội hành hung." },
-            { word: "assembly", ipa: "/ǝ'sembli/", vn: "cuộc họp, dây chuyền", example: "The car is being built on the assembly line.", example_vn: "Chiếc xe đang được lắp ráp trên dây chuyền sản xuất." },
-            { word: "assertive", ipa: "/ǝ'sərstɪv/", vn: "quả quyết, quyết đoán", example: "You need to be more assertive in your job.", example_vn: "Bạn cần phải quyết đoán hơn trong công việc của mình." },
-            { word: "assess", ipa: "/ǝ'ses/", vn: "định giá, đánh giá", example: "The damage was assessed at over $1,000.", example_vn: "Thiệt hại được đánh giá là hơn 1.000 đô la." },
-            { word: "asset", ipa: "/'æset/", vn: "tài sản, món quý", example: "A good education is a valuable asset.", example_vn: "Một nền giáo dục tốt là một tài sản quý giá." },
-            { word: "assist", ipa: "/ǝ'sɪst/", vn: "giúp, giúp đỡ", example: "I'll be happy to assist you.", example_vn: "Tôi rất vui lòng giúp đỡ bạn." },
-            { word: "associate", ipa: "/ǝ'soʊsieɪt/", vn: "kết giao, kết hợp", example: "I don't associate with people who lie.", example_vn: "Tôi không kết giao với những người nói dối." },
-            { word: "assume", ipa: "/ǝ'su:m/", vn: "mang, khoác, có, lấy", example: "I assume you're coming to the party.", example_vn: "Tôi cho rằng bạn sẽ đến bữa tiệc." },
-            { word: "assure", ipa: "/ǝ'ʃuǝr/", vn: "quả quyết, cam đoan", example: "I can assure you that everything will be fine.", example_vn: "Tôi có thể cam đoan với bạn rằng mọi thứ sẽ ổn." },
-            { word: "astonishing", ipa: "/ǝ'stɑnɪʃɪŋ/", vn: "gây bất ngờ, làm ngạc nhiên", example: "The view from the top of the mountain was astonishing.", example_vn: "Quang cảnh từ đỉnh núi thật đáng kinh ngạc." },
-            { word: "atrocious", ipa: "/ǝ'troʊʃəs/", vn: "hung bạo, tàn ác, tồi tệ", example: "The weather was atrocious, so we stayed inside.", example_vn: "Thời tiết rất tồi tệ, vì vậy chúng tôi đã ở trong nhà." },
-            { word: "attack", ipa: "/ǝ'tæk/", vn: "sự tấn công, tấn công", example: "The army launched an attack on the enemy.", example_vn: "Quân đội đã phát động một cuộc tấn công vào kẻ thù." },
-            { word: "attempt", ipa: "/ǝ'tempt/", vn: "sự cố gắng, sự thử", example: "He made an attempt to climb the mountain.", example_vn: "Anh ấy đã cố gắng để leo lên ngọn núi." },
-            { word: "attend", ipa: "/ǝ'tend/", vn: "dự, có mặt", example: "I will attend the meeting tomorrow.", example_vn: "Tôi sẽ tham dự cuộc họp vào ngày mai." },
-            { word: "attire", ipa: "/ǝ'taɪər/", vn: "quần áo, đồ trang điểm; mặc quần áo", example: "Formal attire is required for the event.", example_vn: "Trang phục trang trọng là bắt buộc cho sự kiện." },
-            { word: "attitude", ipa: "/'ætɪtju:d/", vn: "thái độ, quan điểm", example: "Your attitude towards work is important.", example_vn: "Thái độ của bạn đối với công việc rất quan trọng." },
-            { word: "attorney", ipa: "/ǝ'tɜrni/", vn: "người được ủy quyền đại diện", example: "He hired an attorney to represent him in court.", example_vn: "Anh ấy đã thuê một luật sư để đại diện cho mình trước tòa." },
-            { word: "attract", ipa: "/ǝ'trækt/", vn: "thu hút, hấp dẫn", example: "The beautiful flowers attract many bees.", example_vn: "Những bông hoa đẹp thu hút nhiều ong." },
-            { word: "attractive", ipa: "/ə'træktɪv/", vn: "hút, thu hút, hấp dẫn", example: "She has an attractive smile.", example_vn: "Cô ấy có một nụ cười hấp dẫn." },
-            { word: "auction", ipa: "/'ɔ:kʃn/", vn: "sự bán đấu giá", example: "The painting was sold at auction for a high price.", example_vn: "Bức tranh đã được bán đấu giá với giá cao." },
-            { word: "audacious", ipa: "/ɔ:'deɪʃəs/", vn: "trơ tráo, táo bạo", example: "He made an audacious attempt to rob the bank.", example_vn: "Anh ấy đã thực hiện một nỗ lực táo bạo để cướp ngân hàng." },
-            { word: "audience", ipa: "/'ɔ:diəns/", vn: "người nghe, thính giả, người xem, khán giả", example: "The audience clapped loudly after the performance.", example_vn: "Khán giả đã vỗ tay to sau buổi biểu diễn." },
-            { word: "authentic", ipa: "/ɔ:'θentɪk/", vn: "đích thực, xác thực", example: "This is an authentic antique vase.", example_vn: "Đây là một chiếc bình cổ đích thực." },
-            { word: "authority", ipa: "/ə'θɔrəti/", vn: "uy quyền, quyền lực, quyền thế", example: "She has the authority to make decisions.", example_vn: "Cô ấy có quyền đưa ra quyết định." },
-            { word: "available", ipa: "/ə'veɪləbl/", vn: "sẵn có, có thể dùng được", example: "Are there any tickets available for the show?", example_vn: "Có vé nào còn lại cho buổi biểu diễn không?" },
-            { word: "avenge", ipa: "/ǝ'vendʒ/", vn: "trả thù, báo thù", example: "He swore to avenge his brother's death.", example_vn: "Anh ấy thề sẽ trả thù cho cái chết của anh trai mình." },
-            { word: "avoid", ipa: "/ǝ'vɔɪd/", vn: "tránh, tránh xa, ngăn ngừa", example: "You should avoid eating too much sugar.", example_vn: "Bạn nên tránh ăn quá nhiều đường." },
-            { word: "aware", ipa: "/ǝ'weǝr/", vn: "biết, nhận thấy, nhận thức thấy", example: "Are you aware of the risks involved?", example_vn: "Bạn có nhận thức được những rủi ro liên quan không?" },
-            { word: "away", ipa: "/ǝ'weɪ/", vn: "rời xa, đi xa, biến đi", example: "He went away on a business trip.", example_vn: "Anh ấy đã đi công tác." },
-            { word: "awful", ipa: "/ɔ:fl/", vn: "đáng sợ, khủng khiếp; cực kỳ", example: "The movie was awful.", example_vn: "Bộ phim thật kinh khủng." },
-            { word: "awkward", ipa: "/'ɔ:kwərd/", vn: "vụng về, lúng túng, ngượng ngịu", example: "The situation was very awkward.", example_vn: "Tình huống rất lúng túng." },
-            { word: "baby", ipa: "/'beɪbi/", vn: "đứa trẻ", example: "The baby is sleeping in the crib.", example_vn: "Đứa bé đang ngủ trong nôi." },
-            { word: "bachelor", ipa: "/'bætʃələr/", vn: "người chưa vợ, người có bằng cử nhân", example: "He is a confirmed bachelor.", example_vn: "Anh ấy là một người độc thân lâu năm." },
-            { word: "backward", ipa: "/'bækwərd/", vn: "về phía sau, giật lùi", example: "She took a step backward to let me in.", example_vn: "Cô ấy lùi một bước để tôi vào." },
-            { word: "bacon", ipa: "/'beɪkən/", vn: "thịt lưng lợn muối xông khói", example: "I had eggs and bacon for breakfast.", example_vn: "Tôi đã ăn trứng và thịt xông khói cho bữa sáng." },
-            { word: "badge", ipa: "/bædʒ/", vn: "huy hiệu, phù hiệu; quân hàm", example: "He wore his police badge proudly.", example_vn: "Anh ấy đeo huy hiệu cảnh sát một cách tự hào." },
-            { word: "baggage", ipa: "/'bæɡɪdʒ/", vn: "hành lý", example: "You can check your baggage at the counter.", example_vn: "Bạn có thể ký gửi hành lý của mình tại quầy." },
-            { word: "bait", ipa: "/beɪt/", vn: "mồi, bả", example: "The fishermen used worms as bait.", example_vn: "Các ngư dân đã sử dụng giun làm mồi." },
-            { word: "bake", ipa: "/beɪk/", vn: "bỏ lò, nướng bằng lò", example: "I'm going to bake a cake for her birthday.", example_vn: "Tôi sẽ nướng một chiếc bánh kem cho sinh nhật của cô ấy." },
-            { word: "balance", ipa: "/'bæləns/", vn: "cái cân, sự thăng bằng", example: "He lost his balance and fell.", example_vn: "Anh ấy mất thăng bằng và ngã." },
-            { word: "balcony", ipa: "/'bælkəni/", vn: "ban công", example: "We had dinner on the balcony.", example_vn: "Chúng tôi đã ăn tối trên ban công." },
-            { word: "bald", ipa: "/bɔ:ld/", vn: "hói đầu, trọc trụi", example: "He started to go bald in his thirties.", example_vn: "Anh ấy bắt đầu hói đầu ở tuổi ba mươi." },
-            { word: "ballet", ipa: "/bæ'leɪ/", vn: "ba lê, kịch múa", example: "She has been studying ballet since she was a child.", example_vn: "Cô ấy đã học múa ba lê từ khi còn nhỏ." },
-            { word: "band", ipa: "/bænd/", vn: "dải, băng, đai, nẹp, buộc dải, buộc băng", example: "He plays in a rock band.", example_vn: "Anh ấy chơi trong một ban nhạc rock." },
-            { word: "bane", ipa: "/beɪn/", vn: "nguyên do, nỗi khổ", example: "The constant traffic is the bane of my existence.", example_vn: "Tình trạng giao thông liên tục là nỗi khổ của tôi." },
-            { word: "bang", ipa: "/bæn/", vn: "tóc mái, đánh mạnh, đánh đập", example: "He closed the door with a loud bang.", example_vn: "Anh ấy đóng cửa với một tiếng 'bang' lớn." },
-            { word: "banner", ipa: "/'bænə/", vn: "ngọn cờ", example: "They held a banner that said 'Go Team'.", example_vn: "Họ giơ một biểu ngữ có chữ 'Cố lên đội'." },
-            { word: "bar", ipa: "/ba:/", vn: "quầy bán rượu", example: "I'll meet you at the bar.", example_vn: "Tôi sẽ gặp bạn ở quầy bar." },
-            { word: "barbecue", ipa: "/'bɑ:bɪkju:/", vn: "lợn (bò, cừu) nướng (quay) cả con", example: "We're having a barbecue this weekend.", example_vn: "Chúng tôi sẽ có một buổi tiệc nướng vào cuối tuần này." },
-            { word: "bare", ipa: "/beǝ(r)/", vn: "trần, trần truồng, trọc, trần trụi", example: "The trees were bare in the winter.", example_vn: "Cây cối trơ trọi vào mùa đông." },
-            { word: "barely", ipa: "/'beǝli/", vn: "công khai, rõ ràng", example: "I could barely hear what she was saying.", example_vn: "Tôi hầu như không thể nghe thấy cô ấy đang nói gì." },
-            { word: "bargain", ipa: "/'ba:gɪn/", vn: "sự mặc cả, sự thoả thuận mua bán", example: "The jacket was a real bargain.", example_vn: "Chiếc áo khoác là một món hời thực sự." },
-            { word: "barn", ipa: "/ba:n/", vn: "kho thóc", example: "The farmer kept his hay in the barn.", example_vn: "Người nông dân giữ cỏ khô của mình trong kho thóc." },
-            { word: "barrel", ipa: "/'bærəl/", vn: "thùng tròn, lớn, thường được làm bằng gỗ hoặc kim loại", example: "They rolled the barrel down the hill.", example_vn: "Họ lăn thùng gỗ xuống đồi." },
-            { word: "baseball", ipa: "/'beɪs,bɔ:l/", vn: "(thể dục, thể thao) bóng chày", example: "My favorite sport is baseball.", example_vn: "Môn thể thao yêu thích của tôi là bóng chày." },
-            { word: "basement", ipa: "/'beɪsmənt/", vn: "nền móng, móng (của một bức tường...)", example: "We keep all our old furniture in the basement.", example_vn: "Chúng tôi giữ tất cả đồ nội thất cũ của mình trong tầng hầm." },
-            { word: "bashful", ipa: "/'bæʃfl/", vn: "rụt rè, bẽn lẽn", example: "The child was bashful and hid behind his mother's legs.", example_vn: "Đứa trẻ rụt rè và trốn sau chân mẹ." },
-            { word: "battery", ipa: "/'bætəri/", vn: "bộ pin, ắc quy", example: "The remote control needs a new battery.", example_vn: "Điều khiển từ xa cần một cục pin mới." },
-            { word: "bay", ipa: "/beɪ/", vn: "hồng, vịnh", example: "We sailed into the quiet bay.", example_vn: "Chúng tôi đã đi thuyền vào vịnh yên tĩnh." },
-            { word: "beam", ipa: "/bi:m/", vn: "xà, dầm", example: "The sun's first beam of light came through the window.", example_vn: "Tia nắng đầu tiên của mặt trời lọt qua cửa sổ." },
-            { word: "bear", ipa: "/beǝ/", vn: "mang, cầm, vác, đội, đeo, ôm, chịu đựng", example: "I can't bear the thought of losing you.", example_vn: "Tôi không thể chịu đựng được ý nghĩ mất bạn." },
-            { word: "bearing", ipa: "/'beǝrɪŋ/", vn: "sự chịu đựng, sự sinh đẻ", example: "His bearing was one of confidence and authority.", example_vn: "Phong thái của anh ấy là tự tin và có uy quyền." },
-            { word: "beat", ipa: "/bi:t/", vn: "sự đập, tiếng đập", example: "My heart began to beat faster.", example_vn: "Tim tôi bắt đầu đập nhanh hơn." },
-            { word: "beaten", ipa: "/'bi:tn/", vn: "đập, nện (nền đường...)", example: "The unbeaten path is the one less traveled.", example_vn: "Con đường chưa từng được đi là con đường ít người đi lại." },
-            { word: "beautiful", ipa: "/'bju:tɪfl/", vn: "xinh đẹp, tuyệt vời", example: "She wore a beautiful dress to the party.", example_vn: "Cô ấy đã mặc một chiếc váy đẹp đến bữa tiệc." },
-            { word: "beg", ipa: "/beg/", vn: "ăn xin, xin xỏ, cầu xin", example: "He begged her to forgive him.", example_vn: "Anh ấy đã cầu xin cô ấy tha thứ cho mình." },
-            { word: "begin", ipa: "/bɪ'ɡɪn/", vn: "bắt đầu, khởi đầu", example: "Let's begin the meeting now.", example_vn: "Chúng ta hãy bắt đầu cuộc họp ngay bây giờ." },
-            { word: "beginning", ipa: "/bɪ'ɡɪnɪŋ/", vn: "lúc bắt đầu, căn nguyên", example: "The beginning of the movie was a bit slow.", example_vn: "Phần đầu của bộ phim hơi chậm." },
-            { word: "behalf", ipa: "/br'hæf/", vn: "thay mặt cho ai đó", example: "On behalf of the company, I would like to thank you.", example_vn: "Thay mặt công ty, tôi muốn cảm ơn bạn." },
-            { word: "behave", ipa: "/bɪ'heɪv/", vn: "ăn ở, đối xử, cư xử", example: "Please behave well when you are at school.", example_vn: "Vui lòng cư xử tốt khi bạn ở trường." },
-            { word: "behoove", ipa: "/bɪ'hu:v/", vn: "có nhiệm vụ", example: "It would behoove you to study for the exam.", example_vn: "Sẽ là nhiệm vụ của bạn để học cho kỳ thi." },
-            { word: "believe", ipa: "/br'li:v/", vn: "tin tưởng cho rằng, nghĩ rằng", example: "I believe that he is telling the truth.", example_vn: "Tôi tin rằng anh ấy đang nói sự thật." },
-            { word: "belly", ipa: "/'beli/", vn: "bụng; dạ dày, phồng ra (cánh buồm...)", example: "The dog lay on its belly.", example_vn: "Con chó nằm sấp bụng." },
-            { word: "beloved", ipa: "/bɪ'lʌvd/", vn: "được yêu mến, được yêu quý, người yêu dấu, người yêu quý", example: "He returned to his beloved hometown.", example_vn: "Anh ấy trở về quê hương yêu dấu của mình." },
-            { word: "below", ipa: "/bɪ'ləʊ/", vn: "ở dưới, cấp dưới, thấp hơn", example: "The temperature is below zero.", example_vn: "Nhiệt độ dưới không độ." },
-            { word: "bend", ipa: "/bend/", vn: "chỗ uốn, chỗ cong, cúi xuống, uốn cong", example: "Bend your knees when you lift something heavy.", example_vn: "Hãy gập đầu gối khi bạn nâng vật nặng." },
-            { word: "beneficial", ipa: "/benɪ'fɪʃl/", vn: "có ích, có lợi", example: "Regular exercise is beneficial for your health.", example_vn: "Tập thể dục thường xuyên có lợi cho sức khỏe của bạn." },
-            { word: "benefit", ipa: "/'benɪfɪt/", vn: "lợi, lợi ích", example: "The new law will benefit everyone.", example_vn: "Luật mới sẽ mang lại lợi ích cho mọi người." },
-            { word: "benevolent", ipa: "/bɪ'nevələnt/", vn: "nhân từ, từ thiện", example: "The benevolent king was loved by his people.", example_vn: "Vị vua nhân từ được người dân yêu mến." },
-            { word: "bent", ipa: "/bent/", vn: "khiếu, sở thích; xu hướng, khuynh hướng", example: "The spoon was bent out of shape.", example_vn: "Chiếc thìa bị bẻ cong." },
-            { word: "berserk", ipa: "/bər'sɜrk/", vn: "nổi quạu, cáu tiết", example: "He went berserk when he found out his car was stolen.", example_vn: "Anh ấy đã nổi điên khi biết chiếc xe của mình bị đánh cắp." },
-            { word: "bet", ipa: "/bet/", vn: "đánh cược, sự đánh cược", example: "I'll bet you ten dollars that he'll win.", example_vn: "Tôi cá bạn mười đô la rằng anh ấy sẽ thắng." },
-            { word: "betray", ipa: "/bɪ'treɪ/", vn: "phản bội; phụ bạc, tiết lộ, để lộ", example: "She felt betrayed by her best friend.", example_vn: "Cô ấy cảm thấy bị phản bội bởi người bạn thân nhất của mình." },
-            { word: "bias", ipa: "/'baɪəs/", vn: "thành kiến, sự thiên vị; hướng (ý kiến), gây thành kiến", example: "The news report had a clear political bias.", example_vn: "Bản tin có một sự thiên vị chính trị rõ ràng." },
-            { word: "bid", ipa: "/bɪd/", vn: "sự đặt giá, trả giá", example: "He made a high bid for the painting.", example_vn: "Anh ấy đã đưa ra một giá thầu cao cho bức tranh." },
-            { word: "big", ipa: "/bɪɡ/", vn: "to lớn", example: "He lives in a big house.", example_vn: "Anh ấy sống trong một ngôi nhà lớn." },
-            { word: "big-hearted", ipa: "/bɪɡ 'hɑrtɪd/", vn: "rộng lượng, hào hiệp", example: "He's a big-hearted person who always helps others.", example_vn: "Anh ấy là một người rộng lượng luôn giúp đỡ người khác." },
-            { word: "bigoted", ipa: "/'bɪgətɪd/", vn: "mù quáng", example: "He's too bigoted to listen to other people's opinions.", example_vn: "Anh ấy quá cố chấp để lắng nghe ý kiến của người khác." },
-            { word: "birth", ipa: "/bɜrθ/", vn: "sự sinh đẻ, ra đời ngày thành lập", example: "The birth of her child was the happiest day of her life.", example_vn: "Sự ra đời của đứa con là ngày hạnh phúc nhất trong cuộc đời cô ấy." },
-            { word: "bite", ipa: "/baɪt/", vn: "cắn, sự cắn, miếng cắn", example: "The dog bit the mailman.", example_vn: "Con chó đã cắn người đưa thư." },
-            { word: "bizarre", ipa: "/bɪ'zɑr/", vn: "kỳ quái, kỳ dị", example: "The artist's sculptures are very bizarre.", example_vn: "Các tác phẩm điêu khắc của nghệ sĩ rất kỳ quái." },
-            { word: "blameless", ipa: "/'bleɪmləs/", vn: "không thể chê được", example: "He was found to be blameless in the accident.", example_vn: "Anh ấy được tìm thấy là vô tội trong vụ tai nạn." },
-            { word: "blank", ipa: "/blæŋk/", vn: "chỗ trống; để trống, trống rỗng, bần thần", example: "Please fill in the blank spaces.", example_vn: "Vui lòng điền vào các chỗ trống." },
-            { word: "blanket", ipa: "/'blæŋkɪt/", vn: "chăn, mền", example: "I need a warm blanket tonight.", example_vn: "Tôi cần một chiếc chăn ấm tối nay." },
-            { word: "blase", ipa: "/blɑ:'zeɪ/", vn: "dửng dưng, quá quen rồi", example: "He seemed blase about his new job.", example_vn: "Anh ấy có vẻ dửng dưng về công việc mới của mình." },
-            { word: "blend", ipa: "/blend/", vn: "hỗn hợp; trộn lẫn, pha trộn", example: "The colors in the painting blend together beautifully.", example_vn: "Các màu sắc trong bức tranh hòa quyện vào nhau một cách tuyệt đẹp." },
-            { word: "blossom", ipa: "/'blɑsəm/", vn: "hoa; ra hoa, trổ hoa", example: "The cherry trees are in blossom.", example_vn: "Những cây anh đào đang nở hoa." },
-            { word: "blot", ipa: "/blɑt/", vn: "vết nhơ, vết nhục; bôi nhọ, làm bẩn", example: "The scandal was a blot on his reputation.", example_vn: "Vụ bê bối là một vết nhơ trong danh tiếng của anh ấy." },
-            { word: "blunder", ipa: "/'blʌndər/", vn: "điều sai lầm, điều ngớ ngẩn mắc lỗi ngớ ngẩn", example: "He made a huge blunder by forgetting her birthday.", example_vn: "Anh ấy đã mắc một sai lầm lớn khi quên sinh nhật của cô ấy." },
-            { word: "boat", ipa: "/boʊt/", vn: "tàu thủy, thuyền", example: "We took a boat out on the lake.", example_vn: "Chúng tôi đã đi thuyền ra hồ." },
-            { word: "bold", ipa: "/boʊld/", vn: "táo bạo, gan dạ", example: "She made a bold decision to quit her job.", example_vn: "Cô ấy đã đưa ra một quyết định táo bạo là nghỉ việc." },
-            { word: "bottom", ipa: "/'bɑtəm/", vn: "phần đáy, dưới cùng", example: "The book is at the bottom of the pile.", example_vn: "Cuốn sách ở dưới cùng của chồng sách." },
-            { word: "brave", ipa: "/breɪv/", vn: "gan dạ, dũng cảm; bất chấp, đương đầu với", example: "The firefighters were very brave.", example_vn: "Những người lính cứu hỏa rất dũng cảm." },
-            { word: "bravery", ipa: "/'breɪvəri/", vn: "tính gan dạ, sự dũng cảm", example: "The soldiers were awarded for their bravery.", example_vn: "Các binh sĩ đã được trao thưởng vì sự dũng cảm của họ." },
-            { word: "bread and butter", ipa: "/bred ǝn 'bʌtər/", vn: "miếng ăn, kế sinh nhai", example: "Teaching is my bread and butter.", example_vn: "Dạy học là kế sinh nhai của tôi." },
-            { word: "break", ipa: "/breɪk/", vn: "chỗ vỡ, sự rạn vỡ; làm gãy, làm đổ vỡ; ngắt, gián đoạn", example: "I need to take a break from work.", example_vn: "Tôi cần nghỉ giải lao một chút." },
-            { word: "brief", ipa: "/bri:f/", vn: "ngắn, vắn tắt; bản tóm tắt", example: "Can you give me a brief summary of the report?", example_vn: "Bạn có thể tóm tắt ngắn gọn báo cáo cho tôi không?" },
-            { word: "broad", ipa: "/brɔ:d/", vn: "rộng, bao la, mênh mông", example: "The river is very broad at this point.", example_vn: "Con sông rất rộng ở điểm này." },
-            { word: "bumpy", ipa: "/'bʌmpi/", vn: "gập ghềnh, mấp mô", example: "We had a bumpy ride on the dirt road.", example_vn: "Chúng tôi đã có một chuyến đi gập ghềnh trên con đường đất." },
-            { word: "bungalow", ipa: "/'bʌŋɡəloʊ/", vn: "nhà một tầng", example: "My grandparents live in a small bungalow.", example_vn: "Ông bà tôi sống trong một ngôi nhà một tầng nhỏ." },
-            { word: "calamity", ipa: "/kə'læməti/", vn: "tai họa, thiên tai, tai ương", example: "The flood was a great calamity for the town.", example_vn: "Trận lụt là một tai họa lớn cho thị trấn." },
-            { word: "calendar", ipa: "/'kælɪndər/", vn: "lịch", example: "I have a new calendar for the new year.", example_vn: "Tôi có một cuốn lịch mới cho năm mới." },
-            { word: "calm", ipa: "/kɑm/", vn: "bình tĩnh, điềm đạm", example: "The sea was calm and peaceful.", example_vn: "Biển yên tĩnh và thanh bình." },
-            { word: "candid", ipa: "/'kændɪd/", vn: "thật thà, ngay thẳng, không xếp đặt", example: "He gave a candid opinion about the film.", example_vn: "Anh ấy đã đưa ra một ý kiến thẳng thắn về bộ phim." },
-            { word: "carriage", ipa: "/'kærɪdʒ/", vn: "xe ngựa sự chuyên chở hàng hóa", example: "The royal family arrived in a horse-drawn carriage.", example_vn: "Gia đình hoàng gia đã đến bằng một chiếc xe ngựa." },
-            { word: "casual", ipa: "/'kæʒuəl/", vn: "tự nhiên, như thường lệ, bình thường; quần áo bình thường, không trang trọng", example: "I prefer to wear casual clothes on the weekends.", example_vn: "Tôi thích mặc quần áo bình thường vào cuối tuần." },
-            { word: "cease", ipa: "/si:s/", vn: "thôi, ngừng", example: "The company will cease operations next month.", example_vn: "Công ty sẽ ngừng hoạt động vào tháng tới." },
-            { word: "center", ipa: "/'sentər/", vn: "trung tâm; đặt làm trung tâm", example: "The city center is always busy.", example_vn: "Trung tâm thành phố luôn bận rộn." },
-            { word: "certain", ipa: "/'sɜrtn/", vn: "chắc chắn", example: "I am certain that he will succeed.", example_vn: "Tôi chắc chắn rằng anh ấy sẽ thành công." },
-            { word: "change", ipa: "/tʃeɪndʒ/", vn: "sự thay đổi, biến đổi; thay đổi", example: "A change in temperature can affect your mood.", example_vn: "Sự thay đổi nhiệt độ có thể ảnh hưởng đến tâm trạng của bạn." },
-            { word: "chaos", ipa: "/'keɪɑs/", vn: "sự hỗn loạn, lộn xộn", example: "The storm caused complete chaos in the city.", example_vn: "Cơn bão đã gây ra sự hỗn loạn hoàn toàn trong thành phố." },
-            { word: "charismatic", ipa: "/kærɪz'mætɪk/", vn: "có sức hút, lôi cuốn", example: "He is a charismatic leader.", example_vn: "Anh ấy là một nhà lãnh đạo lôi cuốn." },
-            { word: "chatterbox", ipa: "/'tʃætərbɑks/", vn: "người ba hoa, nói nhiều", example: "My little sister is a real chatterbox.", example_vn: "Em gái tôi là một người rất hay nói." },
-            { word: "chiefly", ipa: "/'tʃi:fli/", vn: "chủ yếu là, trước nhất", example: "The movie is chiefly about love and loss.", example_vn: "Bộ phim chủ yếu nói về tình yêu và sự mất mát." },
-            { word: "chilly", ipa: "/'tʃɪli/", vn: "lạnh lẽo, giá lạnh", example: "It's a bit chilly outside, so you should wear a jacket.", example_vn: "Bên ngoài hơi lạnh, vì vậy bạn nên mặc áo khoác." },
-            { word: "chocolate", ipa: "/'tʃɔ:klət/", vn: "sô cô la", example: "I love to eat chocolate.", example_vn: "Tôi thích ăn sô cô la." },
-            { word: "choice", ipa: "/tʃɔɪs/", vn: "lựa chọn, sự chọn lựa; chất lượng tốt", example: "You have a choice between two options.", example_vn: "Bạn có một sự lựa chọn giữa hai tùy chọn." },
-            { word: "choosy", ipa: "/'tʃu:zi/", vn: "khó chiều, kén chọn", example: "She is a very choosy eater.", example_vn: "Cô ấy là một người ăn rất kén." },
-            { word: "chubby", ipa: "/'tʃʌbi/", vn: "mĩm, mập mạp", example: "The baby has chubby cheeks.", example_vn: "Đứa bé có má bầu bĩnh." },
-            { word: "circuit", ipa: "/'sɜrkɪt/", vn: "đường vòng quanh, đi vòng quanh", example: "The race cars completed one circuit of the track.", example_vn: "Những chiếc xe đua đã hoàn thành một vòng quanh đường đua." },
-            { word: "civil", ipa: "/'sɪvɪl/", vn: "(thuộc) công dân lễ phép, lịch sự", example: "The conversation was very civil.", example_vn: "Cuộc trò chuyện rất lịch sự." },
-            { word: "clarify", ipa: "/'klærəfaɪ/", vn: "làm sáng tỏ, giải thích", example: "Can you clarify what you mean?", example_vn: "Bạn có thể làm rõ ý của bạn không?" },
-            { word: "close", ipa: "/kloʊz/", vn: "kín, đóng cửa sát (da vải...)", example: "Please close the door behind you.", example_vn: "Làm ơn đóng cửa sau lưng bạn." },
-            { word: "coarse", ipa: "/kɔrs/", vn: "thô", example: "The sand on the beach was very coarse.", example_vn: "Cát trên bãi biển rất thô." },
-            { word: "collect", ipa: "/kə'lekt/", vn: "tập hợp, thu lượm, thu thập", example: "I collect stamps from all over the world.", example_vn: "Tôi sưu tập tem từ khắp nơi trên thế giới." },
-            { word: "collision", ipa: "/kə'lɪʒn/", vn: "sự va đụng, xung đột", example: "Two cars were involved in a collision.", example_vn: "Hai chiếc xe đã va chạm." },
-            { word: "colossal", ipa: "/kə'lɑsl/", vn: "khổng lồ, to lớn", example: "The statue was a colossal work of art.", example_vn: "Bức tượng là một tác phẩm nghệ thuật khổng lồ." },
-            { word: "combative", ipa: "/kəm'bætɪv/", vn: "hiếu chiến, thích gây gổ", example: "He has a very combative personality.", example_vn: "Anh ấy có một tính cách rất hiếu chiến." },
-            { word: "combine", ipa: "/kəm'baɪn/", vn: "kết hợp, phối hợp", example: "We can combine these two ideas into one project.", example_vn: "Chúng tôi có thể kết hợp hai ý tưởng này thành một dự án." },
-            { word: "comical", ipa: "/'kɑmɪkl/", vn: "hài hước, khôi hài", example: "The clown's movements were very comical.", example_vn: "Các chuyển động của chú hề rất hài hước." },
-            { word: "commence", ipa: "/kə'mens/", vn: "khởi đầu, bắt đầu", example: "The meeting will commence at 9 am.", example_vn: "Cuộc họp sẽ bắt đầu lúc 9 giờ sáng." },
-            { word: "comment", ipa: "/'kɑment/", vn: "lời bình luận; bình luận, chỉ trích", example: "Please feel free to leave a comment on my blog.", example_vn: "Xin vui lòng để lại bình luận trên blog của tôi." },
-            { word: "commerce", ipa: "/'kɑmərs/", vn: "sự buôn bán, giao thương, thương nghiệp", example: "The city's economy is based on commerce.", example_vn: "Nền kinh tế của thành phố dựa trên thương mại." },
-            { word: "commotion", ipa: "/kə'moʊʃn/", vn: "sự rung chuyển, chấn động", example: "The sudden commotion in the street made me look outside.", example_vn: "Tiếng ồn ào đột ngột trên đường phố khiến tôi nhìn ra ngoài." },
-            { word: "compassion", ipa: "/kəm'pæʃn/", vn: "lòng thương cảm, lòng trắc ẩn", example: "He showed great compassion for the poor.", example_vn: "Anh ấy đã thể hiện lòng trắc ẩn lớn đối với người nghèo." },
-            { word: "complex", ipa: "/'kɑmpleks/", vn: "khu phức hợp; phức tạp, rắc rối", example: "The instructions were too complex for me to understand.", example_vn: "Hướng dẫn quá phức tạp đối với tôi để hiểu." },
-            { word: "complicated", ipa: "/'kɑmplɪkeɪtɪd/", vn: "phức tạp, tinh vi", example: "The rules of the game are very complicated.", example_vn: "Các quy tắc của trò chơi rất phức tạp." },
-            { word: "compliment", ipa: "/'kɑmpləmənt/", vn: "lời khen; khen ngợi, ca tụng", example: "She paid me a compliment on my new dress.", example_vn: "Cô ấy đã khen ngợi chiếc váy mới của tôi." },
-            { word: "comply", ipa: "/kəm'plaɪ/", vn: "tuân theo, đồng ý làm theo", example: "You must comply with the rules.", example_vn: "Bạn phải tuân thủ các quy tắc." },
-            { word: "compress", ipa: "/kəm'pres/", vn: "ép, nén, đè", example: "The trash compactor will compress the garbage.", example_vn: "Máy nén rác sẽ nén rác." },
-            { word: "compulsion", ipa: "/kəm'pʌlʃn/", vn: "sự cưỡng bức, ép buộc", example: "He felt a compulsion to check the door lock multiple times.", example_vn: "Anh ấy cảm thấy bị ép buộc phải kiểm tra khóa cửa nhiều lần." },
-            { word: "concise", ipa: "/kən'saɪs/", vn: "ngắn gọn, súc tích (văn)", example: "Please give a concise answer to the question.", example_vn: "Vui lòng đưa ra một câu trả lời ngắn gọn cho câu hỏi." },
-            { word: "confess", ipa: "/kən'fes/", vn: "thú tội, nhận tội", example: "He confessed to stealing the cookies.", example_vn: "Anh ấy đã thú nhận ăn trộm bánh quy." },
-            { word: "confine", ipa: "/kən'faɪn/", vn: "giam giữ, nhốt giữ lại", example: "The dog was confined to the house.", example_vn: "Con chó bị nhốt trong nhà." },
-            { word: "conflict", ipa: "/'kɑnflɪkt/", vn: "sự xung đột, cuộc va chạm; mâu thuẫn, chống đối", example: "There was a conflict of interest.", example_vn: "Có một sự xung đột về lợi ích." },
-            { word: "conform", ipa: "/kən'fɔrm/", vn: "thích ứng với, thích nghi", example: "Students are expected to conform to school rules.", example_vn: "Học sinh được mong đợi tuân thủ các quy tắc của trường." },
-            { word: "confuse", ipa: "/kən'fju:z/", vn: "nhầm lẫn, gây khó hiểu", example: "The complex instructions confused me.", example_vn: "Những hướng dẫn phức tạp đã làm tôi bối rối." },
-            { word: "congested", ipa: "/kən'dʒestɪd/", vn: "đông nghịt, chật ních", example: "The roads are very congested during rush hour.", example_vn: "Các con đường rất đông đúc trong giờ cao điểm." },
-            { word: "connect", ipa: "/kə'nekt/", vn: "nối lại, kết nối", example: "I need to connect my phone to the Wi-Fi.", example_vn: "Tôi cần kết nối điện thoại của mình với Wi-Fi." },
-            { word: "conquer", ipa: "/'kɑŋkər/", vn: "đoạt, xâm chiếm, chinh phục", example: "He set out to conquer his fear of heights.", example_vn: "Anh ấy bắt đầu chinh phục nỗi sợ độ cao của mình." },
-            { word: "consent", ipa: "/kən'sent/", vn: "sự đồng tình, ưng thuận", example: "You need parental consent to go on the trip.", example_vn: "Bạn cần sự đồng ý của phụ huynh để đi chuyến đi." },
-            { word: "considerate", ipa: "/kən'sɪdərət/", vn: "ân cần, chu đáo", example: "It was considerate of you to call.", example_vn: "Bạn thật chu đáo khi gọi điện." },
-            { word: "constraint", ipa: "/kən'streɪnt/", vn: "sự bắt ép, cưỡng ép, sự đè nén", example: "The project was completed under severe time constraints.", example_vn: "Dự án đã được hoàn thành dưới sự hạn chế thời gian nghiêm ngặt." },
-            { word: "contaminate", ipa: "/kən'tæmɪneɪt/", vn: "làm bẩn, gây ô nhiễm, làm hư hỏng", example: "The factory contaminated the river with waste.", example_vn: "Nhà máy đã làm ô nhiễm con sông bằng chất thải." },
-            { word: "contemporary", ipa: "/kən'tempəˌrɛri/", vn: "đương thời, đương đại; người cùng thời", example: "The artist is a leading figure in contemporary art.", example_vn: "Nghệ sĩ là một nhân vật hàng đầu trong nghệ thuật đương đại." },
-            { word: "contrary", ipa: "/'kɑntrəri/", vn: "trái ngược", example: "On the contrary, I think he is a good person.", example_vn: "Ngược lại, tôi nghĩ anh ấy là một người tốt." },
-            { word: "control", ipa: "/kən'troʊl/", vn: "quyền hành, sự điều khiển; kiểm soát, kiềm chế", example: "She has full control over her emotions.", example_vn: "Cô ấy có toàn quyền kiểm soát cảm xúc của mình." },
-            { word: "convert", ipa: "/kən'vɜrt/", vn: "người cải đạo; đổi, biến đổi", example: "We need to convert these files into a different format.", example_vn: "Chúng tôi cần chuyển đổi các tệp này sang một định dạng khác." },
-            { word: "cordial", ipa: "/'kɔr'dʒəl/", vn: "thân mật, chân thành", example: "He gave me a cordial welcome.", example_vn: "Anh ấy đã chào đón tôi một cách thân mật." },
-            { word: "correct", ipa: "/kə'rekt/", vn: "sửa, hiệu chỉnh; đúng, chính xác", example: "Please correct any mistakes in the document.", example_vn: "Vui lòng sửa bất kỳ lỗi nào trong tài liệu." },
-            { word: "couch potato", ipa: "/'kaʊtʃ pə'teɪtəʊ/", vn: "người nghiện xem tv", example: "He's a real couch potato on the weekends.", example_vn: "Anh ấy thực sự là một người nghiện xem TV vào cuối tuần." },
-            { word: "counsel", ipa: "/'kaʊnsl/", vn: "sự bàn bạc, lời khuyên, lời chỉ bảo; khuyên răn, khuyên bảo", example: "He sought counsel from his mentor.", example_vn: "Anh ấy đã tìm kiếm lời khuyên từ người cố vấn của mình." },
-            { word: "courage", ipa: "/'kɜrɪdʒ/", vn: "sự can đảm, dũng khí", example: "It takes a lot of courage to stand up for what you believe in.", example_vn: "Cần rất nhiều dũng khí để đứng lên bảo vệ những gì bạn tin tưởng." },
-            { word: "courteous", ipa: "/'kɜrtiəs/", vn: "lịch sự, nhã nhặn", example: "The staff was very courteous and helpful.", example_vn: "Nhân viên rất lịch sự và hữu ích." },
-            { word: "coy", ipa: "/kɔɪ/", vn: "bẽn lẽn, xấu hổ, rụt rè", example: "She gave a coy smile when he complimented her.", example_vn: "Cô ấy mỉm cười một cách bẽn lẽn khi anh ấy khen ngợi cô." },
-            { word: "crafty", ipa: "/'kræfti/", vn: "láu cá, xảo quyệt", example: "The crafty fox managed to steal the cheese.", example_vn: "Con cáo xảo quyệt đã trộm được miếng phô mai." },
-            { word: "cram", ipa: "/kræm/", vn: "sự nhồi sọ, nhồi nhét; tống vào, luyện thi", example: "I have to cram for my history exam.", example_vn: "Tôi phải nhồi nhét cho kỳ thi lịch sử của mình." },
-            { word: "cranky", ipa: "/'kræŋki/", vn: "kỳ quặc, gàn dở", example: "He gets cranky when he's tired.", example_vn: "Anh ấy trở nên gắt gỏng khi mệt mỏi." },
-            { word: "crazy", ipa: "/'kreɪzi/", vn: "điên rồ, mất trí", example: "That's a crazy idea, but it might just work!", example_vn: "Đó là một ý tưởng điên rồ, nhưng nó có thể thành công!" },
-            { word: "creation", ipa: "/kri:'eɪʃn/", vn: "sự tạo thành, hình thành tác phẩm", example: "The painting is a beautiful creation.", example_vn: "Bức tranh là một tác phẩm đẹp." },
-            { word: "creative", ipa: "/kri:'eɪtɪv/", vn: "sáng tạo", example: "She is a very creative person.", example_vn: "Cô ấy là một người rất sáng tạo." },
-            { word: "creativity", ipa: "/kri:eɪ'tɪvəti/", vn: "óc sáng tạo, sự sáng tạo", example: "The job requires a lot of creativity.", example_vn: "Công việc đòi hỏi rất nhiều sự sáng tạo." },
-            { word: "cruel", ipa: "/'kru:əl/", vn: "độc ác, tàn bạo, tàn nhẫn", example: "It's cruel to treat animals that way.", example_vn: "Đối xử với động vật như vậy là tàn nhẫn." },
-            { word: "crumble", ipa: "/'krʌmbl/", vn: "vỡ vụn, đổ nát; bẻ vụn, đập vụn", example: "The old building is starting to crumble.", example_vn: "Tòa nhà cũ đang bắt đầu đổ nát." },
-            { word: "cunning", ipa: "/'kʌnɪŋ/", vn: "xảo quyệt, láu cá", example: "The cunning politician won the election.", example_vn: "Chính trị gia xảo quyệt đã giành chiến thắng trong cuộc bầu cử." },
-            { word: "cupboard", ipa: "/'kʌbərd/", vn: "tủ đựng", example: "I put the dishes back in the cupboard.", example_vn: "Tôi đặt lại bát đĩa vào tủ." },
-            { word: "curb", ipa: "/kɜrb/", vn: "sự kiềm chế, sự nén lại; kìm hãm, hạn chế", example: "The government is trying to curb inflation.", example_vn: "Chính phủ đang cố gắng kiềm chế lạm phát." },
-            { word: "curse", ipa: "/kɜrs/", vn: "sự nguyền rủa, chửi rủa; nguyền rủa, báng bổ", example: "He mumbled a curse under his breath.", example_vn: "Anh ấy lẩm bẩm một lời nguyền rủa." },
-            { word: "daft", ipa: "/dæft/", vn: "ngớ ngẩn, mất trí, gàn dở", example: "Don't be daft, that's impossible!", example_vn: "Đừng ngớ ngẩn, điều đó là không thể!" },
-            { word: "daily", ipa: "/'deɪli/", vn: "hằng ngày", example: "I read the newspaper daily.", example_vn: "Tôi đọc báo hàng ngày." },
-            { word: "dainty", ipa: "/'deɪnti/", vn: "nhã nhặn, xinh xắn, dễ thương", example: "The little girl wore a dainty dress.", example_vn: "Cô bé mặc một chiếc váy xinh xắn." },
-            { word: "daring", ipa: "/'deərɪŋ/", vn: "táo bạo, mạnh bạo", example: "It was a daring rescue operation.", example_vn: "Đó là một chiến dịch giải cứu táo bạo." },
-            { word: "dash", ipa: "/dæʃ/", vn: "sự va đụng, va chạm", example: "She made a quick dash for the bus.", example_vn: "Cô ấy đã chạy nhanh để bắt kịp xe buýt." },
-            { word: "dated", ipa: "/'deɪtɪd/", vn: "lỗi thời, cũ kỹ", example: "His clothes looked a bit dated.", example_vn: "Quần áo của anh ấy trông hơi lỗi thời." },
-            { word: "dawn", ipa: "/dɔ:n/", vn: "bình minh, rạng đông bắt đầu rạng; lóe lên trong tâm trí", example: "We woke up at dawn to go fishing.", example_vn: "Chúng tôi thức dậy lúc bình minh để đi câu cá." },
-            { word: "daybreak", ipa: "/'deɪbreɪk/", vn: "lúc tảng sáng, rạng đông", example: "The birds started to sing at daybreak.", example_vn: "Những con chim bắt đầu hót lúc tảng sáng." },
-            { word: "deadly", ipa: "/'dedli/", vn: "làm chết người, trí mạng, chí tử", example: "The snake's venom is deadly.", example_vn: "Nọc độc của con rắn rất nguy hiểm." },
-            { word: "dearth", ipa: "/dɜrθ/", vn: "sự khan hiếm, đói kém", example: "There is a dearth of qualified candidates for the job.", example_vn: "Có một sự khan hiếm ứng viên có trình độ cho công việc." },
-            { word: "debate", ipa: "/dɪ'beɪt/", vn: "cuộc tranh luận, tranh luận", example: "The two candidates engaged in a fierce debate.", example_vn: "Hai ứng cử viên đã tham gia vào một cuộc tranh luận gay gắt." },
-            { word: "deceased", ipa: "/dɪ'si:st/", vn: "đã chết, qua đời", example: "The deceased was a respected member of the community.", example_vn: "Người đã khuất là một thành viên được kính trọng trong cộng đồng." },
-            { word: "decoration", ipa: "/dekə'reɪʃn/", vn: "sự trang hoàng, trang trí", example: "The Christmas decorations were beautiful.", example_vn: "Các đồ trang trí Giáng sinh thật đẹp." },
-            { word: "dedicated", ipa: "/'dedɪkeɪtɪd/", vn: "tận tâm, tận tụy", example: "She is a dedicated teacher.", example_vn: "Cô ấy là một giáo viên tận tâm." },
-            { word: "deduct", ipa: "/dɪ'dʌkt/", vn: "trừ đi, khấu trừ", example: "The company will deduct the cost from your salary.", example_vn: "Công ty sẽ khấu trừ chi phí từ tiền lương của bạn." },
-            { word: "defend", ipa: "/dɪ'fend/", vn: "bảo vệ, biện hộ", example: "The lawyer will defend his client in court.", example_vn: "Luật sư sẽ biện hộ cho thân chủ của mình tại tòa." },
-            { word: "defy", ipa: "/dɪ'faɪ/", vn: "thách thức, thách đố, bất chấp", example: "The small country continued to defy the powerful invaders.", example_vn: "Quốc gia nhỏ bé tiếp tục bất chấp những kẻ xâm lược hùng mạnh." },
-            { word: "deliberate", ipa: "/dɪ'lɪbərət/", vn: "chủ tâm, cố ý; cân nhắc, tính toán kỹ lưỡng", example: "The fire was a deliberate act of arson.", example_vn: "Vụ cháy là một hành động phóng hỏa có chủ ý." },
-            { word: "delicate", ipa: "/'delɪkət/", vn: "thanh nhã, thanh tú, tinh tế, khéo léo", example: "The spider's web was a delicate work of art.", example_vn: "Mạng nhện là một tác phẩm nghệ thuật tinh xảo." },
-            { word: "delighted", ipa: "/dɪ'laɪtɪd/", vn: "vui mừng, vui sướng", example: "I was delighted to hear the news.", example_vn: "Tôi rất vui mừng khi nghe tin." },
-            { word: "demeanor", ipa: "/dɪ'mi:nər/", vn: "phong thái, cử chỉ", example: "His calm demeanor helped to soothe the situation.", example_vn: "Phong thái bình tĩnh của anh ấy đã giúp làm dịu tình hình." },
-            { word: "demerit", ipa: "/di: 'merɪt/", vn: "điều lầm lỗi, đáng trách", example: "He received a demerit for being late to class.", example_vn: "Anh ấy đã bị trừ điểm vì đi học muộn." },
-            { word: "democracy", ipa: "/dɪ'mɑkrəsi/", vn: "nền dân chủ, chế độ dân chủ", example: "The country is a democracy.", example_vn: "Đất nước đó là một nền dân chủ." },
-            { word: "democrat", ipa: "/'deməkræt/", vn: "người theo chế độ dân chủ", example: "He is a lifelong democrat.", example_vn: "Anh ấy là một người theo chế độ dân chủ suốt đời." },
-            { word: "demolish", ipa: "/dɪ'mɑlɪʃ/", vn: "phá hủy, đánh đổ", example: "The old building was demolished to make way for a new one.", example_vn: "Tòa nhà cũ đã bị phá hủy để nhường chỗ cho một tòa nhà mới." },
-            { word: "demonstration", ipa: "/demən'streɪʃn/", vn: "sự thấu hiểu, biểu hiện, sự chứng minh, thuyết minh | cuộc biểu tình, tuần hành", example: "The new product demonstration was impressive.", example_vn: "Buổi trình diễn sản phẩm mới rất ấn tượng." },
-            { word: "dense", ipa: "/dens/", vn: "dày đặc, đông đúc, rậm rạp", example: "The forest was so dense we couldn't see the sun.", example_vn: "Khu rừng quá dày đặc đến nỗi chúng tôi không thể nhìn thấy mặt trời." },
-        ];
+const viewArea = document.getElementById('viewArea');
+const xpCountEl = document.getElementById('xpCount');
+const badgesEl = document.getElementById('badges');
+const totalWordsEl = document.getElementById('totalWords');
+const totalBookmarksEl = document.getElementById('totalBookmarks');
+const dueCountEl = document.getElementById('dueCount');
 
-        const wordListElement = document.getElementById('wordList');
-        const searchInput = document.getElementById('searchInput');
-        const startFlashcardButton = document.getElementById('startFlashcardButton');
-        const flashcardView = document.getElementById('flashcardView');
-        const wordListView = document.getElementById('wordListView');
-        const flashcardContainer = document.getElementById('flashcardContainer');
-        const flashcardWord = document.getElementById('flashcardWord');
-        const flashcardIPA = document.getElementById('flashcardIPA');
-        const flashcardVN = document.getElementById('flashcardVN');
-        const flashcardExample = document.getElementById('flashcardExample');
-        const flashcardExampleVN = document.getElementById('flashcardExampleVN');
-        const prevButton = document.getElementById('prevButton');
-        const nextButton = document.getElementById('nextButton');
-        const shuffleButton = document.getElementById('shuffleButton');
-        const backToListButton = document.getElementById('backToListButton');
-        const cardCounter = document.getElementById('cardCounter');
+function saveState() {
+  localStorage.setItem('vocab_bookmarks', JSON.stringify(app.bookmarks));
+  localStorage.setItem('vocab_srs', JSON.stringify(app.srs));
+  localStorage.setItem('vocab_daily', JSON.stringify(app.daily));
+  localStorage.setItem('vocab_xp', String(app.xp));
+  localStorage.setItem('vocab_badges', JSON.stringify(app.badges));
+  localStorage.setItem('vocab_quiz_history', JSON.stringify(app.quizHistory));
+  refreshSidebar();
+}
 
-        let currentWordIndex = 0;
-        let activeWords = [...words];
+/* ==========================
+   Utilities
+   ========================== */
+function addXP(n) {
+  app.xp += n;
+  xpCountEl.textContent = app.xp;
+  // badges thresholds
+  const thresholds = [50, 150, 300, 600];
+  thresholds.forEach(t => {
+    if (app.xp >= t && !app.badges.includes('XP'+t)) {
+      app.badges.push('XP'+t);
+    }
+  });
+  renderBadges();
+  saveState();
+}
+function renderBadges() {
+  badgesEl.innerHTML = '';
+  app.badges.forEach(b => {
+    const el = document.createElement('div');
+    el.className = 'text-xs bg-yellow-200 px-2 py-1 rounded';
+    el.textContent = b.replace('XP','Badge XP ');
+    badgesEl.appendChild(el);
+  });
+}
 
-        // Function to create and display a word card
-        function createWordCard(word) {
-            const card = document.createElement('div');
-            card.className = 'bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 transform hover:scale-105 transition-transform duration-300';
-            card.innerHTML = `
-                <div class="flex items-center justify-between mb-2">
-                    <h3 class="text-3xl font-bold text-gray-900">${word.word}</h3>
-                    <button onclick="speakWord('${word.word}')" class="text-blue-500 hover:text-blue-700 transition-colors duration-300">
-                        <!-- Play icon SVG -->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 20 20" fill="currentColor">
-                          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-                        </svg>
-                    </button>
-                </div>
-                <p class="text-xl italic text-gray-600 mb-2">${word.ipa}</p>
-                <p class="text-lg text-gray-700 mb-4">${word.vn}</p>
-                <p class="text-sm text-gray-500"><strong>Ví dụ:</strong> ${word.example}</p>
-                <p class="text-sm text-gray-500"><em>(${word.example_vn})</em></p>
-            `;
-            wordListElement.appendChild(card);
+function speak(text, lang='en-US') {
+  if (!('speechSynthesis' in window)) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = lang || 'en-US';
+  u.rate = 0.95;
+  window.speechSynthesis.speak(u);
+}
+
+/* ==========================
+   File upload
+   ========================== */
+document.getElementById('fileInput').addEventListener('change', e=>{
+  const f = e.target.files[0];
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = evt=>{
+    try {
+      const parsed = JSON.parse(evt.target.result);
+      app.data = parsed;
+      app.topic = parsed.topic || 'Chủ đề';
+      app.vocab = (parsed.vocabulary || []).map(it=>{
+        // ensure fields
+        return {
+          word: it.word || '',
+          phonetic: it.phonetic || '',
+          type: it.type || '',
+          meaning_vi: it.meaning_vi || '',
+          example_en: it.example_en || '',
+          example_vi: it.example_vi || '',
+          lang: it.lang || 'en-US'
+        };
+      });
+      // init SRS for new words
+      app.vocab.forEach(v=>{
+        if (!app.srs[v.word]) {
+          app.srs[v.word] = { level: 0, nextReview: (new Date()).toISOString() }; // due now
         }
+      });
+      refreshSidebar();
+      showList();
+      alert('✅ Đã tải tệp JSON thành công! (' + app.vocab.length + ' từ)');
+    } catch(err){
+      alert('❌ Không thể đọc JSON: ' + err.message);
+    }
+  };
+  r.readAsText(f);
+});
 
-        // Function to filter and render words in list view
-        function renderWords(query = '') {
-            wordListElement.innerHTML = '';
-            const filteredWords = words.filter(word => word.word.toLowerCase().startsWith(query.toLowerCase()));
-            filteredWords.forEach(createWordCard);
-        }
+/* ==========================
+   Sidebar refresh
+   ========================== */
+function refreshSidebar() {
+  totalWordsEl.textContent = app.vocab.length;
+  totalBookmarksEl.textContent = app.bookmarks.length;
+  // due count
+  const now = new Date();
+  let due = 0;
+  Object.values(app.srs||{}).forEach(rec=>{
+    if (rec.nextReview && new Date(rec.nextReview) <= now) due++;
+  });
+  dueCountEl.textContent = due;
+  xpCountEl.textContent = app.xp;
+  renderBadges();
+}
 
-        // Function to render the current flashcard
-        function renderFlashcard() {
-            const word = activeWords[currentWordIndex];
-            if (!word) {
-                return;
-            }
-            
-            flashcardWord.textContent = word.word;
-            flashcardIPA.textContent = word.ipa;
-            flashcardVN.textContent = word.vn;
-            flashcardExample.textContent = `Ví dụ: ${word.example}`;
-            flashcardExampleVN.textContent = `(${word.example_vn})`;
-            cardCounter.textContent = `${currentWordIndex + 1} / ${activeWords.length}`;
-            flashcardContainer.classList.remove('flipped');
-            speakWord(word.word);
-        }
+/* ==========================
+   View: List
+   ========================== */
+document.getElementById('btnList').addEventListener('click', showList);
+function showList(page=1) {
+  showView('list');
+  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu. Hãy upload JSON.'); return; }
+  const html = `
+    <div class="bg-white p-4 rounded shadow">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-semibold text-indigo-700">Danh sách — ${app.topic}</h2>
+        <div class="text-sm text-slate-600">Tổng: ${app.vocab.length}</div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        ${app.vocab.map(v => listCardHTML(v)).join('')}
+      </div>
+    </div>
+  `;
+  viewArea.innerHTML = html;
+}
+function listCardHTML(v){
+  return `
+    <div class="bg-slate-50 p-3 rounded flex justify-between items-start">
+      <div>
+        <div class="text-lg font-bold text-indigo-600">${escapeHtml(v.word)} <span class="text-sm text-gray-500">${escapeHtml(v.phonetic)}</span></div>
+        <div class="text-sm text-slate-700 mt-1">${escapeHtml(v.meaning_vi)}</div>
+        <div class="text-xs text-slate-500 italic mt-1">${escapeHtml(v.example_en)}</div>
+      </div>
+      <div class="flex flex-col items-end gap-2">
+        <button class="px-2 py-1 bg-blue-500 text-white rounded text-sm" onclick="speakWord('${encodeURIComponent(v.word)}')">🔊</button>
+        <button class="px-2 py-1 rounded text-sm ${app.bookmarks.includes(v.word)?'bg-yellow-400':'bg-gray-200'}" onclick="toggleBookmark('${v.word}')">
+          ${app.bookmarks.includes(v.word)?'⭐':'☆'}
+        </button>
+        <button class="px-2 py-1 rounded text-sm bg-emerald-400" onclick="markKnown('${v.word}')">✅ Known</button>
+      </div>
+    </div>
+  `;
+}
+function speakWord(encodedWord){
+  const w = decodeURIComponent(encodedWord);
+  const rec = app.vocab.find(x=>x.word===w);
+  speak(w, rec?rec.lang:'en-US');
+}
 
-        // Function to shuffle the active words
-        function shuffleWords() {
-            for (let i = activeWords.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [activeWords[i], activeWords[j]] = [activeWords[j], activeWords[i]];
-            }
-            currentWordIndex = 0;
-            renderFlashcard();
-        }
+function toggleBookmark(word){
+  if (app.bookmarks.includes(word)) app.bookmarks = app.bookmarks.filter(w=>w!==word);
+  else app.bookmarks.push(word);
+  saveState();
+  showList();
+}
+function markKnown(word){
+  // increase SRS level
+  const rec = app.srs[word];
+  if (!rec) return;
+  rec.level = (rec.level||0) + 1;
+  // schedule next review: simple exponential days
+  const days = Math.pow(2, rec.level-1); // 1,2,4,8...
+  const next = new Date(); next.setDate(next.getDate() + days);
+  rec.nextReview = next.toISOString();
+  addXP(5);
+  saveState();
+  alert('Đã đánh dấu known. Next review in ' + days + ' day(s).');
+}
 
-        // Function to speak a word using Web Speech API
-        function speakWord(text) {
-            const speech = new SpeechSynthesisUtterance(text);
-            speech.lang = 'en-US';
-            speechSynthesis.speak(speech);
-        }
+/* ==========================
+   View: Flashcards (with autoplay)
+   ========================== */
+document.getElementById('btnFlash').addEventListener('click', showFlashcards);
+let flashIndex = 0;
+let autoPlayInterval = null;
+function showFlashcards() {
+  showView('flash');
+  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu.'); return; }
+  flashIndex = 0;
+  renderFlashcard();
+}
+function renderFlashcard(){
+  const v = app.vocab[flashIndex];
+  viewArea.innerHTML = `
+    <div class="bg-white p-6 rounded shadow text-center">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-xl font-semibold text-indigo-700">Flashcard (${flashIndex+1}/${app.vocab.length})</h3>
+        <div class="flex items-center gap-2">
+          <button id="btnAuto" class="px-3 py-1 bg-indigo-500 text-white rounded">Auto</button>
+          <button id="btnQuick" class="px-3 py-1 bg-slate-200 rounded">Quick Review</button>
+        </div>
+      </div>
 
-        // Event listener for search input
-        searchInput.addEventListener('input', (e) => {
-            renderWords(e.target.value);
-        });
+      <div class="card mb-4" id="cardEl" onclick="toggleFlip(this)">
+        <div class="card-inner">
+          <div class="card-face card-front">
+            <div class="text-3xl font-bold text-indigo-700">${escapeHtml(v.word)}</div>
+            <div class="text-sm text-gray-500 mt-2">${escapeHtml(v.phonetic)}</div>
+          </div>
+          <div class="card-face card-back">
+            <div class="text-xl font-semibold text-green-700">${escapeHtml(v.meaning_vi)}</div>
+            <div class="text-sm italic mt-2">${escapeHtml(v.example_en)}</div>
+          </div>
+        </div>
+      </div>
 
-        // Event listener to start flashcard session
-        startFlashcardButton.addEventListener('click', () => {
-            wordListView.classList.add('hidden');
-            flashcardView.classList.remove('hidden');
-            shuffleWords();
-        });
-        
-        // Event listener to go back to list view
-        backToListButton.addEventListener('click', () => {
-            flashcardView.classList.add('hidden');
-            wordListView.classList.remove('hidden');
-            renderWords();
-        });
+      <div class="flex justify-between">
+        <button class="px-4 py-2 bg-gray-300 rounded" onclick="prevFlashcard()">⬅ Trước</button>
+        <div class="flex gap-2">
+          <button class="px-4 py-2 bg-blue-500 text-white rounded" onclick="speak('${encodeURIComponent(v.word)}','${v.lang}')">🔊 Nghe</button>
+          <button class="px-4 py-2 bg-emerald-500 text-white rounded" onclick="rememberCard('${v.word}', true)">Ghi nhớ</button>
+          <button class="px-4 py-2 bg-yellow-400 text-black rounded" onclick="rememberCard('${v.word}', false)">Ôn lại</button>
+        </div>
+        <button class="px-4 py-2 bg-gray-300 rounded" onclick="nextFlashcard()">Tiếp ➡</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('btnAuto').addEventListener('click', toggleAutoPlay);
+  document.getElementById('btnQuick').addEventListener('click', quickReviewFrom(flashIndex));
+}
+function toggleFlip(el){
+  el.classList.toggle('flipped');
+}
+function prevFlashcard(){ flashIndex = (flashIndex-1+app.vocab.length)%app.vocab.length; renderFlashcard(); }
+function nextFlashcard(){ flashIndex = (flashIndex+1)%app.vocab.length; renderFlashcard(); }
+function rememberCard(word, known){
+  const rec = app.srs[word];
+  if (!rec) return;
+  if (known) rec.level = (rec.level||0) + 1;
+  else rec.level = Math.max(0,(rec.level||0)-1);
+  const days = Math.max(1, Math.pow(2, Math.max(0,rec.level-1)));
+  const next = new Date(); next.setDate(next.getDate()+days);
+  rec.nextReview = next.toISOString();
+  addXP(3);
+  saveState();
+  alert(`Đã cập nhật SRS: level=${rec.level}, nextReview=${next.toLocaleDateString()}`);
+}
+function toggleAutoPlay(){
+  const btn = document.getElementById('btnAuto');
+  if (!autoPlayInterval){
+    btn.textContent = 'Stop';
+    autoPlayInterval = setInterval(()=>{ nextFlashcard(); speak(decodeURIComponent(encodeURIComponent(app.vocab[flashIndex].word))); }, 3000);
+  } else {
+    clearInterval(autoPlayInterval); autoPlayInterval=null; btn.textContent='Auto';
+  }
+}
+function quickReviewFrom(startIndex){
+  return function(){
+    // Quick review of next 5 starting at startIndex
+    const start = startIndex;
+    let i = 0;
+    const list = [];
+    for (let k=0;k<5;k++){
+      list.push((start+k)%app.vocab.length);
+    }
+    runQuickSlideshow(list);
+  };
+}
+function runQuickSlideshow(list){
+  let idx=0;
+  const container = viewArea;
+  const stopBtnId = 'stopQuick';
+  container.innerHTML = `<div class="bg-white p-6 rounded shadow text-center"><h3 class="font-semibold">Quick Review</h3><div id="qrCard" class="mt-4"></div><div class="mt-4"><button id="${stopBtnId}" class="px-3 py-1 bg-red-500 text-white rounded">Dừng</button></div></div>`;
+  function showIdx(){
+    const v=app.vocab[list[idx]];
+    document.getElementById('qrCard').innerHTML = `<div class="text-3xl font-bold">${escapeHtml(v.word)}</div><div class="text-sm text-gray-500 mt-2">${escapeHtml(v.meaning_vi)}</div>`;
+    speak(v.word, v.lang);
+  }
+  showIdx();
+  const interval = setInterval(()=>{ idx++; if (idx>=list.length){ clearInterval(interval); addXP(5); showList(); return;} showIdx(); }, 2500);
+  document.getElementById(stopBtnId).addEventListener('click', ()=>{ clearInterval(interval); showList(); });
+}
 
-        // Event listeners for flashcard navigation
-        prevButton.addEventListener('click', () => {
-            currentWordIndex = (currentWordIndex - 1 + activeWords.length) % activeWords.length;
-            renderFlashcard();
-        });
+/* ==========================
+   View: Quiz (multi-type)
+   ========================== */
+document.getElementById('btnQuiz').addEventListener('click', ()=>startQuiz('mixed'));
+let quizSession = { questions: [], index:0, score:0, type:'mixed' };
 
-        nextButton.addEventListener('click', () => {
-            currentWordIndex = (currentWordIndex + 1) % activeWords.length;
-            renderFlashcard();
-        });
-        
-        // Event listener for shuffle button
-        shuffleButton.addEventListener('click', shuffleWords);
+function startQuiz(mode='mixed'){
+  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu.'); return; }
+  quizSession.type = mode;
+  quizSession.questions = generateQuizQuestions(10);
+  quizSession.index = 0; quizSession.score = 0;
+  showQuizQuestion();
+}
+function generateQuizQuestions(n){
+  const pool = [...app.vocab];
+  pool.sort(()=>Math.random()-0.5);
+  const q = [];
+  for (let i=0;i<Math.min(n,pool.length);i++){
+    const item = pool[i];
+    const t = Math.floor(Math.random()*3); // 0: word->meaning, 1: meaning->word, 2: example completion
+    if (t===0){
+      q.push({type:'word2meaning', prompt:`Nghĩa của từ "${item.word}" là gì?`, answer:item.meaning_vi, options: multiOptions(item.meaning_vi, app.vocab.map(v=>v.meaning_vi))});
+    } else if (t===1){
+      q.push({type:'meaning2word', prompt:`Từ nào có nghĩa: "${item.meaning_vi}"?`, answer:item.word, options: multiOptions(item.word, app.vocab.map(v=>v.word))});
+    } else {
+      // example completion: replace word with blank if present otherwise fallback
+      let ex = item.example_en || '';
+      if (ex.toLowerCase().includes(item.word.toLowerCase())){
+        const re = new RegExp(item.word,'ig');
+        const blank = ex.replace(re,'______');
+        q.push({type:'example', prompt:`Hoàn thành: ${blank}`, answer:item.word, options: multiOptions(item.word, app.vocab.map(v=>v.word))});
+      } else {
+        // fallback to word2meaning
+        q.push({type:'word2meaning', prompt:`Nghĩa của từ "${item.word}" là gì?`, answer:item.meaning_vi, options: multiOptions(item.meaning_vi, app.vocab.map(v=>v.meaning_vi))});
+      }
+    }
+  }
+  return q;
+}
+function multiOptions(correct, pool){
+  const opts = [correct];
+  while (opts.length<4){
+    const cand = pool[Math.floor(Math.random()*pool.length)];
+    if (!opts.includes(cand)) opts.push(cand);
+  }
+  return opts.sort(()=>Math.random()-0.5);
+}
+function showQuizQuestion(){
+  const i = quizSession.index;
+  if (i>=quizSession.questions.length){
+    // done
+    const total = quizSession.questions.length, score = quizSession.score;
+    // save history
+    app.quizHistory.push({date:(new Date()).toISOString(), total, score});
+    addXP(Math.round(score*2));
+    saveState();
+    viewArea.innerHTML = `
+      <div class="bg-white p-6 rounded shadow text-center">
+        <h3 class="text-2xl font-bold text-indigo-700">Kết thúc Quiz</h3>
+        <p class="mt-2">Bạn đúng <b>${score}</b> / ${total} (${((score/total)*100).toFixed(1)}%)</p>
+        <div class="mt-4"><canvas id="histChart" width="300" height="200"></canvas></div>
+        <div class="mt-4"><button class="px-4 py-2 bg-purple-600 text-white rounded" onclick="startQuiz('mixed')">Làm lại</button></div>
+      </div>`;
+    // draw small chart from history
+    setTimeout(()=>drawHistoryChart(),50);
+    return;
+  }
+  const q = quizSession.questions[i];
+  viewArea.innerHTML = `
+    <div class="bg-white p-6 rounded shadow">
+      <div class="flex justify-between items-center">
+        <h3 class="text-lg font-semibold">Quiz — câu ${i+1}/${quizSession.questions.length}</h3>
+        <div class="text-sm text-slate-500">Type: ${q.type}</div>
+      </div>
+      <div class="mt-3">
+        <div class="text-base mb-3">${q.prompt}</div>
+        <div class="grid grid-cols-1 gap-2">${q.options.map(o=>`<button class="opt-btn bg-gray-100 px-3 py-2 rounded text-left" onclick="selectAnswer('${escapeForAttr(o)}', this)">${escapeHtml(o)}</button>`).join('')}</div>
+        <div id="qFeedback" class="mt-3 text-center font-medium"></div>
+        <div class="flex justify-between mt-4">
+          <button onclick="prevQuiz()" class="px-3 py-2 bg-gray-300 rounded">⬅ Quay lại</button>
+          <div>
+            <button id="nextQBtn" onclick="nextQuiz()" class="px-3 py-2 bg-indigo-600 text-white rounded hidden">Câu tiếp ➡</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+function escapeForAttr(s){ return encodeURIComponent(s); }
+function selectAnswer(encChoice, btn){
+  const choice = decodeURIComponent(encChoice);
+  const q = quizSession.questions[quizSession.index];
+  const feedback = document.getElementById('qFeedback');
+  // disable all
+  document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
+  if (choice === q.answer){
+    feedback.innerHTML = `<span class="text-green-600">✅ Đúng!</span>`;
+    quizSession.score++;
+    addXP(2);
+  } else {
+    feedback.innerHTML = `<span class="text-red-600">❌ Sai! Đáp án: ${escapeHtml(q.answer)}</span>`;
+  }
+  document.getElementById('nextQBtn').classList.remove('hidden');
+  saveState();
+}
+function nextQuiz(){ quizSession.index++; showQuizQuestion(); }
+function prevQuiz(){ if (quizSession.index>0) quizSession.index--; showQuizQuestion(); }
+function drawHistoryChart(){
+  const ctx = document.getElementById('histChart');
+  if (!ctx) return;
+  const labels = app.quizHistory.slice(-10).map(x=>new Date(x.date).toLocaleDateString());
+  const data = app.quizHistory.slice(-10).map(x=> Math.round((x.score/x.total)*100));
+  new Chart(ctx, { type:'line', data:{labels, datasets:[{label:'Quiz %', data, borderColor:'#6366f1', backgroundColor:'rgba(99,102,241,0.2)', fill:true}] }, options:{responsive:true} });
+}
 
-        // Function to flip the flashcard
-        function flipCard() {
-            flashcardContainer.classList.toggle('flipped');
-        }
+/* ==========================
+   Spelling mode (hear and type)
+   ========================== */
+document.getElementById('btnSpelling').addEventListener('click', ()=>spellMode());
+function spellMode(){
+  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu.'); return; }
+  // pick 7 random
+  const pick = [...app.vocab].sort(()=>Math.random()-0.5).slice(0,7);
+  let idx=0, correct=0;
+  renderSpell();
+  function renderSpell(){
+    if (idx>=pick.length){
+      viewArea.innerHTML = `<div class="bg-white p-6 rounded shadow text-center"><h3 class="text-xl">Kết thúc Spelling</h3><p>Bạn đúng ${correct}/${pick.length}</p><button class="mt-3 px-3 py-2 bg-indigo-600 text-white rounded" onclick="spellMode()">Làm lại</button></div>`;
+      addXP(5+correct);
+      saveState();
+      return;
+    }
+    const v = pick[idx];
+    viewArea.innerHTML = `
+      <div class="bg-white p-6 rounded shadow text-center">
+        <h3 class="text-lg font-semibold">Spelling — ${idx+1}/${pick.length}</h3>
+        <p class="mt-3 text-slate-600">Nghe và gõ chính tả</p>
+        <div class="mt-4"><button class="px-4 py-2 bg-blue-500 text-white rounded" onclick="speak('${v.word}','${v.lang}')">🔊 Nghe</button></div>
+        <div class="mt-4"><input id="spellInput" class="border p-2 rounded w-full" placeholder="Gõ chính tả tại đây" /></div>
+        <div class="mt-3"><button class="px-4 py-2 bg-emerald-500 text-white rounded" id="submitSpell">Kiểm tra</button></div>
+        <div id="spellFeedback" class="mt-3 font-medium"></div>
+      </div>
+    `;
+    document.getElementById('submitSpell').addEventListener('click', ()=>{
+      const val = document.getElementById('spellInput').value.trim();
+      const fb = document.getElementById('spellFeedback');
+      if (val.toLowerCase() === v.word.toLowerCase()){
+        fb.innerHTML = `<span class="text-green-600">✅ Chính xác!</span>`;
+        correct++; addXP(2);
+      } else {
+        fb.innerHTML = `<span class="text-red-600">❌ Sai. Đáp án: ${v.word}</span>`;
+      }
+      setTimeout(()=>{ idx++; renderSpell(); }, 1100);
+    });
+  }
+}
 
-        // Initial render
-        renderWords();
-    </script>
+/* ==========================
+   Listening mode (choose meaning)
+   ========================== */
+document.getElementById('btnListen').addEventListener('click', ()=>listeningMode());
+function listeningMode(){
+  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu.'); return; }
+  const picks = [...app.vocab].sort(()=>Math.random()-0.5).slice(0,8);
+  let idx=0, score=0;
+  renderListen();
+  function renderListen(){
+    if (idx>=picks.length){
+      viewArea.innerHTML = `<div class="bg-white p-6 rounded shadow text-center">Kết thúc Listening — ${score}/${picks.length}<div class="mt-3"><button onclick="listeningMode()" class="px-3 py-2 bg-indigo-600 text-white rounded">Làm lại</button></div></div>`;
+      addXP(3+score);
+      saveState();
+      return;
+    }
+    const item = picks[idx];
+    // options: correct meaning + 3 distractors
+    const pool = app.vocab.map(v=>v.meaning_vi);
+    const opts = multiOptions(item.meaning_vi, pool);
+    viewArea.innerHTML = `
+      <div class="bg-white p-6 rounded shadow text-center">
+        <h3 class="text-lg font-semibold">Listening — ${idx+1}/${picks.length}</h3>
+        <div class="mt-3"><button class="px-4 py-2 bg-blue-500 text-white rounded" onclick="speak('${item.word}','${item.lang}')">🔊 Nghe</button></div>
+        <div class="mt-4 grid grid-cols-1 gap-2">${opts.map(o=>`<button class="opt2 bg-gray-100 px-3 py-2 rounded" onclick="chooseListen('${encodeURIComponent(o)}', this)">${escapeHtml(o)}</button>`).join('')}</div>
+        <div id="listenFb" class="mt-3 font-medium"></div>
+        <div class="mt-4"><button id="nextListen" class="px-3 py-2 bg-indigo-600 text-white rounded hidden">Câu tiếp</button></div>
+      </div>
+    `;
+    window.chooseListen = function(enc, btn){
+      const choice = decodeURIComponent(enc);
+      const fb = document.getElementById('listenFb');
+      document.querySelectorAll('.opt2').forEach(b=>b.disabled=true);
+      if (choice === item.meaning_vi){ fb.innerHTML = `<span class="text-green-600">✅ Đúng</span>`; score++; addXP(2); } else { fb.innerHTML = `<span class="text-red-600">❌ Sai. Đáp án: ${item.meaning_vi}</span>`; }
+      document.getElementById('nextListen').classList.remove('hidden');
+      document.getElementById('nextListen').onclick = ()=>{ idx++; renderListen(); };
+      saveState();
+    };
+  }
+}
+
+/* ==========================
+   Matching Game (drag-drop)
+   ========================== */
+document.getElementById('btnMatch').addEventListener('click', ()=>startMatching());
+function startMatching(){
+  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu.'); return; }
+  const picks = [...app.vocab].sort(()=>Math.random()-0.5).slice(0,6);
+  const left = picks.map(v=>v.word).sort(()=>Math.random()-0.5);
+  const right = picks.map(v=>v.meaning_vi).sort(()=>Math.random()-0.5);
+  viewArea.innerHTML = `
+    <div class="bg-white p-6 rounded shadow">
+      <h3 class="font-semibold text-indigo-700">Matching Game</h3>
+      <div class="grid grid-cols-2 gap-4 mt-4">
+        <div>
+          ${left.map(w => `<div draggable="true" class="draggable p-2 bg-slate-100 rounded mb-2" ondragstart="dragStart(event)" data-word="${escapeHtml(w)}">${escapeHtml(w)}</div>`).join('')}
+        </div>
+        <div>
+          ${right.map(m => `<div class="drop-target p-2 mb-2" ondragover="allowDrop(event)" ondrop="drop(event)" data-meaning="${escapeHtml(m)}">${escapeHtml(m)}</div>`).join('')}
+        </div>
+      </div>
+      <div class="mt-4"><button onclick="checkMatches()" class="px-3 py-2 bg-emerald-500 text-white rounded">Kiểm tra</button></div>
+      <div id="matchFb" class="mt-3 font-medium"></div>
+    </div>
+  `;
+  // store correct pairs
+  window._matchPairs = {};
+  picks.forEach(v=> window._matchPairs[v.word] = v.meaning_vi);
+  window._dropped = {};
+}
+function dragStart(e){ e.dataTransfer.setData('text/plain', e.target.dataset.word); }
+function allowDrop(e){ e.preventDefault(); }
+function drop(e){
+  const word = e.dataTransfer.getData('text/plain');
+  const target = e.currentTarget;
+  target.innerHTML = `<b>${escapeHtml(word)}</b><div class="text-sm">${escapeHtml(target.dataset.meaning)}</div>`;
+  window._dropped[word] = target.dataset.meaning;
+}
+function checkMatches(){
+  const fb = document.getElementById('matchFb');
+  let correct = 0, total = Object.keys(window._matchPairs).length;
+  Object.entries(window._matchPairs).forEach(([w,m])=>{
+    if (window._dropped[w] && window._dropped[w]===m) correct++;
+  });
+  fb.innerHTML = `Bạn đúng ${correct}/${total}`;
+  addXP(3+correct);
+  saveState();
+}
+
+/* ==========================
+   Daily 10
+   ========================== */
+document.getElementById('btnDaily').addEventListener('click', ()=>showDaily());
+function showDaily(){
+  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu.'); return; }
+  const today = (new Date()).toISOString().slice(0,10);
+  if (!app.daily[today]){
+    // generate and save
+    app.daily[today] = [...app.vocab].sort(()=>Math.random()-0.5).slice(0,10).map(v=>v.word);
+    saveState();
+  }
+  const list = app.daily[today];
+  viewArea.innerHTML = `
+    <div class="bg-white p-6 rounded shadow">
+      <h3 class="text-lg font-semibold">Daily 10 — ${today}</h3>
+      <ul class="mt-3 space-y-2">${list.map(w=>`<li class="p-2 bg-slate-50 rounded flex justify-between">${w}<button onclick="speak('${w}')' class='px-2 py-1 bg-blue-500 text-white rounded'>🔊</button></li>`).join('')}</ul>
+      <div class="mt-4"><button onclick="startDailyPractice()" class="px-3 py-2 bg-indigo-600 text-white rounded">Ôn Daily</button></div>
+    </div>
+  `;
+}
+function startDailyPractice(){
+  const today = (new Date()).toISOString().slice(0,10);
+  const list = app.daily[today] || [];
+  if (!list.length) return alert('Chưa có Daily cho hôm nay');
+  // simple quiz through the words
+  const questions = list.map(w=> {
+    const v = app.vocab.find(x=>x.word===w);
+    const options = multiOptions(v.meaning_vi, app.vocab.map(x=>x.meaning_vi));
+    return {prompt:`Nghĩa của "${v.word}" là?`, answer:v.meaning_vi, options};
+  });
+  quizSession.questions = questions; quizSession.index=0; quizSession.score=0;
+  showQuizQuestion();
+}
+
+/* ==========================
+   SRS view (due today)
+   ========================== */
+document.getElementById('btnSRS').addEventListener('click', ()=>showSRS());
+function showSRS(){
+  showView('srs');
+  const now = new Date();
+  const dueWords = Object.entries(app.srs).filter(([w,r])=> new Date(r.nextReview) <= now).map(([w,r])=>w);
+  if (!dueWords.length) { viewArea.innerHTML = emptyBox('Không có từ nào đến hạn ôn hôm nay.'); return; }
+  viewArea.innerHTML = `
+    <div class="bg-white p-6 rounded shadow">
+      <h3 class="text-lg font-semibold">Ôn hôm nay — ${dueWords.length} từ</h3>
+      <div class="mt-3 grid gap-3">${dueWords.map(w=> {
+        const v = app.vocab.find(x=>x.word===w);
+        return `<div class="p-3 bg-slate-50 rounded flex justify-between"><div><b>${escapeHtml(w)}</b><div class="text-sm text-slate-600">${escapeHtml(v.meaning_vi)}</div></div><div><button class="px-2 py-1 bg-emerald-500 text-white rounded" onclick="srsAnswer('${w}',true)">✅</button><button class="px-2 py-1 bg-red-400 text-white rounded ml-2" onclick="srsAnswer('${w}',false)">❌</button></div></div>`;
+      }).join('')}</div>
+    </div>
+  `;
+}
+function srsAnswer(word, correct){
+  const rec = app.srs[word];
+  if (!rec) return;
+  if (correct) rec.level = (rec.level||0)+1;
+  else rec.level = Math.max(0,(rec.level||0)-1);
+  const days = Math.max(1, Math.pow(2, Math.max(0,rec.level-1)));
+  const next = new Date(); next.setDate(next.getDate()+days);
+  rec.nextReview = next.toISOString();
+  addXP(correct?5:1);
+  saveState();
+  showSRS();
+}
+
+/* ==========================
+   Dashboard
+   ========================== */
+document.getElementById('btnDash').addEventListener('click', ()=>showDashboard());
+function showDashboard(){
+  showView('dash');
+  const total = app.vocab.length;
+  const known = Object.values(app.srs).filter(r=> r.level>0).length;
+  const due = Object.values(app.srs).filter(r=> new Date(r.nextReview) <= new Date()).length;
+  viewArea.innerHTML = `
+    <div class="bg-white p-6 rounded shadow">
+      <h3 class="text-xl font-semibold">Dashboard</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+        <div class="p-4 bg-slate-50 rounded">
+          <p>Total words: <b>${total}</b></p>
+          <p>Known (level>0): <b>${known}</b></p>
+          <p>Due today: <b>${due}</b></p>
+          <p>XP: <b>${app.xp}</b></p>
+        </div>
+        <div class="p-4 bg-slate-50 rounded">
+          <canvas id="dashChart" width="300" height="250"></canvas>
+        </div>
+      </div>
+    </div>
+  `;
+  const ctx = document.getElementById('dashChart');
+  const knownCount = known, unknown = total-known;
+  new Chart(ctx, { type:'doughnut', data:{ labels:['Known','Unknown'], datasets:[{data:[knownCount,unknown], backgroundColor:['#10b981','#94a3b8']}] }});
+}
+
+/* ==========================
+   Helpers
+   ========================== */
+function showView(name){
+  // center viewArea is used; nothing special hiding required in this single-page design
+}
+function emptyBox(msg){ return `<div class="bg-white p-6 rounded shadow text-center text-slate-600">${msg}</div>`; }
+function escapeHtml(s){ if (!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+
+/* ==========================
+   Persistence control
+   ========================== */
+document.getElementById('btnQuickReview').addEventListener('click', ()=>{
+  if (!app.vocab.length) { alert('Chưa có dữ liệu'); return; }
+  const list = [...app.vocab].sort(()=>Math.random()-0.5).slice(0,5).map(v=>app.vocab.indexOf(v));
+  runQuickSlideshow(list);
+});
+document.getElementById('btnClearProgress').addEventListener('click', ()=>{
+  if (!confirm('Xóa toàn bộ progress (bookmarks, SRS, xp, badges)?')) return;
+  localStorage.removeItem('vocab_bookmarks');
+  localStorage.removeItem('vocab_srs');
+  localStorage.removeItem('vocab_daily');
+  localStorage.removeItem('vocab_xp');
+  localStorage.removeItem('vocab_badges');
+  localStorage.removeItem('vocab_quiz_history');
+  // reload internal state
+  app.bookmarks=[]; app.srs={}; app.daily={}; app.xp=0; app.badges=[]; app.quizHistory=[];
+  saveState();
+  alert('Đã xóa.');
+  refreshSidebar();
+  showList();
+});
+
+/* ==========================
+   Init
+   ========================== */
+(function init(){
+  xpCountEl.textContent = app.xp;
+  renderBadges();
+  refreshSidebar();
+  // default empty view
+  viewArea.innerHTML = emptyBox('Upload file JSON để bắt đầu hoặc thử các tính năng ở trên.');
+})();
+
+</script>
 </body>
 </html>
