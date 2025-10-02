@@ -1,712 +1,353 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Học Từ Vựng | Flashcards & Câu Hỏi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f0f4f8;
-        }
-        .flashcard {
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-            cursor: pointer;
-        }
-        .flashcard.is-flipped {
-            transform: rotateY(180deg);
-        }
-        .flashcard-face {
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-        .flashcard-back {
-            transform: rotateY(180deg);
-        }
-        .speaker-btn {
-            transition: background-color 0.2s;
-        }
-        .speaker-btn:hover {
-            background-color: #e2e8f0;
-        }
-        .nav-btn.active {
-            background-color: #4f46e5;
-            color: white;
-        }
-        /* Hide the default file input */
-        #json-file-input {
-            display: none;
-        }
-        .pagination-btn.active {
-            background-color: #4f46e5;
-            color: white;
-        }
-        .quiz-option {
-            transition: all 0.2s;
-        }
-        .quiz-option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        .quiz-option.correct {
-            background-color: #10b981;
-            color: white;
-        }
-        .quiz-option.incorrect {
-            background-color: #ef4444;
-            color: white;
-        }
-        .progress-bar {
-            height: 6px;
-            background-color: #e5e7eb;
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background-color: #4f46e5;
-            transition: width 0.3s ease;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Vocabulary App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* Flashcard */
+    .card {
+      perspective: 1000px;
+      width: 320px;
+      height: 220px;
+      position: relative;
+      cursor: pointer;
+      margin: auto;
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 1rem;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+    .card-front { background: white; }
+    .card-back { background: #fef3c7; transform: rotateY(180deg); }
+  </style>
 </head>
-<body class="antialiased text-slate-800">
+<body class="bg-gradient-to-r from-blue-100 to-indigo-200 min-h-screen p-6">
 
-    <div id="app" class="container mx-auto p-4 md:p-8 max-w-5xl">
-        <!-- Header -->
-        <header class="text-center mb-8">
-            <h1 id="topic-title" class="text-3xl md:text-4xl font-bold text-slate-900">Học Từ Vựng Theo Chủ Đề</h1>
-            <p id="topic-subtitle" class="text-slate-600 mt-2">Tải lên tệp JSON của bạn để bắt đầu.</p>
-        </header>
-        
-        <!-- File Uploader -->
-        <div id="upload-section" class="text-center">
-            <label for="json-file-input" class="cursor-pointer inline-block bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:bg-indigo-700 transition-colors">
-                Chọn tệp JSON
-            </label>
-            <input type="file" id="json-file-input" accept=".json">
-            <p id="error-message" class="text-red-500 mt-4"></p>
+  <h1 class="text-4xl font-extrabold mb-6 text-center text-indigo-700 drop-shadow">📚 Vocabulary Learning App</h1>
+
+  <!-- Upload JSON -->
+  <div class="flex justify-center mb-6">
+    <input type="file" id="fileInput" accept=".json" class="p-2 border rounded bg-white shadow">
+  </div>
+
+  <!-- Menu -->
+  <div class="flex justify-center gap-3 mb-6">
+    <button id="listBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg shadow">📋 List</button>
+    <button id="flashBtn" class="bg-green-500 hover:bg-green-600 text-white px-5 py-2 rounded-lg shadow">🃏 Flashcards</button>
+    <button id="quizBtn" class="bg-purple-500 hover:bg-purple-600 text-white px-5 py-2 rounded-lg shadow">❓ Quiz</button>
+    <button id="bookmarkBtn" class="bg-yellow-500 hover:bg-yellow-600 text-white px-5 py-2 rounded-lg shadow">⭐ Bookmarks</button>
+  </div>
+
+  <!-- Views -->
+  <div id="listView" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+  <div id="flashView" class="hidden"></div>
+  <div id="quizView" class="hidden"></div>
+
+  <!-- Pagination -->
+  <div id="pagination" class="flex justify-center gap-2 mt-6"></div>
+
+  <script>
+    let data = null;
+    let currentPage = 1;
+    const itemsPerPage = 6;
+    const flashcardsPerPage = 10;
+
+    let bookmarked = JSON.parse(localStorage.getItem("bookmarked")) || [];
+
+    const fileInput = document.getElementById("fileInput");
+    const listView = document.getElementById("listView");
+    const flashView = document.getElementById("flashView");
+    const quizView = document.getElementById("quizView");
+    const pagination = document.getElementById("pagination");
+
+    // Upload JSON
+    fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          data = JSON.parse(e.target.result);
+          alert("✅ Đã tải dữ liệu thành công!");
+          showList();
+        } catch {
+          alert("❌ File JSON không hợp lệ!");
+        }
+      };
+      reader.readAsText(file);
+    });
+
+    // Menu
+    document.getElementById("listBtn").addEventListener("click", showList);
+    document.getElementById("flashBtn").addEventListener("click", showFlashcards);
+    document.getElementById("quizBtn").addEventListener("click", startQuiz);
+    document.getElementById("bookmarkBtn").addEventListener("click", showBookmarks);
+
+    // ----- BOOKMARK -----
+    function toggleBookmark(word) {
+      if (bookmarked.includes(word)) {
+        bookmarked = bookmarked.filter(w => w !== word);
+      } else {
+        bookmarked.push(word);
+      }
+      localStorage.setItem("bookmarked", JSON.stringify(bookmarked));
+      showList();
+    }
+
+    function showBookmarks() {
+      if (!data) return;
+      showView("list");
+      const bookmarkedWords = data.vocabulary.filter(item => bookmarked.includes(item.word));
+      listView.innerHTML = bookmarkedWords.map(item => cardHTML(item)).join("");
+      pagination.innerHTML = "";
+    }
+
+    // ----- LIST VIEW -----
+    function showList() {
+      if (!data) return;
+      showView("list");
+      displayList();
+    }
+
+    function cardHTML(item) {
+      return `
+        <div class="bg-white rounded-2xl p-4 shadow hover:shadow-lg transition flex justify-between items-center">
+          <div>
+            <h3 class="font-bold text-xl text-indigo-600">${item.word} 
+              <span class="text-gray-500 text-sm">${item.phonetic || ""}</span>
+            </h3>
+            <p><strong>(${item.type})</strong> - ${item.meaning_vi}</p>
+            <p class="text-sm text-gray-600 italic">${item.example_en || ""}</p>
+            <p class="text-sm text-gray-600">(${item.example_vi || ""})</p>
+          </div>
+          <div class="flex flex-col gap-2 items-center">
+            <button onclick="speak('${item.word}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow">🔊</button>
+            <button onclick="toggleBookmark('${item.word}')" 
+                    class="text-2xl ${bookmarked.includes(item.word) ? 'text-yellow-400' : 'text-gray-300'}">★</button>
+          </div>
         </div>
+      `;
+    }
 
-        <!-- Main Content (hidden by default) -->
-        <div id="main-content" class="hidden">
-            <!-- Navigation -->
-            <div class="flex justify-center mb-8 bg-slate-200 rounded-lg p-1 max-w-md mx-auto">
-                <button id="btn-list-view" class="nav-btn w-1/3 py-2 px-4 rounded-md font-semibold text-slate-700 transition-colors active">Danh sách</button>
-                <button id="btn-flashcard-view" class="nav-btn w-1/3 py-2 px-4 rounded-md font-semibold text-slate-700 transition-colors">Flashcard</button>
-                <button id="btn-quiz-view" class="nav-btn w-1/3 py-2 px-4 rounded-md font-semibold text-slate-700 transition-colors">Câu hỏi</button>
+    function displayList() {
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const paginatedItems = data.vocabulary.slice(start, end);
+
+      listView.innerHTML = paginatedItems.map(item => cardHTML(item)).join("");
+      updatePagination("list", currentPage, Math.ceil(data.vocabulary.length / itemsPerPage));
+    }
+
+    // ----- FLASHCARDS -----
+    let flashIndex = 0;
+    function showFlashcards() {
+      if (!data) return;
+      showView("flash");
+      flashIndex = (currentPage - 1) * flashcardsPerPage;
+      displayFlashcard();
+    }
+
+    function displayFlashcard() {
+      const card = data.vocabulary[flashIndex];
+      if (!card) return;
+
+      flashView.innerHTML = `
+        <div class="card" onclick="this.classList.toggle('flipped')">
+          <div class="card-inner">
+            <div class="card-front">
+              <h2 class="text-2xl font-bold text-indigo-700">${card.word}</h2>
+              <p class="text-gray-500">${card.phonetic || ""}</p>
+              <button onclick="speak('${card.word}'); event.stopPropagation();" 
+                      class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded mt-3">🔊 Nghe</button>
             </div>
-
-            <!-- Vocabulary List View -->
-            <main id="list-view" class="mb-8">
-                <div id="list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Vocabulary items will be inserted here by JavaScript -->
-                </div>
-                
-                <!-- Pagination for List View -->
-                <div id="list-pagination" class="mt-8 flex justify-center items-center space-x-2">
-                    <!-- Pagination buttons will be inserted here by JavaScript -->
-                </div>
-            </main>
-
-            <!-- Flashcard View -->
-            <section id="flashcard-view" class="hidden">
-                <div id="flashcard-container" class="mb-6">
-                    <!-- Flashcard will be inserted here -->
-                </div>
-                
-                <!-- Pagination for Flashcard View -->
-                <div id="flashcard-pagination" class="mb-6 flex justify-center items-center space-x-2">
-                    <!-- Pagination buttons will be inserted here by JavaScript -->
-                </div>
-                
-                <div id="flashcard-controls" class="flex items-center justify-center gap-4 flex-wrap">
-                    <button id="btn-prev" class="px-5 py-2.5 bg-white rounded-lg font-semibold shadow-md hover:bg-slate-100 transition-colors">Trước</button>
-                    <button id="btn-random" class="px-5 py-2.5 bg-white rounded-lg font-semibold shadow-md hover:bg-slate-100 transition-colors">Ngẫu nhiên</button>
-                    <button id="btn-next" class="px-5 py-2.5 bg-white rounded-lg font-semibold shadow-md hover:bg-slate-100 transition-colors">Tiếp theo</button>
-                </div>
-            </section>
-
-            <!-- Quiz View -->
-            <section id="quiz-view" class="hidden">
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-slate-800">Kiểm tra từ vựng</h2>
-                        <div class="text-sm font-medium text-slate-600">
-                            <span id="quiz-progress-text">0/0</span>
-                        </div>
-                    </div>
-                    <div class="progress-bar mb-4">
-                        <div id="quiz-progress-bar" class="progress-fill" style="width: 0%"></div>
-                    </div>
-                    
-                    <div id="quiz-container">
-                        <!-- Quiz content will be inserted here by JavaScript -->
-                    </div>
-                    
-                    <div id="quiz-result" class="hidden mt-6 p-4 bg-slate-100 rounded-lg text-center">
-                        <h3 class="text-xl font-bold mb-2" id="quiz-result-title">Kết quả</h3>
-                        <p class="text-lg mb-4" id="quiz-result-text">Bạn đã trả lời đúng <span id="quiz-correct-count">0</span>/<span id="quiz-total-count">0</span> câu hỏi</p>
-                        <button id="quiz-restart-btn" class="bg-indigo-600 text-white font-medium py-2 px-6 rounded-lg hover:bg-indigo-700 transition-colors">
-                            Làm lại
-                        </button>
-                    </div>
-                </div>
-                
-                <div class="text-center">
-                    <button id="quiz-start-btn" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 transition-colors">
-                        Bắt đầu kiểm tra
-                    </button>
-                </div>
-            </section>
+            <div class="card-back">
+              <p class="text-xl font-semibold text-green-700">${card.meaning_vi}</p>
+              <p class="italic text-gray-700">${card.example_en || ""}</p>
+              <p class="text-gray-700">${card.example_vi || ""}</p>
+            </div>
+          </div>
         </div>
-    </div>
+        <div class="flex justify-center gap-4 mt-4">
+          <button onclick="prevFlashcard()" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">⬅ Trước</button>
+          <button onclick="nextFlashcard()" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">Tiếp ➡</button>
+        </div>
+      `;
+      pagination.innerHTML = "";
+    }
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let vocabulary = [];
-            let currentFlashcardIndex = 0;
-            
-            // Quiz variables
-            let quizQuestions = [];
-            let currentQuizIndex = 0;
-            let quizScore = 0;
-            let quizInProgress = false;
-            
-            // Pagination settings
-            let currentListPage = 1;
-            let itemsPerPage = 6; // Number of items per page in list view
-            let currentFlashcardPage = 1;
-            let flashcardsPerPage = 10; // Number of flashcards per page
+    function prevFlashcard() {
+      if (flashIndex > 0) flashIndex--;
+      displayFlashcard();
+    }
+    function nextFlashcard() {
+      if (flashIndex < data.vocabulary.length - 1) flashIndex++;
+      displayFlashcard();
+    }
 
-            // DOM Elements
-            const uploadSection = document.getElementById('upload-section');
-            const mainContent = document.getElementById('main-content');
-            const jsonFileInput = document.getElementById('json-file-input');
-            const errorMessage = document.getElementById('error-message');
-            
-            const topicTitle = document.getElementById('topic-title');
-            const topicSubtitle = document.getElementById('topic-subtitle');
+    // ----- QUIZ -----
+    let quizQuestions = [];
+    let quizIndex = 0;
+    let score = 0;
 
-            const listView = document.getElementById('list-view');
-            const listContainer = document.getElementById('list-container');
-            const listPagination = document.getElementById('list-pagination');
-            
-            const flashcardView = document.getElementById('flashcard-view');
-            const flashcardContainer = document.getElementById('flashcard-container');
-            const flashcardPagination = document.getElementById('flashcard-pagination');
-            
-            const quizView = document.getElementById('quiz-view');
-            const quizContainer = document.getElementById('quiz-container');
-            const quizProgressText = document.getElementById('quiz-progress-text');
-            const quizProgressBar = document.getElementById('quiz-progress-bar');
-            const quizResult = document.getElementById('quiz-result');
-            const quizResultTitle = document.getElementById('quiz-result-title');
-            const quizResultText = document.getElementById('quiz-result-text');
-            const quizCorrectCount = document.getElementById('quiz-correct-count');
-            const quizTotalCount = document.getElementById('quiz-total-count');
-            const quizStartBtn = document.getElementById('quiz-start-btn');
-            const quizRestartBtn = document.getElementById('quiz-restart-btn');
-            
-            const btnListView = document.getElementById('btn-list-view');
-            const btnFlashcardView = document.getElementById('btn-flashcard-view');
-            const btnQuizView = document.getElementById('btn-quiz-view');
-            const btnPrev = document.getElementById('btn-prev');
-            const btnNext = document.getElementById('btn-next');
-            const btnRandom = document.getElementById('btn-random');
+    function startQuiz() {
+      if (!data) return;
+      showView("quiz");
+      generateQuestions();
+      quizIndex = 0;
+      score = 0;
+      displayQuizQuestion();
+    }
 
-            // --- Core Functions ---
+    function generateQuestions() {
+      quizQuestions = [];
+      const vocab = [...data.vocabulary];
+      vocab.sort(() => Math.random() - 0.5);
 
-            function speak(text) {
-                if ('speechSynthesis' in window) {
-                    window.speechSynthesis.cancel();
-                    const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.lang = 'en-US';
-                    utterance.rate = 0.9;
-                    window.speechSynthesis.speak(utterance);
-                } else {
-                    alert('Trình duyệt của bạn không hỗ trợ phát âm.');
-                }
-            }
+      for (let i = 0; i < Math.min(10, vocab.length); i++) {
+        const item = vocab[i];
+        const type = Math.floor(Math.random() * 2);
 
-            function renderListView(page = 1) {
-                currentListPage = page;
-                listContainer.innerHTML = '';
-                
-                // Calculate items to show
-                const startIndex = (page - 1) * itemsPerPage;
-                const endIndex = Math.min(startIndex + itemsPerPage, vocabulary.length);
-                
-                // Render items for current page
-                for (let i = startIndex; i < endIndex; i++) {
-                    const item = vocabulary[i];
-                    const card = `
-                        <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200">
-                            <div class="flex justify-between items-center mb-2">
-                                <h3 class="text-xl font-bold text-indigo-600">${item.word}</h3>
-                                <button class="speaker-btn p-2 rounded-full" data-word="${item.word}" title="Nghe phát âm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-                                </button>
-                            </div>
-                            <p class="text-slate-500 mb-4">${item.phonetic} <span class="italic text-slate-400 ml-2">(${item.type})</span></p>
-                            <p class="text-lg font-semibold text-slate-800 mb-4">${item.meaning_vi}</p>
-                            <div class="text-sm text-slate-600 space-y-2">
-                                <p><strong class="font-medium">EN:</strong> ${item.example_en}</p>
-                                <p><strong class="font-medium">VI:</strong> ${item.example_vi}</p>
-                            </div>
-                        </div>`;
-                    listContainer.innerHTML += card;
-                }
-                
-                // Render pagination
-                renderListPagination();
-            }
-            
-            function renderListPagination() {
-                const totalPages = Math.ceil(vocabulary.length / itemsPerPage);
-                
-                if (totalPages <= 1) {
-                    listPagination.innerHTML = '';
-                    return;
-                }
-                
-                let paginationHTML = '';
-                
-                // Previous button
-                if (currentListPage > 1) {
-                    paginationHTML += `<button class="pagination-btn px-3 py-2 bg-white rounded-md font-medium shadow-sm hover:bg-slate-100 transition-colors" data-page="${currentListPage - 1}">Trước</button>`;
-                }
-                
-                // Page numbers
-                for (let i = 1; i <= totalPages; i++) {
-                    if (i === currentListPage) {
-                        paginationHTML += `<button class="pagination-btn active px-3 py-2 bg-indigo-600 text-white rounded-md font-medium shadow-sm">${i}</button>`;
-                    } else {
-                        paginationHTML += `<button class="pagination-btn px-3 py-2 bg-white rounded-md font-medium shadow-sm hover:bg-slate-100 transition-colors" data-page="${i}">${i}</button>`;
-                    }
-                }
-                
-                // Next button
-                if (currentListPage < totalPages) {
-                    paginationHTML += `<button class="pagination-btn px-3 py-2 bg-white rounded-md font-medium shadow-sm hover:bg-slate-100 transition-colors" data-page="${currentListPage + 1}">Tiếp</button>`;
-                }
-                
-                listPagination.innerHTML = paginationHTML;
-            }
-            
-            function renderFlashcard(index) {
-                if (index < 0 || index >= vocabulary.length) return;
-                const item = vocabulary[index];
-                flashcardContainer.innerHTML = `
-                    <div class="flashcard-wrapper" style="perspective: 1000px;">
-                        <div class="flashcard relative w-full h-80 md:h-96">
-                            <div class="flashcard-face absolute w-full h-full flex flex-col items-center justify-center bg-white rounded-xl shadow-lg border border-slate-200 p-6 text-center">
-                                <h2 class="text-4xl md:text-5xl font-bold text-indigo-600">${item.word}</h2>
-                                <p class="text-slate-500 mt-2 text-lg">${item.phonetic}</p>
-                                <button class="speaker-btn absolute top-4 right-4 p-2 rounded-full" data-word="${item.word}" title="Nghe phát âm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-                                </button>
-                                <p class="absolute bottom-6 text-slate-400">Nhấn để xem nghĩa</p>
-                            </div>
-                            <div class="flashcard-face flashcard-back absolute w-full h-full flex flex-col justify-center bg-indigo-600 text-white rounded-xl shadow-lg p-6 text-center">
-                                <h3 class="text-3xl md:text-4xl font-bold mb-4">${item.meaning_vi}</h3>
-                                <div class="text-indigo-100 space-y-2">
-                                    <p><strong class="font-medium">EN:</strong> ${item.example_en}</p>
-                                    <p><strong class="font-medium">VI:</strong> ${item.example_vi}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-                const flashcard = flashcardContainer.querySelector('.flashcard');
-                flashcard.addEventListener('click', () => flashcard.classList.toggle('is-flipped'));
-                
-                // Update flashcard pagination
-                renderFlashcardPagination();
-            }
-            
-            function renderFlashcardPagination() {
-                const totalPages = Math.ceil(vocabulary.length / flashcardsPerPage);
-                
-                if (totalPages <= 1) {
-                    flashcardPagination.innerHTML = '';
-                    return;
-                }
-                
-                // Calculate current page based on current flashcard index
-                currentFlashcardPage = Math.floor(currentFlashcardIndex / flashcardsPerPage) + 1;
-                
-                let paginationHTML = '';
-                
-                // Previous button
-                if (currentFlashcardPage > 1) {
-                    paginationHTML += `<button class="pagination-btn px-3 py-2 bg-white rounded-md font-medium shadow-sm hover:bg-slate-100 transition-colors" data-page="${currentFlashcardPage - 1}">Trước</button>`;
-                }
-                
-                // Page numbers
-                for (let i = 1; i <= totalPages; i++) {
-                    if (i === currentFlashcardPage) {
-                        paginationHTML += `<button class="pagination-btn active px-3 py-2 bg-indigo-600 text-white rounded-md font-medium shadow-sm">${i}</button>`;
-                    } else {
-                        paginationHTML += `<button class="pagination-btn px-3 py-2 bg-white rounded-md font-medium shadow-sm hover:bg-slate-100 transition-colors" data-page="${i}">${i}</button>`;
-                    }
-                }
-                
-                // Next button
-                if (currentFlashcardPage < totalPages) {
-                    paginationHTML += `<button class="pagination-btn px-3 py-2 bg-white rounded-md font-medium shadow-sm hover:bg-slate-100 transition-colors" data-page="${currentFlashcardPage + 1}">Tiếp</button>`;
-                }
-                
-                flashcardPagination.innerHTML = paginationHTML;
-            }
-            
-            function goToFlashcardPage(page) {
-                currentFlashcardPage = page;
-                currentFlashcardIndex = (page - 1) * flashcardsPerPage;
-                renderFlashcard(currentFlashcardIndex);
-            }
+        if (type === 0) {
+          quizQuestions.push({
+            question: `Nghĩa của từ <span class="font-bold text-indigo-700">"${item.word}"</span> là gì?`,
+            answer: item.meaning_vi,
+            options: shuffleOptions(item.meaning_vi, vocab.map(v => v.meaning_vi))
+          });
+        } else {
+          quizQuestions.push({
+            question: `Từ nào có nghĩa: <span class="font-bold text-green-700">"${item.meaning_vi}"</span>?`,
+            answer: item.word,
+            options: shuffleOptions(item.word, vocab.map(v => v.word))
+          });
+        }
+      }
+    }
 
-            // --- Quiz Functions ---
-            
-            function generateQuizQuestions() {
-                quizQuestions = [];
-                
-                // Create different types of questions
-                vocabulary.forEach((item, index) => {
-                    // Question type 1: Word to meaning
-                    quizQuestions.push({
-                        type: 'word_to_meaning',
-                        question: `"${item.word}" có nghĩa là gì?`,
-                        options: generateOptionsForMeaning(item.meaning_vi, index),
-                        correctAnswer: item.meaning_vi,
-                        word: item.word
-                    });
-                    
-                    // Question type 2: Meaning to word
-                    quizQuestions.push({
-                        type: 'meaning_to_word',
-                        question: `Từ nào có nghĩa là "${item.meaning_vi}"?`,
-                        options: generateOptionsForWord(item.word, index),
-                        correctAnswer: item.word,
-                        meaning: item.meaning_vi
-                    });
-                    
-                    // Question type 3: Example completion
-                    if (item.example_en) {
-                        const incompleteExample = item.example_en.replace(item.word, '______');
-                        quizQuestions.push({
-                            type: 'example_completion',
-                            question: `Hoàn thành câu: ${incompleteExample}`,
-                            options: generateOptionsForWord(item.word, index),
-                            correctAnswer: item.word,
-                            example: item.example_en
-                        });
-                    }
-                });
-                
-                // Shuffle questions
-                shuffleArray(quizQuestions);
-                // Limit to 15 questions max for better user experience
-                if (quizQuestions.length > 15) {
-                    quizQuestions = quizQuestions.slice(0, 15);
-                }
-            }
-            
-            function generateOptionsForMeaning(correctMeaning, correctIndex) {
-                const options = [correctMeaning];
-                
-                // Get 3 random wrong meanings
-                while (options.length < 4) {
-                    const randomIndex = Math.floor(Math.random() * vocabulary.length);
-                    if (randomIndex !== correctIndex && !options.includes(vocabulary[randomIndex].meaning_vi)) {
-                        options.push(vocabulary[randomIndex].meaning_vi);
-                    }
-                }
-                
-                shuffleArray(options);
-                return options;
-            }
-            
-            function generateOptionsForWord(correctWord, correctIndex) {
-                const options = [correctWord];
-                
-                // Get 3 random wrong words
-                while (options.length < 4) {
-                    const randomIndex = Math.floor(Math.random() * vocabulary.length);
-                    if (randomIndex !== correctIndex && !options.includes(vocabulary[randomIndex].word)) {
-                        options.push(vocabulary[randomIndex].word);
-                    }
-                }
-                
-                shuffleArray(options);
-                return options;
-            }
-            
-            function shuffleArray(array) {
-                for (let i = array.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [array[i], array[j]] = [array[j], array[i]];
-                }
-                return array;
-            }
-            
-            function startQuiz() {
-                quizInProgress = true;
-                currentQuizIndex = 0;
-                quizScore = 0;
-                
-                generateQuizQuestions();
-                
-                quizStartBtn.classList.add('hidden');
-                quizResult.classList.add('hidden');
-                renderQuizQuestion();
-            }
-            
-            function renderQuizQuestion() {
-                if (currentQuizIndex >= quizQuestions.length) {
-                    endQuiz();
-                    return;
-                }
-                
-                const question = quizQuestions[currentQuizIndex];
-                let questionHTML = '';
-                
-                questionHTML += `<div class="mb-6">
-                    <h3 class="text-xl font-semibold text-slate-800 mb-4">${question.question}</h3>
-                    <div class="space-y-3">`;
-                
-                question.options.forEach((option, index) => {
-                    questionHTML += `
-                        <button class="quiz-option w-full text-left p-4 bg-white rounded-lg border border-slate-200 font-medium text-slate-700" data-option="${option}">
-                            ${String.fromCharCode(65 + index)}. ${option}
-                        </button>`;
-                });
-                
-                questionHTML += `</div></div>`;
-                
-                quizContainer.innerHTML = questionHTML;
-                
-                // Update progress
-                quizProgressText.textContent = `${currentQuizIndex + 1}/${quizQuestions.length}`;
-                quizProgressBar.style.width = `${((currentQuizIndex) / quizQuestions.length) * 100}%`;
-                
-                // Add event listeners to options
-                document.querySelectorAll('.quiz-option').forEach(option => {
-                    option.addEventListener('click', handleAnswerSelection);
-                });
-            }
-            
-            function handleAnswerSelection(e) {
-                if (!quizInProgress) return;
-                
-                const selectedOption = e.currentTarget;
-                const selectedAnswer = selectedOption.dataset.option;
-                const correctAnswer = quizQuestions[currentQuizIndex].correctAnswer;
-                
-                // Disable all options
-                document.querySelectorAll('.quiz-option').forEach(option => {
-                    option.removeEventListener('click', handleAnswerSelection);
-                    option.style.pointerEvents = 'none';
-                });
-                
-                // Mark correct and incorrect answers
-                document.querySelectorAll('.quiz-option').forEach(option => {
-                    if (option.dataset.option === correctAnswer) {
-                        option.classList.add('correct');
-                    } else if (option === selectedOption && selectedAnswer !== correctAnswer) {
-                        option.classList.add('incorrect');
-                    }
-                });
-                
-                // Update score
-                if (selectedAnswer === correctAnswer) {
-                    quizScore++;
-                }
-                
-                // Move to next question after a delay
-                setTimeout(() => {
-                    currentQuizIndex++;
-                    renderQuizQuestion();
-                }, 1500);
-            }
-            
-            function endQuiz() {
-                quizInProgress = false;
-                
-                // Calculate percentage
-                const percentage = Math.round((quizScore / quizQuestions.length) * 100);
-                
-                // Set result message based on performance
-                let resultTitle = '';
-                let resultMessage = '';
-                
-                if (percentage >= 90) {
-                    resultTitle = 'Xuất sắc!';
-                    resultMessage = 'Bạn thực sự nắm vững từ vựng này!';
-                } else if (percentage >= 70) {
-                    resultTitle = 'Tốt lắm!';
-                    resultMessage = 'Bạn có vốn từ vựng khá tốt!';
-                } else if (percentage >= 50) {
-                    resultTitle = 'Khá tốt!';
-                    resultMessage = 'Bạn đã nắm được khá nhiều từ vựng!';
-                } else {
-                    resultTitle = 'Cần luyện tập thêm';
-                    resultMessage = 'Hãy tiếp tục ôn tập để cải thiện!';
-                }
-                
-                // Update result display
-                quizResultTitle.textContent = resultTitle;
-                quizResultText.innerHTML = `${resultMessage}<br>Bạn đã trả lời đúng <span class="font-bold">${quizScore}</span> trong tổng số <span class="font-bold">${quizQuestions.length}</span> câu hỏi.`;
-                quizCorrectCount.textContent = quizScore;
-                quizTotalCount.textContent = quizQuestions.length;
-                
-                // Show result
-                quizResult.classList.remove('hidden');
-                quizContainer.innerHTML = '';
-                
-                // Update progress bar to full
-                quizProgressBar.style.width = '100%';
-            }
-            
-            function resetQuiz() {
-                quizInProgress = false;
-                currentQuizIndex = 0;
-                quizScore = 0;
-                
-                quizStartBtn.classList.remove('hidden');
-                quizResult.classList.add('hidden');
-                quizContainer.innerHTML = '';
-                
-                quizProgressText.textContent = '0/0';
-                quizProgressBar.style.width = '0%';
-            }
+    function shuffleOptions(correct, pool) {
+      let options = [correct];
+      while (options.length < 4) {
+        const rand = pool[Math.floor(Math.random() * pool.length)];
+        if (!options.includes(rand)) options.push(rand);
+      }
+      return options.sort(() => Math.random() - 0.5);
+    }
 
-            function loadVocabulary(data) {
-                if (!data.vocabulary || !Array.isArray(data.vocabulary)) {
-                    errorMessage.textContent = 'Lỗi: Tệp JSON không có cấu trúc hợp lệ.';
-                    return;
-                }
-                
-                vocabulary = data.vocabulary;
-                currentFlashcardIndex = 0;
-                currentListPage = 1;
-                currentFlashcardPage = 1;
+    function displayQuizQuestion() {
+      if (quizIndex >= quizQuestions.length) {
+        showQuizResult();
+        return;
+      }
+      const q = quizQuestions[quizIndex];
+      quizView.innerHTML = `
+        <div class="bg-white p-6 rounded-2xl shadow">
+          <h2 class="text-xl font-bold mb-4">${q.question}</h2>
+          <div class="flex flex-col gap-2">
+            ${q.options.map(opt => `
+              <button onclick="checkAnswer('${opt}')" 
+                      class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded transition">${opt}</button>
+            `).join("")}
+          </div>
+          <div id="feedback" class="mt-4 text-lg font-semibold text-center"></div>
+          <div class="mt-4 flex justify-center">
+            <button id="nextBtn" onclick="nextQuestion()" class="hidden bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded">Câu tiếp ➡</button>
+          </div>
+        </div>
+      `;
+    }
 
-                topicTitle.textContent = `Bộ từ vựng: ${data.topic || 'Chủ đề tùy chỉnh'}`;
-                topicSubtitle.textContent = 'Sử dụng danh sách, flashcards hoặc câu hỏi để học hiệu quả hơn.';
-                errorMessage.textContent = '';
-                
-                uploadSection.classList.add('hidden');
-                mainContent.classList.remove('hidden');
+    function checkAnswer(choice) {
+      const feedback = document.getElementById("feedback");
+      const nextBtn = document.getElementById("nextBtn");
+      if (choice === quizQuestions[quizIndex].answer) {
+        score++;
+        feedback.innerHTML = `<span class="text-green-600">✅ Đúng rồi!</span>`;
+      } else {
+        feedback.innerHTML = `<span class="text-red-600">❌ Sai! Đáp án đúng: ${quizQuestions[quizIndex].answer}</span>`;
+      }
+      nextBtn.classList.remove("hidden");
+    }
 
-                // Reset view to list
-                flashcardView.classList.add('hidden');
-                quizView.classList.add('hidden');
-                listView.classList.remove('hidden');
-                btnListView.classList.add('active');
-                btnFlashcardView.classList.remove('active');
-                btnQuizView.classList.remove('active');
+    function nextQuestion() {
+      quizIndex++;
+      displayQuizQuestion();
+    }
 
-                renderListView();
-                
-                // Reset quiz
-                resetQuiz();
-            }
+    // ----- QUIZ RESULT -----
+    function showQuizResult() {
+      const total = quizQuestions.length;
+      const wrong = total - score;
+      const percent = ((score / total) * 100).toFixed(1);
 
-            // --- Event Listeners ---
-            jsonFileInput.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (!file) return;
+      quizView.innerHTML = `
+        <div class="bg-white p-6 rounded-2xl shadow text-center">
+          <h2 class="text-2xl font-bold text-indigo-700 mb-2">🎉 Kết thúc Quiz!</h2>
+          <p class="text-lg">Điểm của bạn: <span class="font-bold">${score}/${total}</span> (${percent}%)</p>
+          <canvas id="resultChart" class="mx-auto mt-6" width="300" height="300"></canvas>
+        </div>
+      `;
 
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    try {
-                        const data = JSON.parse(e.target.result);
-                        loadVocabulary(data);
-                    } catch (error) {
-                        errorMessage.textContent = 'Không thể đọc tệp. Vui lòng kiểm tra lại định dạng JSON.';
-                        mainContent.classList.add('hidden');
-                        uploadSection.classList.remove('hidden');
-                    }
-                };
-                reader.readAsText(file);
-            });
-            
-            btnListView.addEventListener('click', () => {
-                flashcardView.classList.add('hidden');
-                quizView.classList.add('hidden');
-                listView.classList.remove('hidden');
-                btnListView.classList.add('active');
-                btnFlashcardView.classList.remove('active');
-                btnQuizView.classList.remove('active');
-            });
+      // Vẽ biểu đồ tròn
+      new Chart(document.getElementById("resultChart"), {
+        type: "pie",
+        data: {
+          labels: ["Đúng", "Sai"],
+          datasets: [{
+            data: [score, wrong],
+            backgroundColor: ["#34d399", "#f87171"]
+          }]
+        }
+      });
+    }
 
-            btnFlashcardView.addEventListener('click', () => {
-                listView.classList.add('hidden');
-                quizView.classList.add('hidden');
-                flashcardView.classList.remove('hidden');
-                btnFlashcardView.classList.add('active');
-                btnListView.classList.remove('active');
-                btnQuizView.classList.remove('active');
-                renderFlashcard(currentFlashcardIndex);
-            });
-            
-            btnQuizView.addEventListener('click', () => {
-                listView.classList.add('hidden');
-                flashcardView.classList.add('hidden');
-                quizView.classList.remove('hidden');
-                btnQuizView.classList.add('active');
-                btnListView.classList.remove('active');
-                btnFlashcardView.classList.remove('active');
-            });
-            
-            document.body.addEventListener('click', (e) => {
-                const speakerButton = e.target.closest('.speaker-btn');
-                if (speakerButton) {
-                    const wordToSpeak = speakerButton.dataset.word;
-                    speak(wordToSpeak);
-                }
-                
-                // Handle list pagination clicks
-                const listPaginationBtn = e.target.closest('#list-pagination .pagination-btn');
-                if (listPaginationBtn && listPaginationBtn.dataset.page) {
-                    const page = parseInt(listPaginationBtn.dataset.page);
-                    renderListView(page);
-                }
-                
-                // Handle flashcard pagination clicks
-                const flashcardPaginationBtn = e.target.closest('#flashcard-pagination .pagination-btn');
-                if (flashcardPaginationBtn && flashcardPaginationBtn.dataset.page) {
-                    const page = parseInt(flashcardPaginationBtn.dataset.page);
-                    goToFlashcardPage(page);
-                }
-            });
+    // ----- SPEAK -----
+    function speak(text) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      speechSynthesis.speak(utterance);
+    }
 
-            btnNext.addEventListener('click', () => {
-                currentFlashcardIndex = (currentFlashcardIndex + 1) % vocabulary.length;
-                renderFlashcard(currentFlashcardIndex);
-            });
+    // ----- VIEW SWITCH -----
+    function showView(view) {
+      listView.classList.add("hidden");
+      flashView.classList.add("hidden");
+      quizView.classList.add("hidden");
+      if (view === "list") listView.classList.remove("hidden");
+      if (view === "flash") flashView.classList.remove("hidden");
+      if (view === "quiz") quizView.classList.remove("hidden");
+    }
 
-            btnPrev.addEventListener('click', () => {
-                currentFlashcardIndex = (currentFlashcardIndex - 1 + vocabulary.length) % vocabulary.length;
-                renderFlashcard(currentFlashcardIndex);
-            });
+    function updatePagination(mode, page, totalPages) {
+      pagination.innerHTML = "";
+      for (let i = 1; i <= totalPages; i++) {
+        pagination.innerHTML += `<button onclick="goToPage('${mode}', ${i})" class="px-3 py-1 rounded ${i===page ? 'bg-indigo-600 text-white':'bg-gray-300 hover:bg-gray-400'}">${i}</button>`;
+      }
+    }
 
-            btnRandom.addEventListener('click', () => {
-                let randomIndex;
-                do {
-                    randomIndex = Math.floor(Math.random() * vocabulary.length);
-                } while (randomIndex === currentFlashcardIndex && vocabulary.length > 1);
-                currentFlashcardIndex = randomIndex;
-                renderFlashcard(currentFlashcardIndex);
-            });
-            
-            quizStartBtn.addEventListener('click', startQuiz);
-            quizRestartBtn.addEventListener('click', resetQuiz);
-        });
-    </script>
+    function goToPage(mode, page) {
+      currentPage = page;
+      if (mode === "list") displayList();
+      if (mode === "flash") showFlashcards();
+    }
+  </script>
 </body>
 </html>
