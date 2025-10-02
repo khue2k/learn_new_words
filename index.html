@@ -1,295 +1,444 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="utf-8" />
-  <title>Vocabulary Master — Full Features</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    .card { perspective:1000px; width:320px; height:220px; margin:auto; cursor:pointer }
-    .card-inner { width:100%; height:100%; transition: transform .6s; transform-style: preserve-3d; position:relative }
-    .card.flipped .card-inner { transform: rotateY(180deg); }
-    .card-face { position:absolute; width:100%; height:100%; backface-visibility:hidden; border-radius:1rem; box-shadow:0 6px 12px rgba(0,0,0,0.15); display:flex; align-items:center; justify-content:center; padding:1rem }
-    .card-front { background:white }
-    .card-back { background:#fef3c7; transform: rotateY(180deg) }
-    .draggable { user-select:none }
-    .drop-target { min-height:48px; border: 2px dashed #e5e7eb; border-radius:8px; padding:8px }
-  </style>
-</head>
-<body class="min-h-screen bg-gradient-to-r from-slate-100 to-indigo-50 font-sans">
+  <head>
+    <meta charset="utf-8" />
+    <title>Vocabulary Master — Full Features</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      .card {
+        perspective: 1000px;
+        width: 320px;
+        height: 220px;
+        margin: auto;
+        cursor: pointer;
+      }
+      .card-inner {
+        width: 100%;
+        height: 100%;
+        transition: transform 0.6s;
+        transform-style: preserve-3d;
+        position: relative;
+      }
+      .card.flipped .card-inner {
+        transform: rotateY(180deg);
+      }
+      .card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 1rem;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+      .card-front {
+        background: white;
+      }
+      .card-back {
+        background: #fef3c7;
+        transform: rotateY(180deg);
+      }
+      .draggable {
+        user-select: none;
+      }
+      .drop-target {
+        min-height: 48px;
+        border: 2px dashed #e5e7eb;
+        border-radius: 8px;
+        padding: 8px;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-r from-slate-100 to-indigo-50 font-sans"
+  >
+    <div class="max-w-6xl mx-auto p-6">
+      <header class="mb-6">
+        <h1 class="text-4xl font-extrabold text-indigo-700">
+          Vocabulary Master — Tất cả chức năng
+        </h1>
+        <p class="text-slate-600 mt-1">
+          Upload JSON → học bằng các chế độ: List, Flashcards, Quiz, Spelling,
+          Listening, Matching, SRS, Daily 10, Dashboard...
+        </p>
+      </header>
 
-  <div class="max-w-6xl mx-auto p-6">
-    <header class="mb-6">
-      <h1 class="text-4xl font-extrabold text-indigo-700">Vocabulary Master — Tất cả chức năng</h1>
-      <p class="text-slate-600 mt-1">Upload JSON → học bằng các chế độ: List, Flashcards, Quiz, Spelling, Listening, Matching, SRS, Daily 10, Dashboard...</p>
-    </header>
+      <!-- Top controls -->
+      <section class="flex flex-wrap gap-3 items-center mb-4">
+        <input
+          id="fileInput"
+          type="file"
+          accept=".json"
+          class="p-2 border rounded bg-white shadow"
+        />
+        <button
+          id="btnList"
+          class="px-4 py-2 bg-indigo-600 text-white rounded shadow"
+        >
+          List
+        </button>
+        <button
+          id="btnFlash"
+          class="px-4 py-2 bg-green-600 text-white rounded shadow"
+        >
+          Flashcards
+        </button>
+        <button
+          id="btnQuiz"
+          class="px-4 py-2 bg-purple-600 text-white rounded shadow"
+        >
+          Quiz
+        </button>
+        <button
+          id="btnSpelling"
+          class="px-4 py-2 bg-orange-500 text-white rounded shadow"
+        >
+          Spelling
+        </button>
+        <button
+          id="btnListen"
+          class="px-4 py-2 bg-cyan-600 text-white rounded shadow"
+        >
+          Listening
+        </button>
+        <button
+          id="btnMatch"
+          class="px-4 py-2 bg-fuchsia-600 text-white rounded shadow"
+        >
+          Matching
+        </button>
+        <button
+          id="btnDaily"
+          class="px-4 py-2 bg-yellow-600 text-white rounded shadow"
+        >
+          Daily 10
+        </button>
+        <button
+          id="btnSRS"
+          class="px-4 py-2 bg-emerald-600 text-white rounded shadow"
+        >
+          Ôn hôm nay (SRS)
+        </button>
+        <button
+          id="btnDash"
+          class="px-4 py-2 bg-slate-700 text-white rounded shadow"
+        >
+          Dashboard
+        </button>
 
-    <!-- Top controls -->
-    <section class="flex flex-wrap gap-3 items-center mb-4">
-      <input id="fileInput" type="file" accept=".json" class="p-2 border rounded bg-white shadow" />
-      <button id="btnList" class="px-4 py-2 bg-indigo-600 text-white rounded shadow">List</button>
-      <button id="btnFlash" class="px-4 py-2 bg-green-600 text-white rounded shadow">Flashcards</button>
-      <button id="btnQuiz" class="px-4 py-2 bg-purple-600 text-white rounded shadow">Quiz</button>
-      <button id="btnSpelling" class="px-4 py-2 bg-orange-500 text-white rounded shadow">Spelling</button>
-      <button id="btnListen" class="px-4 py-2 bg-cyan-600 text-white rounded shadow">Listening</button>
-      <button id="btnMatch" class="px-4 py-2 bg-fuchsia-600 text-white rounded shadow">Matching</button>
-      <button id="btnDaily" class="px-4 py-2 bg-yellow-600 text-white rounded shadow">Daily 10</button>
-      <button id="btnSRS" class="px-4 py-2 bg-emerald-600 text-white rounded shadow">Ôn hôm nay (SRS)</button>
-      <button id="btnDash" class="px-4 py-2 bg-slate-700 text-white rounded shadow">Dashboard</button>
+        <div class="ml-auto flex items-center gap-3">
+          <div class="text-sm text-slate-600">
+            XP: <span id="xpCount">0</span>
+          </div>
+          <div id="badges" class="flex gap-2"></div>
+        </div>
+      </section>
 
-      <div class="ml-auto flex items-center gap-3">
-        <div class="text-sm text-slate-600">XP: <span id="xpCount">0</span></div>
-        <div id="badges" class="flex gap-2"></div>
-      </div>
-    </section>
-
-    <!-- Main content area -->
-    <main id="main" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <!-- left: sidebar / info -->
-      <aside class="col-span-1 space-y-4">
-        <div class="bg-white p-4 rounded shadow">
-          <h3 class="font-semibold text-indigo-600">Tải tệp JSON</h3>
-          <p class="text-sm text-slate-600 mt-2">Định dạng mẫu:</p>
-          <pre class="text-xs bg-slate-50 p-2 rounded text-slate-700 overflow-x-auto">{
+      <!-- Main content area -->
+      <main id="main" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- left: sidebar / info -->
+        <aside class="col-span-1 space-y-4">
+          <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-semibold text-indigo-600">Tải tệp JSON</h3>
+            <p class="text-sm text-slate-600 mt-2">Định dạng mẫu:</p>
+            <pre
+              class="text-xs bg-slate-50 p-2 rounded text-slate-700 overflow-x-auto"
+            >
+{
  "topic": "Family",
  "vocabulary": [
    {"word":"father","phonetic":"/ˈfɑːðər/","type":"noun","meaning_vi":"cha, bố","example_en":"My father is a teacher.","example_vi":"Cha tôi là giáo viên.","lang":"en-US"}
  ]
-}</pre>
-        </div>
-
-        <div class="bg-white p-4 rounded shadow">
-          <h3 class="font-semibold text-indigo-600">Thống kê nhanh</h3>
-          <p class="text-sm mt-2">Tổng từ: <span id="totalWords">0</span></p>
-          <p class="text-sm">Đã bookmark: <span id="totalBookmarks">0</span></p>
-          <p class="text-sm">SRS đến hạn: <span id="dueCount">0</span></p>
-        </div>
-
-        <div class="bg-white p-4 rounded shadow">
-          <h3 class="font-semibold text-indigo-600">Công cụ nhanh</h3>
-          <div class="flex flex-col gap-2 mt-2">
-            <button id="btnQuickReview" class="px-3 py-2 bg-indigo-500 text-white rounded">Quick Review (5)</button>
-            <button id="btnClearProgress" class="px-3 py-2 bg-red-500 text-white rounded">Xóa progress (localStorage)</button>
+}</pre
+            >
           </div>
-        </div>
-      </aside>
 
-      <!-- center: main view -->
-      <section id="center" class="col-span-2 space-y-6">
-        <!-- dynamic content inserted here -->
-        <div id="viewArea"></div>
-      </section>
-    </main>
-  </div>
+          <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-semibold text-indigo-600">Thống kê nhanh</h3>
+            <p class="text-sm mt-2">Tổng từ: <span id="totalWords">0</span></p>
+            <p class="text-sm">
+              Đã bookmark: <span id="totalBookmarks">0</span>
+            </p>
+            <p class="text-sm">SRS đến hạn: <span id="dueCount">0</span></p>
+          </div>
 
-<script>
-/* ==========================
+          <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-semibold text-indigo-600">Công cụ nhanh</h3>
+            <div class="flex flex-col gap-2 mt-2">
+              <button
+                id="btnQuickReview"
+                class="px-3 py-2 bg-indigo-500 text-white rounded"
+              >
+                Quick Review (5)
+              </button>
+              <button
+                id="btnClearProgress"
+                class="px-3 py-2 bg-red-500 text-white rounded"
+              >
+                Xóa progress (localStorage)
+              </button>
+            </div>
+          </div>
+        </aside>
+
+        <!-- center: main view -->
+        <section id="center" class="col-span-2 space-y-6">
+          <!-- dynamic content inserted here -->
+          <div id="viewArea"></div>
+        </section>
+      </main>
+    </div>
+
+    <script>
+      /* ==========================
    App state & storage
    ========================== */
-let app = {
-  data: null,
-  topic: '',
-  vocab: [],
-  bookmarks: JSON.parse(localStorage.getItem('vocab_bookmarks')||'[]'),
-  srs: JSON.parse(localStorage.getItem('vocab_srs')||'{}'), // word -> {level, nextReview (iso)}
-  daily: JSON.parse(localStorage.getItem('vocab_daily')||'{}'), // date -> [words]
-  xp: parseInt(localStorage.getItem('vocab_xp')||'0',10) || 0,
-  badges: JSON.parse(localStorage.getItem('vocab_badges')||'[]'),
-  quizHistory: JSON.parse(localStorage.getItem('vocab_quiz_history')||'[]') // records
-};
+      let app = {
+        data: null,
+        topic: "",
+        vocab: [],
+        bookmarks: JSON.parse(localStorage.getItem("vocab_bookmarks") || "[]"),
+        srs: JSON.parse(localStorage.getItem("vocab_srs") || "{}"), // word -> {level, nextReview (iso)}
+        daily: JSON.parse(localStorage.getItem("vocab_daily") || "{}"), // date -> [words]
+        xp: parseInt(localStorage.getItem("vocab_xp") || "0", 10) || 0,
+        badges: JSON.parse(localStorage.getItem("vocab_badges") || "[]"),
+        quizHistory: JSON.parse(
+          localStorage.getItem("vocab_quiz_history") || "[]"
+        ), // records
+      };
 
-const viewArea = document.getElementById('viewArea');
-const xpCountEl = document.getElementById('xpCount');
-const badgesEl = document.getElementById('badges');
-const totalWordsEl = document.getElementById('totalWords');
-const totalBookmarksEl = document.getElementById('totalBookmarks');
-const dueCountEl = document.getElementById('dueCount');
+      const viewArea = document.getElementById("viewArea");
+      const xpCountEl = document.getElementById("xpCount");
+      const badgesEl = document.getElementById("badges");
+      const totalWordsEl = document.getElementById("totalWords");
+      const totalBookmarksEl = document.getElementById("totalBookmarks");
+      const dueCountEl = document.getElementById("dueCount");
 
-function saveState() {
-  localStorage.setItem('vocab_bookmarks', JSON.stringify(app.bookmarks));
-  localStorage.setItem('vocab_srs', JSON.stringify(app.srs));
-  localStorage.setItem('vocab_daily', JSON.stringify(app.daily));
-  localStorage.setItem('vocab_xp', String(app.xp));
-  localStorage.setItem('vocab_badges', JSON.stringify(app.badges));
-  localStorage.setItem('vocab_quiz_history', JSON.stringify(app.quizHistory));
-  refreshSidebar();
-}
+      function saveState() {
+        localStorage.setItem("vocab_bookmarks", JSON.stringify(app.bookmarks));
+        localStorage.setItem("vocab_srs", JSON.stringify(app.srs));
+        localStorage.setItem("vocab_daily", JSON.stringify(app.daily));
+        localStorage.setItem("vocab_xp", String(app.xp));
+        localStorage.setItem("vocab_badges", JSON.stringify(app.badges));
+        localStorage.setItem(
+          "vocab_quiz_history",
+          JSON.stringify(app.quizHistory)
+        );
+        refreshSidebar();
+      }
 
-/* ==========================
+      /* ==========================
    Utilities
    ========================== */
-function addXP(n) {
-  app.xp += n;
-  xpCountEl.textContent = app.xp;
-  // badges thresholds
-  const thresholds = [50, 150, 300, 600];
-  thresholds.forEach(t => {
-    if (app.xp >= t && !app.badges.includes('XP'+t)) {
-      app.badges.push('XP'+t);
-    }
-  });
-  renderBadges();
-  saveState();
-}
-function renderBadges() {
-  badgesEl.innerHTML = '';
-  app.badges.forEach(b => {
-    const el = document.createElement('div');
-    el.className = 'text-xs bg-yellow-200 px-2 py-1 rounded';
-    el.textContent = b.replace('XP','Badge XP ');
-    badgesEl.appendChild(el);
-  });
-}
+      function addXP(n) {
+        app.xp += n;
+        xpCountEl.textContent = app.xp;
+        // badges thresholds
+        const thresholds = [50, 150, 300, 600];
+        thresholds.forEach((t) => {
+          if (app.xp >= t && !app.badges.includes("XP" + t)) {
+            app.badges.push("XP" + t);
+          }
+        });
+        renderBadges();
+        saveState();
+      }
+      function renderBadges() {
+        badgesEl.innerHTML = "";
+        app.badges.forEach((b) => {
+          const el = document.createElement("div");
+          el.className = "text-xs bg-yellow-200 px-2 py-1 rounded";
+          el.textContent = b.replace("XP", "Badge XP ");
+          badgesEl.appendChild(el);
+        });
+      }
 
-function speak(text, lang='en-US') {
-  if (!('speechSynthesis' in window)) return;
-  window.speechSynthesis.cancel();
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = lang || 'en-US';
-  u.rate = 0.95;
-  window.speechSynthesis.speak(u);
-}
+      function speak(text, lang = "en-US") {
+        if (!("speechSynthesis" in window)) return;
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = lang || "en-US";
+        u.rate = 0.95;
+        window.speechSynthesis.speak(u);
+      }
 
-/* ==========================
+      /* ==========================
    File upload
    ========================== */
-document.getElementById('fileInput').addEventListener('change', e=>{
-  const f = e.target.files[0];
-  if (!f) return;
-  const r = new FileReader();
-  r.onload = evt=>{
-    try {
-      const parsed = JSON.parse(evt.target.result);
-      app.data = parsed;
-      app.topic = parsed.topic || 'Chủ đề';
-      app.vocab = (parsed.vocabulary || []).map(it=>{
-        // ensure fields
-        return {
-          word: it.word || '',
-          phonetic: it.phonetic || '',
-          type: it.type || '',
-          meaning_vi: it.meaning_vi || '',
-          example_en: it.example_en || '',
-          example_vi: it.example_vi || '',
-          lang: it.lang || 'en-US'
+      document.getElementById("fileInput").addEventListener("change", (e) => {
+        const f = e.target.files[0];
+        if (!f) return;
+        const r = new FileReader();
+        r.onload = (evt) => {
+          try {
+            const parsed = JSON.parse(evt.target.result);
+            app.data = parsed;
+            app.topic = parsed.topic || "Chủ đề";
+            app.vocab = (parsed.vocabulary || []).map((it) => {
+              // ensure fields
+              return {
+                word: it.word || "",
+                phonetic: it.phonetic || "",
+                type: it.type || "",
+                meaning_vi: it.meaning_vi || "",
+                example_en: it.example_en || "",
+                example_vi: it.example_vi || "",
+                lang: it.lang || "en-US",
+              };
+            });
+            // init SRS for new words
+            app.vocab.forEach((v) => {
+              if (!app.srs[v.word]) {
+                app.srs[v.word] = {
+                  level: 0,
+                  nextReview: new Date().toISOString(),
+                }; // due now
+              }
+            });
+            refreshSidebar();
+            showList();
+            alert(
+              "✅ Đã tải tệp JSON thành công! (" + app.vocab.length + " từ)"
+            );
+          } catch (err) {
+            alert("❌ Không thể đọc JSON: " + err.message);
+          }
         };
+        r.readAsText(f);
       });
-      // init SRS for new words
-      app.vocab.forEach(v=>{
-        if (!app.srs[v.word]) {
-          app.srs[v.word] = { level: 0, nextReview: (new Date()).toISOString() }; // due now
-        }
-      });
-      refreshSidebar();
-      showList();
-      alert('✅ Đã tải tệp JSON thành công! (' + app.vocab.length + ' từ)');
-    } catch(err){
-      alert('❌ Không thể đọc JSON: ' + err.message);
-    }
-  };
-  r.readAsText(f);
-});
 
-/* ==========================
+      /* ==========================
    Sidebar refresh
    ========================== */
-function refreshSidebar() {
-  totalWordsEl.textContent = app.vocab.length;
-  totalBookmarksEl.textContent = app.bookmarks.length;
-  // due count
-  const now = new Date();
-  let due = 0;
-  Object.values(app.srs||{}).forEach(rec=>{
-    if (rec.nextReview && new Date(rec.nextReview) <= now) due++;
-  });
-  dueCountEl.textContent = due;
-  xpCountEl.textContent = app.xp;
-  renderBadges();
-}
+      function refreshSidebar() {
+        totalWordsEl.textContent = app.vocab.length;
+        totalBookmarksEl.textContent = app.bookmarks.length;
+        // due count
+        const now = new Date();
+        let due = 0;
+        Object.values(app.srs || {}).forEach((rec) => {
+          if (rec.nextReview && new Date(rec.nextReview) <= now) due++;
+        });
+        dueCountEl.textContent = due;
+        xpCountEl.textContent = app.xp;
+        renderBadges();
+      }
 
-/* ==========================
+      /* ==========================
    View: List
    ========================== */
-document.getElementById('btnList').addEventListener('click', showList);
-function showList(page=1) {
-  showView('list');
-  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu. Hãy upload JSON.'); return; }
-  const html = `
+      document.getElementById("btnList").addEventListener("click", showList);
+      function showList(page = 1) {
+        showView("list");
+        if (!app.vocab.length) {
+          viewArea.innerHTML = emptyBox("Chưa có dữ liệu. Hãy upload JSON.");
+          return;
+        }
+        const html = `
     <div class="bg-white p-4 rounded shadow">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-indigo-700">Danh sách — ${app.topic}</h2>
+        <h2 class="text-xl font-semibold text-indigo-700">Danh sách — ${
+          app.topic
+        }</h2>
         <div class="text-sm text-slate-600">Tổng: ${app.vocab.length}</div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        ${app.vocab.map(v => listCardHTML(v)).join('')}
+        ${app.vocab.map((v) => listCardHTML(v)).join("")}
       </div>
     </div>
   `;
-  viewArea.innerHTML = html;
-}
-function listCardHTML(v){
-  return `
+        viewArea.innerHTML = html;
+      }
+      function listCardHTML(v) {
+        return `
     <div class="bg-slate-50 p-3 rounded flex justify-between items-start">
       <div>
-        <div class="text-lg font-bold text-indigo-600">${escapeHtml(v.word)} <span class="text-sm text-gray-500">${escapeHtml(v.phonetic)}</span></div>
-        <div class="text-sm text-slate-700 mt-1">${escapeHtml(v.meaning_vi)}</div>
-        <div class="text-xs text-slate-500 italic mt-1">${escapeHtml(v.example_en)}</div>
+        <div class="text-lg font-bold text-indigo-600">${escapeHtml(
+          v.word
+        )} <span class="text-sm text-gray-500">${escapeHtml(
+          v.phonetic
+        )}</span></div>
+        <div class="text-sm text-slate-700 mt-1">${escapeHtml(
+          v.meaning_vi
+        )}</div>
+        <div class="text-xs text-slate-500 italic mt-1">${escapeHtml(
+          v.example_en
+        )}</div>
       </div>
       <div class="flex flex-col items-end gap-2">
-        <button class="px-2 py-1 bg-blue-500 text-white rounded text-sm" onclick="speakWord('${encodeURIComponent(v.word)}')">🔊</button>
-        <button class="px-2 py-1 rounded text-sm ${app.bookmarks.includes(v.word)?'bg-yellow-400':'bg-gray-200'}" onclick="toggleBookmark('${v.word}')">
-          ${app.bookmarks.includes(v.word)?'⭐':'☆'}
+        <button class="px-2 py-1 bg-blue-500 text-white rounded text-sm" onclick="speakWord('${encodeURIComponent(
+          v.word
+        )}')">🔊</button>
+        <button class="px-2 py-1 rounded text-sm ${
+          app.bookmarks.includes(v.word) ? "bg-yellow-400" : "bg-gray-200"
+        }" onclick="toggleBookmark('${v.word}')">
+          ${app.bookmarks.includes(v.word) ? "⭐" : "☆"}
         </button>
-        <button class="px-2 py-1 rounded text-sm bg-emerald-400" onclick="markKnown('${v.word}')">✅ Known</button>
+        <button class="px-2 py-1 rounded text-sm bg-emerald-400" onclick="markKnown('${
+          v.word
+        }')">✅ Known</button>
       </div>
     </div>
   `;
-}
-function speakWord(encodedWord){
-  const w = decodeURIComponent(encodedWord);
-  const rec = app.vocab.find(x=>x.word===w);
-  speak(w, rec?rec.lang:'en-US');
-}
+      }
+      function speakWord(encodedWord) {
+        const w = decodeURIComponent(encodedWord);
+        const rec = app.vocab.find((x) => x.word === w);
+        speak(w, rec ? rec.lang : "en-US");
+      }
 
-function toggleBookmark(word){
-  if (app.bookmarks.includes(word)) app.bookmarks = app.bookmarks.filter(w=>w!==word);
-  else app.bookmarks.push(word);
-  saveState();
-  showList();
-}
-function markKnown(word){
-  // increase SRS level
-  const rec = app.srs[word];
-  if (!rec) return;
-  rec.level = (rec.level||0) + 1;
-  // schedule next review: simple exponential days
-  const days = Math.pow(2, rec.level-1); // 1,2,4,8...
-  const next = new Date(); next.setDate(next.getDate() + days);
-  rec.nextReview = next.toISOString();
-  addXP(5);
-  saveState();
-  alert('Đã đánh dấu known. Next review in ' + days + ' day(s).');
-}
+      function toggleBookmark(word) {
+        if (app.bookmarks.includes(word))
+          app.bookmarks = app.bookmarks.filter((w) => w !== word);
+        else app.bookmarks.push(word);
+        saveState();
+        showList();
+      }
+      function markKnown(word) {
+        // increase SRS level
+        const rec = app.srs[word];
+        if (!rec) return;
+        rec.level = (rec.level || 0) + 1;
+        // schedule next review: simple exponential days
+        const days = Math.pow(2, rec.level - 1); // 1,2,4,8...
+        const next = new Date();
+        next.setDate(next.getDate() + days);
+        rec.nextReview = next.toISOString();
+        addXP(5);
+        saveState();
+        alert("Đã đánh dấu known. Next review in " + days + " day(s).");
+      }
 
-/* ==========================
+      /* ==========================
    View: Flashcards (with autoplay)
    ========================== */
-document.getElementById('btnFlash').addEventListener('click', showFlashcards);
-let flashIndex = 0;
-let autoPlayInterval = null;
-function showFlashcards() {
-  showView('flash');
-  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu.'); return; }
-  flashIndex = 0;
-  renderFlashcard();
-}
-function renderFlashcard(){
-  const v = app.vocab[flashIndex];
-  viewArea.innerHTML = `
+      document
+        .getElementById("btnFlash")
+        .addEventListener("click", showFlashcards);
+      let flashIndex = 0;
+      let autoPlayInterval = null;
+      function showFlashcards() {
+        showView("flash");
+        if (!app.vocab.length) {
+          viewArea.innerHTML = emptyBox("Chưa có dữ liệu.");
+          return;
+        }
+        flashIndex = 0;
+        renderFlashcard();
+      }
+      function renderFlashcard() {
+        const v = app.vocab[flashIndex];
+        viewArea.innerHTML = `
     <div class="bg-white p-6 rounded shadow text-center">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-xl font-semibold text-indigo-700">Flashcard (${flashIndex+1}/${app.vocab.length})</h3>
+        <h3 class="text-xl font-semibold text-indigo-700">Flashcard (${
+          flashIndex + 1
+        }/${app.vocab.length})</h3>
         <div class="flex items-center gap-2">
           <button id="btnAuto" class="px-3 py-1 bg-indigo-500 text-white rounded">Auto</button>
           <button id="btnQuick" class="px-3 py-1 bg-slate-200 rounded">Quick Review</button>
@@ -299,11 +448,17 @@ function renderFlashcard(){
       <div class="card mb-4" id="cardEl" onclick="toggleFlip(this)">
         <div class="card-inner">
           <div class="card-face card-front">
-            <div class="text-3xl font-bold text-indigo-700">${escapeHtml(v.word)}</div>
-            <div class="text-sm text-gray-500 mt-2">${escapeHtml(v.phonetic)}</div>
+            <div class="text-3xl font-bold text-indigo-700">${escapeHtml(
+              v.word
+            )}</div>
+            <div class="text-sm text-gray-500 mt-2">${escapeHtml(
+              v.phonetic
+            )}</div>
           </div>
           <div class="card-face card-back">
-            <div class="text-xl font-semibold text-green-700">${escapeHtml(v.meaning_vi)}</div>
+            <div class="text-xl font-semibold text-green-700">${escapeHtml(
+              v.meaning_vi
+            )}</div>
             <div class="text-sm italic mt-2">${escapeHtml(v.example_en)}</div>
           </div>
         </div>
@@ -312,147 +467,248 @@ function renderFlashcard(){
       <div class="flex justify-between">
         <button class="px-4 py-2 bg-gray-300 rounded" onclick="prevFlashcard()">⬅ Trước</button>
         <div class="flex gap-2">
-          <button class="px-4 py-2 bg-blue-500 text-white rounded" onclick="speak('${encodeURIComponent(v.word)}','${v.lang}')">🔊 Nghe</button>
-          <button class="px-4 py-2 bg-emerald-500 text-white rounded" onclick="rememberCard('${v.word}', true)">Ghi nhớ</button>
-          <button class="px-4 py-2 bg-yellow-400 text-black rounded" onclick="rememberCard('${v.word}', false)">Ôn lại</button>
+          <button class="px-4 py-2 bg-blue-500 text-white rounded" onclick="speak('${encodeURIComponent(
+            v.word
+          )}','${v.lang}')">🔊 Nghe</button>
+          <button class="px-4 py-2 bg-emerald-500 text-white rounded" onclick="rememberCard('${
+            v.word
+          }', true)">Ghi nhớ</button>
+          <button class="px-4 py-2 bg-yellow-400 text-black rounded" onclick="rememberCard('${
+            v.word
+          }', false)">Ôn lại</button>
         </div>
         <button class="px-4 py-2 bg-gray-300 rounded" onclick="nextFlashcard()">Tiếp ➡</button>
       </div>
     </div>
   `;
-  document.getElementById('btnAuto').addEventListener('click', toggleAutoPlay);
-  document.getElementById('btnQuick').addEventListener('click', quickReviewFrom(flashIndex));
-}
-function toggleFlip(el){
-  el.classList.toggle('flipped');
-}
-function prevFlashcard(){ flashIndex = (flashIndex-1+app.vocab.length)%app.vocab.length; renderFlashcard(); }
-function nextFlashcard(){ flashIndex = (flashIndex+1)%app.vocab.length; renderFlashcard(); }
-function rememberCard(word, known){
-  const rec = app.srs[word];
-  if (!rec) return;
-  if (known) rec.level = (rec.level||0) + 1;
-  else rec.level = Math.max(0,(rec.level||0)-1);
-  const days = Math.max(1, Math.pow(2, Math.max(0,rec.level-1)));
-  const next = new Date(); next.setDate(next.getDate()+days);
-  rec.nextReview = next.toISOString();
-  addXP(3);
-  saveState();
-  alert(`Đã cập nhật SRS: level=${rec.level}, nextReview=${next.toLocaleDateString()}`);
-}
-function toggleAutoPlay(){
-  const btn = document.getElementById('btnAuto');
-  if (!autoPlayInterval){
-    btn.textContent = 'Stop';
-    autoPlayInterval = setInterval(()=>{ nextFlashcard(); speak(decodeURIComponent(encodeURIComponent(app.vocab[flashIndex].word))); }, 3000);
-  } else {
-    clearInterval(autoPlayInterval); autoPlayInterval=null; btn.textContent='Auto';
-  }
-}
-function quickReviewFrom(startIndex){
-  return function(){
-    // Quick review of next 5 starting at startIndex
-    const start = startIndex;
-    let i = 0;
-    const list = [];
-    for (let k=0;k<5;k++){
-      list.push((start+k)%app.vocab.length);
-    }
-    runQuickSlideshow(list);
-  };
-}
-function runQuickSlideshow(list){
-  let idx=0;
-  const container = viewArea;
-  const stopBtnId = 'stopQuick';
-  container.innerHTML = `<div class="bg-white p-6 rounded shadow text-center"><h3 class="font-semibold">Quick Review</h3><div id="qrCard" class="mt-4"></div><div class="mt-4"><button id="${stopBtnId}" class="px-3 py-1 bg-red-500 text-white rounded">Dừng</button></div></div>`;
-  function showIdx(){
-    const v=app.vocab[list[idx]];
-    document.getElementById('qrCard').innerHTML = `<div class="text-3xl font-bold">${escapeHtml(v.word)}</div><div class="text-sm text-gray-500 mt-2">${escapeHtml(v.meaning_vi)}</div>`;
-    speak(v.word, v.lang);
-  }
-  showIdx();
-  const interval = setInterval(()=>{ idx++; if (idx>=list.length){ clearInterval(interval); addXP(5); showList(); return;} showIdx(); }, 2500);
-  document.getElementById(stopBtnId).addEventListener('click', ()=>{ clearInterval(interval); showList(); });
-}
+        document
+          .getElementById("btnAuto")
+          .addEventListener("click", toggleAutoPlay);
+        document
+          .getElementById("btnQuick")
+          .addEventListener("click", quickReviewFrom(flashIndex));
+      }
+      function toggleFlip(el) {
+        el.classList.toggle("flipped");
+      }
+      function prevFlashcard() {
+        flashIndex = (flashIndex - 1 + app.vocab.length) % app.vocab.length;
+        renderFlashcard();
+      }
+      function nextFlashcard() {
+        flashIndex = (flashIndex + 1) % app.vocab.length;
+        renderFlashcard();
+      }
+      function rememberCard(word, known) {
+        const rec = app.srs[word];
+        if (!rec) return;
+        if (known) rec.level = (rec.level || 0) + 1;
+        else rec.level = Math.max(0, (rec.level || 0) - 1);
+        const days = Math.max(1, Math.pow(2, Math.max(0, rec.level - 1)));
+        const next = new Date();
+        next.setDate(next.getDate() + days);
+        rec.nextReview = next.toISOString();
+        addXP(3);
+        saveState();
+        alert(
+          `Đã cập nhật SRS: level=${
+            rec.level
+          }, nextReview=${next.toLocaleDateString()}`
+        );
+      }
+      function toggleAutoPlay() {
+        const btn = document.getElementById("btnAuto");
+        if (!autoPlayInterval) {
+          btn.textContent = "Stop";
+          autoPlayInterval = setInterval(() => {
+            nextFlashcard();
+            speak(
+              decodeURIComponent(encodeURIComponent(app.vocab[flashIndex].word))
+            );
+          }, 3000);
+        } else {
+          clearInterval(autoPlayInterval);
+          autoPlayInterval = null;
+          btn.textContent = "Auto";
+        }
+      }
+      function quickReviewFrom(startIndex) {
+        return function () {
+          // Quick review of next 5 starting at startIndex
+          const start = startIndex;
+          let i = 0;
+          const list = [];
+          for (let k = 0; k < 5; k++) {
+            list.push((start + k) % app.vocab.length);
+          }
+          runQuickSlideshow(list);
+        };
+      }
+      function runQuickSlideshow(list) {
+        let idx = 0;
+        const container = viewArea;
+        const stopBtnId = "stopQuick";
+        container.innerHTML = `<div class="bg-white p-6 rounded shadow text-center"><h3 class="font-semibold">Quick Review</h3><div id="qrCard" class="mt-4"></div><div class="mt-4"><button id="${stopBtnId}" class="px-3 py-1 bg-red-500 text-white rounded">Dừng</button></div></div>`;
+        function showIdx() {
+          const v = app.vocab[list[idx]];
+          document.getElementById(
+            "qrCard"
+          ).innerHTML = `<div class="text-3xl font-bold">${escapeHtml(
+            v.word
+          )}</div><div class="text-sm text-gray-500 mt-2">${escapeHtml(
+            v.meaning_vi
+          )}</div>`;
+          speak(v.word, v.lang);
+        }
+        showIdx();
+        const interval = setInterval(() => {
+          idx++;
+          if (idx >= list.length) {
+            clearInterval(interval);
+            addXP(5);
+            showList();
+            return;
+          }
+          showIdx();
+        }, 2500);
+        document.getElementById(stopBtnId).addEventListener("click", () => {
+          clearInterval(interval);
+          showList();
+        });
+      }
 
-/* ==========================
+      /* ==========================
    View: Quiz (multi-type)
    ========================== */
-document.getElementById('btnQuiz').addEventListener('click', ()=>startQuiz('mixed'));
-let quizSession = { questions: [], index:0, score:0, type:'mixed' };
+      document
+        .getElementById("btnQuiz")
+        .addEventListener("click", () => startQuiz("mixed"));
+      let quizSession = { questions: [], index: 0, score: 0, type: "mixed" };
 
-function startQuiz(mode='mixed'){
-  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu.'); return; }
-  quizSession.type = mode;
-  quizSession.questions = generateQuizQuestions(10);
-  quizSession.index = 0; quizSession.score = 0;
-  showQuizQuestion();
-}
-function generateQuizQuestions(n){
-  const pool = [...app.vocab];
-  pool.sort(()=>Math.random()-0.5);
-  const q = [];
-  for (let i=0;i<Math.min(n,pool.length);i++){
-    const item = pool[i];
-    const t = Math.floor(Math.random()*3); // 0: word->meaning, 1: meaning->word, 2: example completion
-    if (t===0){
-      q.push({type:'word2meaning', prompt:`Nghĩa của từ "${item.word}" là gì?`, answer:item.meaning_vi, options: multiOptions(item.meaning_vi, app.vocab.map(v=>v.meaning_vi))});
-    } else if (t===1){
-      q.push({type:'meaning2word', prompt:`Từ nào có nghĩa: "${item.meaning_vi}"?`, answer:item.word, options: multiOptions(item.word, app.vocab.map(v=>v.word))});
-    } else {
-      // example completion: replace word with blank if present otherwise fallback
-      let ex = item.example_en || '';
-      if (ex.toLowerCase().includes(item.word.toLowerCase())){
-        const re = new RegExp(item.word,'ig');
-        const blank = ex.replace(re,'______');
-        q.push({type:'example', prompt:`Hoàn thành: ${blank}`, answer:item.word, options: multiOptions(item.word, app.vocab.map(v=>v.word))});
-      } else {
-        // fallback to word2meaning
-        q.push({type:'word2meaning', prompt:`Nghĩa của từ "${item.word}" là gì?`, answer:item.meaning_vi, options: multiOptions(item.meaning_vi, app.vocab.map(v=>v.meaning_vi))});
+      function startQuiz(mode = "mixed") {
+        if (!app.vocab.length) {
+          viewArea.innerHTML = emptyBox("Chưa có dữ liệu.");
+          return;
+        }
+        quizSession.type = mode;
+        quizSession.questions = generateQuizQuestions(10);
+        quizSession.index = 0;
+        quizSession.score = 0;
+        showQuizQuestion();
       }
-    }
-  }
-  return q;
-}
-function multiOptions(correct, pool){
-  const opts = [correct];
-  while (opts.length<4){
-    const cand = pool[Math.floor(Math.random()*pool.length)];
-    if (!opts.includes(cand)) opts.push(cand);
-  }
-  return opts.sort(()=>Math.random()-0.5);
-}
-function showQuizQuestion(){
-  const i = quizSession.index;
-  if (i>=quizSession.questions.length){
-    // done
-    const total = quizSession.questions.length, score = quizSession.score;
-    // save history
-    app.quizHistory.push({date:(new Date()).toISOString(), total, score});
-    addXP(Math.round(score*2));
-    saveState();
-    viewArea.innerHTML = `
+      function generateQuizQuestions(n) {
+        const pool = [...app.vocab];
+        pool.sort(() => Math.random() - 0.5);
+        const q = [];
+        for (let i = 0; i < Math.min(n, pool.length); i++) {
+          const item = pool[i];
+          const t = Math.floor(Math.random() * 3); // 0: word->meaning, 1: meaning->word, 2: example completion
+          if (t === 0) {
+            q.push({
+              type: "word2meaning",
+              prompt: `Nghĩa của từ "${item.word}" là gì?`,
+              answer: item.meaning_vi,
+              options: multiOptions(
+                item.meaning_vi,
+                app.vocab.map((v) => v.meaning_vi)
+              ),
+            });
+          } else if (t === 1) {
+            q.push({
+              type: "meaning2word",
+              prompt: `Từ nào có nghĩa: "${item.meaning_vi}"?`,
+              answer: item.word,
+              options: multiOptions(
+                item.word,
+                app.vocab.map((v) => v.word)
+              ),
+            });
+          } else {
+            // example completion: replace word with blank if present otherwise fallback
+            let ex = item.example_en || "";
+            if (ex.toLowerCase().includes(item.word.toLowerCase())) {
+              const re = new RegExp(item.word, "ig");
+              const blank = ex.replace(re, "______");
+              q.push({
+                type: "example",
+                prompt: `Hoàn thành: ${blank}`,
+                answer: item.word,
+                options: multiOptions(
+                  item.word,
+                  app.vocab.map((v) => v.word)
+                ),
+              });
+            } else {
+              // fallback to word2meaning
+              q.push({
+                type: "word2meaning",
+                prompt: `Nghĩa của từ "${item.word}" là gì?`,
+                answer: item.meaning_vi,
+                options: multiOptions(
+                  item.meaning_vi,
+                  app.vocab.map((v) => v.meaning_vi)
+                ),
+              });
+            }
+          }
+        }
+        return q;
+      }
+      function multiOptions(correct, pool) {
+        const opts = [correct];
+        while (opts.length < 4) {
+          const cand = pool[Math.floor(Math.random() * pool.length)];
+          if (!opts.includes(cand)) opts.push(cand);
+        }
+        return opts.sort(() => Math.random() - 0.5);
+      }
+      function showQuizQuestion() {
+        const i = quizSession.index;
+        if (i >= quizSession.questions.length) {
+          // done
+          const total = quizSession.questions.length,
+            score = quizSession.score;
+          // save history
+          app.quizHistory.push({
+            date: new Date().toISOString(),
+            total,
+            score,
+          });
+          addXP(Math.round(score * 2));
+          saveState();
+          viewArea.innerHTML = `
       <div class="bg-white p-6 rounded shadow text-center">
         <h3 class="text-2xl font-bold text-indigo-700">Kết thúc Quiz</h3>
-        <p class="mt-2">Bạn đúng <b>${score}</b> / ${total} (${((score/total)*100).toFixed(1)}%)</p>
+        <p class="mt-2">Bạn đúng <b>${score}</b> / ${total} (${(
+            (score / total) *
+            100
+          ).toFixed(1)}%)</p>
         <div class="mt-4"><canvas id="histChart" width="300" height="200"></canvas></div>
         <div class="mt-4"><button class="px-4 py-2 bg-purple-600 text-white rounded" onclick="startQuiz('mixed')">Làm lại</button></div>
       </div>`;
-    // draw small chart from history
-    setTimeout(()=>drawHistoryChart(),50);
-    return;
-  }
-  const q = quizSession.questions[i];
-  viewArea.innerHTML = `
+          // draw small chart from history
+          setTimeout(() => drawHistoryChart(), 50);
+          return;
+        }
+        const q = quizSession.questions[i];
+        viewArea.innerHTML = `
     <div class="bg-white p-6 rounded shadow">
       <div class="flex justify-between items-center">
-        <h3 class="text-lg font-semibold">Quiz — câu ${i+1}/${quizSession.questions.length}</h3>
+        <h3 class="text-lg font-semibold">Quiz — câu ${i + 1}/${
+          quizSession.questions.length
+        }</h3>
         <div class="text-sm text-slate-500">Type: ${q.type}</div>
       </div>
       <div class="mt-3">
         <div class="text-base mb-3">${q.prompt}</div>
-        <div class="grid grid-cols-1 gap-2">${q.options.map(o=>`<button class="opt-btn bg-gray-100 px-3 py-2 rounded text-left" onclick="selectAnswer('${escapeForAttr(o)}', this)">${escapeHtml(o)}</button>`).join('')}</div>
+        <div class="grid grid-cols-1 gap-2">${q.options
+          .map(
+            (o) =>
+              `<button class="opt-btn bg-gray-100 px-3 py-2 rounded text-left" onclick="selectAnswer('${escapeForAttr(
+                o
+              )}', this)">${escapeHtml(o)}</button>`
+          )
+          .join("")}</div>
         <div id="qFeedback" class="mt-3 text-center font-medium"></div>
         <div class="flex justify-between mt-4">
           <button onclick="prevQuiz()" class="px-3 py-2 bg-gray-300 rounded">⬅ Quay lại</button>
@@ -463,242 +719,389 @@ function showQuizQuestion(){
       </div>
     </div>
   `;
-}
-function escapeForAttr(s){ return encodeURIComponent(s); }
-function selectAnswer(encChoice, btn){
-  const choice = decodeURIComponent(encChoice);
-  const q = quizSession.questions[quizSession.index];
-  const feedback = document.getElementById('qFeedback');
-  // disable all
-  document.querySelectorAll('.opt-btn').forEach(b=>b.disabled=true);
-  if (choice === q.answer){
-    feedback.innerHTML = `<span class="text-green-600">✅ Đúng!</span>`;
-    quizSession.score++;
-    addXP(2);
-  } else {
-    feedback.innerHTML = `<span class="text-red-600">❌ Sai! Đáp án: ${escapeHtml(q.answer)}</span>`;
-  }
-  document.getElementById('nextQBtn').classList.remove('hidden');
-  saveState();
-}
-function nextQuiz(){ quizSession.index++; showQuizQuestion(); }
-function prevQuiz(){ if (quizSession.index>0) quizSession.index--; showQuizQuestion(); }
-function drawHistoryChart(){
-  const ctx = document.getElementById('histChart');
-  if (!ctx) return;
-  const labels = app.quizHistory.slice(-10).map(x=>new Date(x.date).toLocaleDateString());
-  const data = app.quizHistory.slice(-10).map(x=> Math.round((x.score/x.total)*100));
-  new Chart(ctx, { type:'line', data:{labels, datasets:[{label:'Quiz %', data, borderColor:'#6366f1', backgroundColor:'rgba(99,102,241,0.2)', fill:true}] }, options:{responsive:true} });
-}
+      }
+      function escapeForAttr(s) {
+        return encodeURIComponent(s);
+      }
+      function selectAnswer(encChoice, btn) {
+        const choice = decodeURIComponent(encChoice);
+        const q = quizSession.questions[quizSession.index];
+        const feedback = document.getElementById("qFeedback");
+        // disable all
+        document
+          .querySelectorAll(".opt-btn")
+          .forEach((b) => (b.disabled = true));
+        if (choice === q.answer) {
+          feedback.innerHTML = `<span class="text-green-600">✅ Đúng!</span>`;
+          quizSession.score++;
+          addXP(2);
+        } else {
+          feedback.innerHTML = `<span class="text-red-600">❌ Sai! Đáp án: ${escapeHtml(
+            q.answer
+          )}</span>`;
+        }
+        document.getElementById("nextQBtn").classList.remove("hidden");
+        saveState();
+      }
+      function nextQuiz() {
+        quizSession.index++;
+        showQuizQuestion();
+      }
+      function prevQuiz() {
+        if (quizSession.index > 0) quizSession.index--;
+        showQuizQuestion();
+      }
+      function drawHistoryChart() {
+        const ctx = document.getElementById("histChart");
+        if (!ctx) return;
+        const labels = app.quizHistory
+          .slice(-10)
+          .map((x) => new Date(x.date).toLocaleDateString());
+        const data = app.quizHistory
+          .slice(-10)
+          .map((x) => Math.round((x.score / x.total) * 100));
+        new Chart(ctx, {
+          type: "line",
+          data: {
+            labels,
+            datasets: [
+              {
+                label: "Quiz %",
+                data,
+                borderColor: "#6366f1",
+                backgroundColor: "rgba(99,102,241,0.2)",
+                fill: true,
+              },
+            ],
+          },
+          options: { responsive: true },
+        });
+      }
 
-/* ==========================
+      /* ==========================
    Spelling mode (hear and type)
    ========================== */
-document.getElementById('btnSpelling').addEventListener('click', ()=>spellMode());
-function spellMode(){
-  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu.'); return; }
-  // pick 7 random
-  const pick = [...app.vocab].sort(()=>Math.random()-0.5).slice(0,7);
-  let idx=0, correct=0;
-  renderSpell();
-  function renderSpell(){
-    if (idx>=pick.length){
-      viewArea.innerHTML = `<div class="bg-white p-6 rounded shadow text-center"><h3 class="text-xl">Kết thúc Spelling</h3><p>Bạn đúng ${correct}/${pick.length}</p><button class="mt-3 px-3 py-2 bg-indigo-600 text-white rounded" onclick="spellMode()">Làm lại</button></div>`;
-      addXP(5+correct);
-      saveState();
-      return;
-    }
-    const v = pick[idx];
-    viewArea.innerHTML = `
+      document
+        .getElementById("btnSpelling")
+        .addEventListener("click", () => spellMode());
+      function spellMode() {
+        if (!app.vocab.length) {
+          viewArea.innerHTML = emptyBox("Chưa có dữ liệu.");
+          return;
+        }
+        // pick 7 random
+        const pick = [...app.vocab].sort(() => Math.random() - 0.5).slice(0, 7);
+        let idx = 0,
+          correct = 0;
+        renderSpell();
+        function renderSpell() {
+          if (idx >= pick.length) {
+            viewArea.innerHTML = `<div class="bg-white p-6 rounded shadow text-center"><h3 class="text-xl">Kết thúc Spelling</h3><p>Bạn đúng ${correct}/${pick.length}</p><button class="mt-3 px-3 py-2 bg-indigo-600 text-white rounded" onclick="spellMode()">Làm lại</button></div>`;
+            addXP(5 + correct);
+            saveState();
+            return;
+          }
+          const v = pick[idx];
+          viewArea.innerHTML = `
       <div class="bg-white p-6 rounded shadow text-center">
-        <h3 class="text-lg font-semibold">Spelling — ${idx+1}/${pick.length}</h3>
+        <h3 class="text-lg font-semibold">Spelling — ${idx + 1}/${
+            pick.length
+          }</h3>
         <p class="mt-3 text-slate-600">Nghe và gõ chính tả</p>
-        <div class="mt-4"><button class="px-4 py-2 bg-blue-500 text-white rounded" onclick="speak('${v.word}','${v.lang}')">🔊 Nghe</button></div>
+        <div class="mt-4"><button class="px-4 py-2 bg-blue-500 text-white rounded" onclick="speak('${
+          v.word
+        }','${v.lang}')">🔊 Nghe</button></div>
         <div class="mt-4"><input id="spellInput" class="border p-2 rounded w-full" placeholder="Gõ chính tả tại đây" /></div>
         <div class="mt-3"><button class="px-4 py-2 bg-emerald-500 text-white rounded" id="submitSpell">Kiểm tra</button></div>
         <div id="spellFeedback" class="mt-3 font-medium"></div>
       </div>
     `;
-    document.getElementById('submitSpell').addEventListener('click', ()=>{
-      const val = document.getElementById('spellInput').value.trim();
-      const fb = document.getElementById('spellFeedback');
-      if (val.toLowerCase() === v.word.toLowerCase()){
-        fb.innerHTML = `<span class="text-green-600">✅ Chính xác!</span>`;
-        correct++; addXP(2);
-      } else {
-        fb.innerHTML = `<span class="text-red-600">❌ Sai. Đáp án: ${v.word}</span>`;
+          document
+            .getElementById("submitSpell")
+            .addEventListener("click", () => {
+              const val = document.getElementById("spellInput").value.trim();
+              const fb = document.getElementById("spellFeedback");
+              if (val.toLowerCase() === v.word.toLowerCase()) {
+                fb.innerHTML = `<span class="text-green-600">✅ Chính xác!</span>`;
+                correct++;
+                addXP(2);
+              } else {
+                fb.innerHTML = `<span class="text-red-600">❌ Sai. Đáp án: ${v.word}</span>`;
+              }
+              setTimeout(() => {
+                idx++;
+                renderSpell();
+              }, 1100);
+            });
+        }
       }
-      setTimeout(()=>{ idx++; renderSpell(); }, 1100);
-    });
-  }
-}
 
-/* ==========================
+      /* ==========================
    Listening mode (choose meaning)
    ========================== */
-document.getElementById('btnListen').addEventListener('click', ()=>listeningMode());
-function listeningMode(){
-  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu.'); return; }
-  const picks = [...app.vocab].sort(()=>Math.random()-0.5).slice(0,8);
-  let idx=0, score=0;
-  renderListen();
-  function renderListen(){
-    if (idx>=picks.length){
-      viewArea.innerHTML = `<div class="bg-white p-6 rounded shadow text-center">Kết thúc Listening — ${score}/${picks.length}<div class="mt-3"><button onclick="listeningMode()" class="px-3 py-2 bg-indigo-600 text-white rounded">Làm lại</button></div></div>`;
-      addXP(3+score);
-      saveState();
-      return;
-    }
-    const item = picks[idx];
-    // options: correct meaning + 3 distractors
-    const pool = app.vocab.map(v=>v.meaning_vi);
-    const opts = multiOptions(item.meaning_vi, pool);
-    viewArea.innerHTML = `
+      document
+        .getElementById("btnListen")
+        .addEventListener("click", () => listeningMode());
+      function listeningMode() {
+        if (!app.vocab.length) {
+          viewArea.innerHTML = emptyBox("Chưa có dữ liệu.");
+          return;
+        }
+        const picks = [...app.vocab]
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 8);
+        let idx = 0,
+          score = 0;
+        renderListen();
+        function renderListen() {
+          if (idx >= picks.length) {
+            viewArea.innerHTML = `<div class="bg-white p-6 rounded shadow text-center">Kết thúc Listening — ${score}/${picks.length}<div class="mt-3"><button onclick="listeningMode()" class="px-3 py-2 bg-indigo-600 text-white rounded">Làm lại</button></div></div>`;
+            addXP(3 + score);
+            saveState();
+            return;
+          }
+          const item = picks[idx];
+          // options: correct meaning + 3 distractors
+          const pool = app.vocab.map((v) => v.meaning_vi);
+          const opts = multiOptions(item.meaning_vi, pool);
+          viewArea.innerHTML = `
       <div class="bg-white p-6 rounded shadow text-center">
-        <h3 class="text-lg font-semibold">Listening — ${idx+1}/${picks.length}</h3>
-        <div class="mt-3"><button class="px-4 py-2 bg-blue-500 text-white rounded" onclick="speak('${item.word}','${item.lang}')">🔊 Nghe</button></div>
-        <div class="mt-4 grid grid-cols-1 gap-2">${opts.map(o=>`<button class="opt2 bg-gray-100 px-3 py-2 rounded" onclick="chooseListen('${encodeURIComponent(o)}', this)">${escapeHtml(o)}</button>`).join('')}</div>
+        <h3 class="text-lg font-semibold">Listening — ${idx + 1}/${
+            picks.length
+          }</h3>
+        <div class="mt-3"><button class="px-4 py-2 bg-blue-500 text-white rounded" onclick="speak('${
+          item.word
+        }','${item.lang}')">🔊 Nghe</button></div>
+        <div class="mt-4 grid grid-cols-1 gap-2">${opts
+          .map(
+            (o) =>
+              `<button class="opt2 bg-gray-100 px-3 py-2 rounded" onclick="chooseListen('${encodeURIComponent(
+                o
+              )}', this)">${escapeHtml(o)}</button>`
+          )
+          .join("")}</div>
         <div id="listenFb" class="mt-3 font-medium"></div>
         <div class="mt-4"><button id="nextListen" class="px-3 py-2 bg-indigo-600 text-white rounded hidden">Câu tiếp</button></div>
       </div>
     `;
-    window.chooseListen = function(enc, btn){
-      const choice = decodeURIComponent(enc);
-      const fb = document.getElementById('listenFb');
-      document.querySelectorAll('.opt2').forEach(b=>b.disabled=true);
-      if (choice === item.meaning_vi){ fb.innerHTML = `<span class="text-green-600">✅ Đúng</span>`; score++; addXP(2); } else { fb.innerHTML = `<span class="text-red-600">❌ Sai. Đáp án: ${item.meaning_vi}</span>`; }
-      document.getElementById('nextListen').classList.remove('hidden');
-      document.getElementById('nextListen').onclick = ()=>{ idx++; renderListen(); };
-      saveState();
-    };
-  }
-}
+          window.chooseListen = function (enc, btn) {
+            const choice = decodeURIComponent(enc);
+            const fb = document.getElementById("listenFb");
+            document
+              .querySelectorAll(".opt2")
+              .forEach((b) => (b.disabled = true));
+            if (choice === item.meaning_vi) {
+              fb.innerHTML = `<span class="text-green-600">✅ Đúng</span>`;
+              score++;
+              addXP(2);
+            } else {
+              fb.innerHTML = `<span class="text-red-600">❌ Sai. Đáp án: ${item.meaning_vi}</span>`;
+            }
+            document.getElementById("nextListen").classList.remove("hidden");
+            document.getElementById("nextListen").onclick = () => {
+              idx++;
+              renderListen();
+            };
+            saveState();
+          };
+        }
+      }
 
-/* ==========================
+      /* ==========================
    Matching Game (drag-drop)
    ========================== */
-document.getElementById('btnMatch').addEventListener('click', ()=>startMatching());
-function startMatching(){
-  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu.'); return; }
-  const picks = [...app.vocab].sort(()=>Math.random()-0.5).slice(0,6);
-  const left = picks.map(v=>v.word).sort(()=>Math.random()-0.5);
-  const right = picks.map(v=>v.meaning_vi).sort(()=>Math.random()-0.5);
-  viewArea.innerHTML = `
+      document
+        .getElementById("btnMatch")
+        .addEventListener("click", () => startMatching());
+      function startMatching() {
+        if (!app.vocab.length) {
+          viewArea.innerHTML = emptyBox("Chưa có dữ liệu.");
+          return;
+        }
+        const picks = [...app.vocab]
+          .sort(() => Math.random() - 0.5)
+          .slice(0, 6);
+        const left = picks.map((v) => v.word).sort(() => Math.random() - 0.5);
+        const right = picks
+          .map((v) => v.meaning_vi)
+          .sort(() => Math.random() - 0.5);
+        viewArea.innerHTML = `
     <div class="bg-white p-6 rounded shadow">
       <h3 class="font-semibold text-indigo-700">Matching Game</h3>
       <div class="grid grid-cols-2 gap-4 mt-4">
         <div>
-          ${left.map(w => `<div draggable="true" class="draggable p-2 bg-slate-100 rounded mb-2" ondragstart="dragStart(event)" data-word="${escapeHtml(w)}">${escapeHtml(w)}</div>`).join('')}
+          ${left
+            .map(
+              (w) =>
+                `<div draggable="true" class="draggable p-2 bg-slate-100 rounded mb-2" ondragstart="dragStart(event)" data-word="${escapeHtml(
+                  w
+                )}">${escapeHtml(w)}</div>`
+            )
+            .join("")}
         </div>
         <div>
-          ${right.map(m => `<div class="drop-target p-2 mb-2" ondragover="allowDrop(event)" ondrop="drop(event)" data-meaning="${escapeHtml(m)}">${escapeHtml(m)}</div>`).join('')}
+          ${right
+            .map(
+              (m) =>
+                `<div class="drop-target p-2 mb-2" ondragover="allowDrop(event)" ondrop="drop(event)" data-meaning="${escapeHtml(
+                  m
+                )}">${escapeHtml(m)}</div>`
+            )
+            .join("")}
         </div>
       </div>
       <div class="mt-4"><button onclick="checkMatches()" class="px-3 py-2 bg-emerald-500 text-white rounded">Kiểm tra</button></div>
       <div id="matchFb" class="mt-3 font-medium"></div>
     </div>
   `;
-  // store correct pairs
-  window._matchPairs = {};
-  picks.forEach(v=> window._matchPairs[v.word] = v.meaning_vi);
-  window._dropped = {};
-}
-function dragStart(e){ e.dataTransfer.setData('text/plain', e.target.dataset.word); }
-function allowDrop(e){ e.preventDefault(); }
-function drop(e){
-  const word = e.dataTransfer.getData('text/plain');
-  const target = e.currentTarget;
-  target.innerHTML = `<b>${escapeHtml(word)}</b><div class="text-sm">${escapeHtml(target.dataset.meaning)}</div>`;
-  window._dropped[word] = target.dataset.meaning;
-}
-function checkMatches(){
-  const fb = document.getElementById('matchFb');
-  let correct = 0, total = Object.keys(window._matchPairs).length;
-  Object.entries(window._matchPairs).forEach(([w,m])=>{
-    if (window._dropped[w] && window._dropped[w]===m) correct++;
-  });
-  fb.innerHTML = `Bạn đúng ${correct}/${total}`;
-  addXP(3+correct);
-  saveState();
-}
+        // store correct pairs
+        window._matchPairs = {};
+        picks.forEach((v) => (window._matchPairs[v.word] = v.meaning_vi));
+        window._dropped = {};
+      }
+      function dragStart(e) {
+        e.dataTransfer.setData("text/plain", e.target.dataset.word);
+      }
+      function allowDrop(e) {
+        e.preventDefault();
+      }
+      function drop(e) {
+        const word = e.dataTransfer.getData("text/plain");
+        const target = e.currentTarget;
+        target.innerHTML = `<b>${escapeHtml(
+          word
+        )}</b><div class="text-sm">${escapeHtml(target.dataset.meaning)}</div>`;
+        window._dropped[word] = target.dataset.meaning;
+      }
+      function checkMatches() {
+        const fb = document.getElementById("matchFb");
+        let correct = 0,
+          total = Object.keys(window._matchPairs).length;
+        Object.entries(window._matchPairs).forEach(([w, m]) => {
+          if (window._dropped[w] && window._dropped[w] === m) correct++;
+        });
+        fb.innerHTML = `Bạn đúng ${correct}/${total}`;
+        addXP(3 + correct);
+        saveState();
+      }
 
-/* ==========================
+      /* ==========================
    Daily 10
    ========================== */
-document.getElementById('btnDaily').addEventListener('click', ()=>showDaily());
-function showDaily(){
-  if (!app.vocab.length) { viewArea.innerHTML = emptyBox('Chưa có dữ liệu.'); return; }
-  const today = (new Date()).toISOString().slice(0,10);
-  if (!app.daily[today]){
-    // generate and save
-    app.daily[today] = [...app.vocab].sort(()=>Math.random()-0.5).slice(0,10).map(v=>v.word);
-    saveState();
-  }
-  const list = app.daily[today];
-  viewArea.innerHTML = `
+      document
+        .getElementById("btnDaily")
+        .addEventListener("click", () => showDaily());
+      function showDaily() {
+        if (!app.vocab.length) {
+          viewArea.innerHTML = emptyBox("Chưa có dữ liệu.");
+          return;
+        }
+        const today = new Date().toISOString().slice(0, 10);
+        if (!app.daily[today]) {
+          // generate and save
+          app.daily[today] = [...app.vocab]
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 10)
+            .map((v) => v.word);
+          saveState();
+        }
+        const list = app.daily[today];
+        viewArea.innerHTML = `
     <div class="bg-white p-6 rounded shadow">
       <h3 class="text-lg font-semibold">Daily 10 — ${today}</h3>
-      <ul class="mt-3 space-y-2">${list.map(w=>`<li class="p-2 bg-slate-50 rounded flex justify-between">${w}<button onclick="speak('${w}')' class='px-2 py-1 bg-blue-500 text-white rounded'>🔊</button></li>`).join('')}</ul>
+      <ul class="mt-3 space-y-2">${list
+        .map(
+          (w) =>
+            `<li class="p-2 bg-slate-50 rounded flex justify-between">${w}<button onclick="speak('${w}')' class='px-2 py-1 bg-blue-500 text-white rounded'>🔊</button></li>`
+        )
+        .join("")}</ul>
       <div class="mt-4"><button onclick="startDailyPractice()" class="px-3 py-2 bg-indigo-600 text-white rounded">Ôn Daily</button></div>
     </div>
   `;
-}
-function startDailyPractice(){
-  const today = (new Date()).toISOString().slice(0,10);
-  const list = app.daily[today] || [];
-  if (!list.length) return alert('Chưa có Daily cho hôm nay');
-  // simple quiz through the words
-  const questions = list.map(w=> {
-    const v = app.vocab.find(x=>x.word===w);
-    const options = multiOptions(v.meaning_vi, app.vocab.map(x=>x.meaning_vi));
-    return {prompt:`Nghĩa của "${v.word}" là?`, answer:v.meaning_vi, options};
-  });
-  quizSession.questions = questions; quizSession.index=0; quizSession.score=0;
-  showQuizQuestion();
-}
+      }
+      function startDailyPractice() {
+        const today = new Date().toISOString().slice(0, 10);
+        const list = app.daily[today] || [];
+        if (!list.length) return alert("Chưa có Daily cho hôm nay");
+        // simple quiz through the words
+        const questions = list.map((w) => {
+          const v = app.vocab.find((x) => x.word === w);
+          const options = multiOptions(
+            v.meaning_vi,
+            app.vocab.map((x) => x.meaning_vi)
+          );
+          return {
+            prompt: `Nghĩa của "${v.word}" là?`,
+            answer: v.meaning_vi,
+            options,
+          };
+        });
+        quizSession.questions = questions;
+        quizSession.index = 0;
+        quizSession.score = 0;
+        showQuizQuestion();
+      }
 
-/* ==========================
+      /* ==========================
    SRS view (due today)
    ========================== */
-document.getElementById('btnSRS').addEventListener('click', ()=>showSRS());
-function showSRS(){
-  showView('srs');
-  const now = new Date();
-  const dueWords = Object.entries(app.srs).filter(([w,r])=> new Date(r.nextReview) <= now).map(([w,r])=>w);
-  if (!dueWords.length) { viewArea.innerHTML = emptyBox('Không có từ nào đến hạn ôn hôm nay.'); return; }
-  viewArea.innerHTML = `
+      document
+        .getElementById("btnSRS")
+        .addEventListener("click", () => showSRS());
+      function showSRS() {
+        showView("srs");
+        const now = new Date();
+        const dueWords = Object.entries(app.srs)
+          .filter(([w, r]) => new Date(r.nextReview) <= now)
+          .map(([w, r]) => w);
+        if (!dueWords.length) {
+          viewArea.innerHTML = emptyBox("Không có từ nào đến hạn ôn hôm nay.");
+          return;
+        }
+        viewArea.innerHTML = `
     <div class="bg-white p-6 rounded shadow">
       <h3 class="text-lg font-semibold">Ôn hôm nay — ${dueWords.length} từ</h3>
-      <div class="mt-3 grid gap-3">${dueWords.map(w=> {
-        const v = app.vocab.find(x=>x.word===w);
-        return `<div class="p-3 bg-slate-50 rounded flex justify-between"><div><b>${escapeHtml(w)}</b><div class="text-sm text-slate-600">${escapeHtml(v.meaning_vi)}</div></div><div><button class="px-2 py-1 bg-emerald-500 text-white rounded" onclick="srsAnswer('${w}',true)">✅</button><button class="px-2 py-1 bg-red-400 text-white rounded ml-2" onclick="srsAnswer('${w}',false)">❌</button></div></div>`;
-      }).join('')}</div>
+      <div class="mt-3 grid gap-3">${dueWords
+        .map((w) => {
+          const v = app.vocab.find((x) => x.word === w);
+          return `<div class="p-3 bg-slate-50 rounded flex justify-between"><div><b>${escapeHtml(
+            w
+          )}</b><div class="text-sm text-slate-600">${escapeHtml(
+            v.meaning_vi
+          )}</div></div><div><button class="px-2 py-1 bg-emerald-500 text-white rounded" onclick="srsAnswer('${w}',true)">✅</button><button class="px-2 py-1 bg-red-400 text-white rounded ml-2" onclick="srsAnswer('${w}',false)">❌</button></div></div>`;
+        })
+        .join("")}</div>
     </div>
   `;
-}
-function srsAnswer(word, correct){
-  const rec = app.srs[word];
-  if (!rec) return;
-  if (correct) rec.level = (rec.level||0)+1;
-  else rec.level = Math.max(0,(rec.level||0)-1);
-  const days = Math.max(1, Math.pow(2, Math.max(0,rec.level-1)));
-  const next = new Date(); next.setDate(next.getDate()+days);
-  rec.nextReview = next.toISOString();
-  addXP(correct?5:1);
-  saveState();
-  showSRS();
-}
+      }
+      function srsAnswer(word, correct) {
+        const rec = app.srs[word];
+        if (!rec) return;
+        if (correct) rec.level = (rec.level || 0) + 1;
+        else rec.level = Math.max(0, (rec.level || 0) - 1);
+        const days = Math.max(1, Math.pow(2, Math.max(0, rec.level - 1)));
+        const next = new Date();
+        next.setDate(next.getDate() + days);
+        rec.nextReview = next.toISOString();
+        addXP(correct ? 5 : 1);
+        saveState();
+        showSRS();
+      }
 
-/* ==========================
+      /* ==========================
    Dashboard
    ========================== */
-document.getElementById('btnDash').addEventListener('click', ()=>showDashboard());
-function showDashboard(){
-  showView('dash');
-  const total = app.vocab.length;
-  const known = Object.values(app.srs).filter(r=> r.level>0).length;
-  const due = Object.values(app.srs).filter(r=> new Date(r.nextReview) <= new Date()).length;
-  viewArea.innerHTML = `
+      document
+        .getElementById("btnDash")
+        .addEventListener("click", () => showDashboard());
+      function showDashboard() {
+        showView("dash");
+        const total = app.vocab.length;
+        const known = Object.values(app.srs).filter((r) => r.level > 0).length;
+        const due = Object.values(app.srs).filter(
+          (r) => new Date(r.nextReview) <= new Date()
+        ).length;
+        viewArea.innerHTML = `
     <div class="bg-white p-6 rounded shadow">
       <h3 class="text-xl font-semibold">Dashboard</h3>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -714,55 +1117,92 @@ function showDashboard(){
       </div>
     </div>
   `;
-  const ctx = document.getElementById('dashChart');
-  const knownCount = known, unknown = total-known;
-  new Chart(ctx, { type:'doughnut', data:{ labels:['Known','Unknown'], datasets:[{data:[knownCount,unknown], backgroundColor:['#10b981','#94a3b8']}] }});
-}
+        const ctx = document.getElementById("dashChart");
+        const knownCount = known,
+          unknown = total - known;
+        new Chart(ctx, {
+          type: "doughnut",
+          data: {
+            labels: ["Known", "Unknown"],
+            datasets: [
+              {
+                data: [knownCount, unknown],
+                backgroundColor: ["#10b981", "#94a3b8"],
+              },
+            ],
+          },
+        });
+      }
 
-/* ==========================
+      /* ==========================
    Helpers
    ========================== */
-function showView(name){
-  // center viewArea is used; nothing special hiding required in this single-page design
-}
-function emptyBox(msg){ return `<div class="bg-white p-6 rounded shadow text-center text-slate-600">${msg}</div>`; }
-function escapeHtml(s){ if (!s) return ''; return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+      function showView(name) {
+        // center viewArea is used; nothing special hiding required in this single-page design
+      }
+      function emptyBox(msg) {
+        return `<div class="bg-white p-6 rounded shadow text-center text-slate-600">${msg}</div>`;
+      }
+      function escapeHtml(s) {
+        if (!s) return "";
+        return String(s)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;");
+      }
 
-/* ==========================
+      /* ==========================
    Persistence control
    ========================== */
-document.getElementById('btnQuickReview').addEventListener('click', ()=>{
-  if (!app.vocab.length) { alert('Chưa có dữ liệu'); return; }
-  const list = [...app.vocab].sort(()=>Math.random()-0.5).slice(0,5).map(v=>app.vocab.indexOf(v));
-  runQuickSlideshow(list);
-});
-document.getElementById('btnClearProgress').addEventListener('click', ()=>{
-  if (!confirm('Xóa toàn bộ progress (bookmarks, SRS, xp, badges)?')) return;
-  localStorage.removeItem('vocab_bookmarks');
-  localStorage.removeItem('vocab_srs');
-  localStorage.removeItem('vocab_daily');
-  localStorage.removeItem('vocab_xp');
-  localStorage.removeItem('vocab_badges');
-  localStorage.removeItem('vocab_quiz_history');
-  // reload internal state
-  app.bookmarks=[]; app.srs={}; app.daily={}; app.xp=0; app.badges=[]; app.quizHistory=[];
-  saveState();
-  alert('Đã xóa.');
-  refreshSidebar();
-  showList();
-});
+      document
+        .getElementById("btnQuickReview")
+        .addEventListener("click", () => {
+          if (!app.vocab.length) {
+            alert("Chưa có dữ liệu");
+            return;
+          }
+          const list = [...app.vocab]
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 5)
+            .map((v) => app.vocab.indexOf(v));
+          runQuickSlideshow(list);
+        });
+      document
+        .getElementById("btnClearProgress")
+        .addEventListener("click", () => {
+          if (!confirm("Xóa toàn bộ progress (bookmarks, SRS, xp, badges)?"))
+            return;
+          localStorage.removeItem("vocab_bookmarks");
+          localStorage.removeItem("vocab_srs");
+          localStorage.removeItem("vocab_daily");
+          localStorage.removeItem("vocab_xp");
+          localStorage.removeItem("vocab_badges");
+          localStorage.removeItem("vocab_quiz_history");
+          // reload internal state
+          app.bookmarks = [];
+          app.srs = {};
+          app.daily = {};
+          app.xp = 0;
+          app.badges = [];
+          app.quizHistory = [];
+          saveState();
+          alert("Đã xóa.");
+          refreshSidebar();
+          showList();
+        });
 
-/* ==========================
+      /* ==========================
    Init
    ========================== */
-(function init(){
-  xpCountEl.textContent = app.xp;
-  renderBadges();
-  refreshSidebar();
-  // default empty view
-  viewArea.innerHTML = emptyBox('Upload file JSON để bắt đầu hoặc thử các tính năng ở trên.');
-})();
-
-</script>
-</body>
+      (function init() {
+        xpCountEl.textContent = app.xp;
+        renderBadges();
+        refreshSidebar();
+        // default empty view
+        viewArea.innerHTML = emptyBox(
+          "Upload file JSON để bắt đầu hoặc thử các tính năng ở trên."
+        );
+      })();
+    </script>
+  </body>
 </html>
